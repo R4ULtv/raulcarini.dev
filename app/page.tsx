@@ -172,9 +172,9 @@ export default async function Home() {
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-3">
           <ImageViewer
-            src={croatia}
-            width={320}
-            alt="Croatia"
+            src={city}
+            width={640}
+            alt="Lake Garda, Italy"
             placeholder="blur"
           />
           <ImageViewer
@@ -184,9 +184,9 @@ export default async function Home() {
             placeholder="blur"
           />
           <ImageViewer
-            src={city}
-            width={640}
-            alt="Lake Garda, Italy"
+            src={croatia}
+            width={320}
+            alt="Croatia"
             placeholder="blur"
             className="col-span-2 sm:col-span-1"
           />
