@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { getAllPosts } from "@/lib/content";
 import type { Metadata } from "next";
-import BookReading from "@/components/svg/book-reading";
+import BookReading from "@/components/svg/artworks/book-reading";
 
 export const metadata: Metadata = {
   title: "Blog",

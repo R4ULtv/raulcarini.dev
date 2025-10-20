@@ -2,7 +2,7 @@ import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
 import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
-import Projects from "@/components/svg/projects";
+import Projects from "@/components/svg/artworks/projects";
 import { ExternalLinkIcon } from "lucide-react";
 
 export const metadata: Metadata = {
