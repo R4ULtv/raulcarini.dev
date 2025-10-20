@@ -7,7 +7,12 @@ import { ThemeProvider } from "next-themes";
 import ThemeSwitch from "@/components/theme-switch";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
-import { ProjectorIcon, RssIcon } from "lucide-react";
+import {
+  FolderCogIcon,
+  ProjectorIcon,
+  ReceiptTextIcon,
+  RssIcon,
+} from "lucide-react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -67,23 +72,15 @@ export default function RootLayout({
                 </span>
               </div>
               <nav className="ml-auto flex gap-1 text-sm">
-                <Button variant="ghost" size="sm" asChild>
-                  <Link
-                    href="/blog"
-                    aria-label="Blog Page"
-                    className="hover:underline text-muted-foreground"
-                  >
-                    <RssIcon />
+                <Button variant="link" size="sm" asChild>
+                  <Link href="/blog" aria-label="Blog Page">
+                    <RssIcon className="sm:hidden" />
                     <span className="hidden sm:inline">Blog</span>
                   </Link>
                 </Button>
-                <Button variant="ghost" size="sm" asChild>
-                  <Link
-                    href="/projects"
-                    aria-label="Projects Page"
-                    className="hover:underline text-muted-foreground"
-                  >
-                    <ProjectorIcon />
+                <Button variant="link" size="sm" asChild>
+                  <Link href="/projects" aria-label="Projects Page">
+                    <FolderCogIcon className="sm:hidden" />
                     <span className="hidden sm:inline">Projects</span>
                   </Link>
                 </Button>
