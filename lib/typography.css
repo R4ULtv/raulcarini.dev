@@ -28,8 +28,6 @@
         @apply bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
     }
 
-    /* Preformatted code blocks are handled in mdx-components with shiki */
-
     /* Lists */
     .prose :where(ul):not(:where(.not-prose *)) {
         @apply my-6 ml-6 list-disc;
@@ -38,7 +36,7 @@
         @apply my-6 ml-6 list-decimal;
     }
     .prose :where(li):not(:where(.not-prose *)) {
-        @apply mt-2;
+        @apply mt-2 text-muted-foreground;
     }
 
     /* HR */
