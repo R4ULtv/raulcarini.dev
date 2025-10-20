@@ -7,12 +7,7 @@ import { ThemeProvider } from "next-themes";
 import ThemeSwitch from "@/components/theme-switch";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
-import {
-  FolderCogIcon,
-  ProjectorIcon,
-  ReceiptTextIcon,
-  RssIcon,
-} from "lucide-react";
+import { FolderCogIcon, RssIcon } from "lucide-react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
