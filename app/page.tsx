@@ -228,14 +228,14 @@ export default async function Home() {
               </div>
             </Link>
           ))}
-          <div className="flex items-center justify-start">
-            <Link
-              href="/blog"
-              className="py-1 text-sm text-muted-foreground hover:underline"
-            >
-              Load more blog posts...
-            </Link>
-          </div>
+        </div>
+        <div className="flex items-center justify-start mt-4">
+          <Link
+            href="/blog"
+            className="py-1 text-sm text-muted-foreground hover:underline"
+          >
+            Load more blog posts...
+          </Link>
         </div>
       </section>
       <section id="contributions">
@@ -255,6 +255,16 @@ export default async function Home() {
           Public Repositories
         </a>
         <GithubRepositories username="r4ultv" limit={6} />
+        <div className="flex items-center justify-start mt-4">
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://github.com/R4ULtv?tab=repositories"
+            className="py-1 text-sm text-muted-foreground hover:underline"
+          >
+            More repositories...
+          </a>
+        </div>
       </section>
       <section id="contact">
         <a
