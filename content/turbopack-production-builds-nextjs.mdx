@@ -1,0 +1,55 @@
+export const metadata = {
+  title: "Turbopack Production Builds in Next.js",
+  createdAt: "2025-04-24",
+  description: "Turbopack production builds in Next.js 15.3: Explore the alpha and its performance.",
+  keywords: "Turbopack, Next.js, Production Builds, Performance Optimization, Webpack",
+  shortSlug: "prdctn",
+};
+
+In the ever-evolving landscape of web development, build tools are paramount for achieving optimal performance. While [Webpack](https://webpack.js.org/) has long been the standard bundler for Next.js, Vercel has been diligently developing **Turbopack**, a revolutionary Rust-based bundler promising dramatically faster build times.
+
+We've previously explored the comparison between [Turbopack and Webpack](/blog/turbopack-vs-webpack), primarily focusing on the development experience. However, a major milestone has arrived with the release of **Next.js 15.3**: an exciting alpha release introducing **Turbopack for production builds (`next build --turbopack`)**. This is a significant step towards leveraging Turbopack's speed benefits, already used in over 50% of Next.js 15 development sessions, for the critical production process.
+
+This marks a significant step towards bringing the speed benefits of Turbopack, which over 50% of development sessions on Next.js 15 are already using, to the production build process.
+
+## Trying Out Turbopack Production Builds in 15.3
+
+You can start experimenting with Turbopack builds in Next.js 15.3 today. After upgrading to 15.3, simply run your build command with the `--turbopack` flag:
+
+```bash
+next build --turbopack
+```
+
+This simple addition to your build command is all that's needed to instruct Next.js to use the Turbopack engine for generating your production-ready application.
+
+## Current Functionality and Progress
+
+As an alpha release, it's important to note that this feature is still under active development. However, the progress is promising, with **99.3% of integration tests for `next build` already passing**. You can monitor the progress towards full compatibility at [areweturboyet.com](https://areweturboyet.com/).
+
+If your application is already compatible with Turbopack for development, it is expected to work with the build command as well.
+
+Given this promising progress and alpha status, it's crucial to understand the current state and recommended use cases.
+
+> **Important Consideration:** Given its alpha status, **Vercel does not recommend using Turbopack for production builds in mission-critical applications at this stage.** It's best suited for testing in preview or staging environments, or for running locally to compare bundle sizes and performance against the standard Webpack build.
+
+The team is diligently working to achieve 100% compatibility and close any performance gaps through various optimizations like scope hoisting and improved chunking.
+
+## Performance Improvements Observed
+
+One of the most compelling aspects of Turbopack is its performance potential, especially when leveraging multi-core processors. Vercel has observed significant speedups compared to the previous Webpack implementation:
+
+- **At 4 CPU cores: 28% faster than Webpack**
+- **At 16 CPU cores: 60% faster than Webpack**
+- **At 30 CPU cores: 83% faster than Webpack**
+
+These significant speedups translate directly into faster deployment cycles, quicker feedback loops for developers, and potential cost savings on CI/CD infrastructure. These numbers highlight Turbopack's ability to parallelize tasks more effectively. Furthermore, experimental work on persistent caching is underway, which is expected to further reduce build times in the future.
+
+## Ecosystem Compatibility
+
+Ensuring compatibility with the broader Next.js ecosystem is a key focus before the stable release. Vercel is collaborating with commonly used integrations, such as Sentry, to ensure they work seamlessly with `next build --turbopack`. Tool authors are encouraged to reach out to the Next.js team for assistance in ensuring their libraries are compatible.
+
+## Conclusion
+
+The alpha release of Turbopack production builds in Next.js 15.3 is an exciting development for the Next.js ecosystem. While not yet production-ready, it offers a compelling glimpse into the future of faster build times, especially for projects leveraging multi-core machines.
+
+We strongly encourage developers to try out this alpha feature in non-critical environments, provide valuable feedback, and closely follow the exciting progress at [areweturboyet.com](https://areweturboyet.com). As development continues and compatibility rapidly improves, Turbopack is undeniably poised to become a true game-changer for Next.js build performance in the near future.

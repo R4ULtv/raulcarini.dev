@@ -1,27 +1,114 @@
 <img alt="Raul Carini - Full-Stack Developer" src="https://www.raulcarini.dev/api/dynamic-og">
 
-This is the newest version of my old portfolio, now with a better design. The website is built using Next.js 15.3, a React framework for building high-performance web applications, and leverages features like Server Components, Partial Prerendering (PPR), and the latest optimizations.
+A modern personal portfolio and blog built with Next.js 15, featuring MDX-powered content, dynamic Open Graph images, page view tracking, and GitHub contributions visualization. The site leverages cutting-edge Next.js features including App Router, Server Components, and Turbopack for optimal performance.
 
-This repository serves as my personal portfolio and blog, showcasing projects, sharing updates, and discussing various web development topics.
+## ✨ Features
 
-## Features
+- **📝 MDX Blog** - Write rich blog posts with custom components (Tweet embeds, YouTube videos)
+- **🎨 Syntax Highlighting** - Beautiful code blocks with Shiki (`vitesse-dark`/`vitesse-light` themes)
+- **🖼️ Dynamic OG Images** - Automatically generated social preview images (WebP, 1200x630px)
+- **📊 Page View Tracking** - Real-time view counts with Upstash Redis (Edge runtime)
+- **💻 GitHub Integration** - Contribution heatmap and repository visualization
+- **🌗 Dark Mode** - Seamless theme switching with system preference detection
+- **⚡ Modern Stack** - Next.js 15.5.4, React 19.1.0, Tailwind CSS v4, TypeScript
+- **🔍 SEO Optimized** - Dynamic sitemap/robots.txt, metadata API, semantic HTML
 
-- **Blog with Categories**: Content is organized into distinct categories:
-    - **Projects**: In-depth case studies and technical write-ups of completed projects.
-    - **Updates**: Quick updates on ongoing work, career milestones, and behind-the-scenes glimpses.
-    - **Articles**: Broader discussions on tech trends, development concepts, and resources.
-- **Dynamic Open Graph (OG) Images**: Automatically generated social preview images for blog posts and other pages using the `@vercel/og` library.
-- **Page Views**: Track blog post views using Upstash Redis.
-- **Github Contributions**: Visualize coding activity and contributions fetched via the GitHub API.
-- **Newsletter Integration**: Allow users to subscribe to updates via Resend.
-- **Next.js 15 + MDX**: Built with the latest Next.js features for performance and flexibility, using MDX for rich, interactive content in blog posts.
-- **Tailwind CSS**: Styled with Tailwind CSS for a utility-first approach and rapid UI development.
-- **Next View Transitions**: Utilizes the View Transitions API for smooth page navigation and animations.
-- **SEO Friendly**: Includes sitemap.xml and robots.txt for better search engine visibility.
+## 🚀 Getting Started
 
-## How to Use:
-- Clone this repository to your local machine.
-- Install the required dependencies (e.g., `npm install` or `yarn install`).
-- Run the website locally using the command `npm run dev` or `yarn dev`.
-- Customize the website with your information, projects, and style.
-- Deploy the website to a web hosting service like [Vercel](https://vercel.com/new/clone?project-name=Simple%20Portfolio&repository-name=raulcarini.com-v2&repository-url=https%3A%2F%2Fgithub.com%2FR4ULtv%2Fraulcarini.com-v2).
+### Prerequisites
+
+- Node.js 20+ (latest LTS recommended)
+- npm, yarn, or pnpm
+
+### Installation
+
+1. Clone the repository:
+```bash
+git clone https://github.com/R4ULtv/raulcarini.com-v2.git
+cd raulcarini.com-v2
+```
+
+2. Install dependencies:
+```bash
+pnpm install
+```
+
+3. Set up environment variables (create `.env.local`):
+```env
+# Upstash Redis (for page views)
+UPSTASH_REDIS_REST_URL=your_redis_url
+UPSTASH_REDIS_REST_TOKEN=your_redis_token
+
+# Optional: GitHub token for higher API rate limits
+GITHUB_TOKEN=your_github_token
+```
+
+4. Run the development server with Turbopack:
+```bash
+pnpm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to see your site.
+
+## 📝 Writing Blog Posts
+
+Create a new `.mdx` file in the `/content` directory:
+
+```mdx
+export const metadata = {
+  title: "My First Blog Post",
+  createdAt: "2025-01-15",
+  description: "An amazing blog post about web development",
+  keywords: ["nextjs", "react", "typescript"],
+  shortSlug: "first-post" // Optional short URL
+};
+
+# My First Blog Post
+
+This is my blog post content with **markdown** support!
+
+\`\`\`typescript
+const greeting = "Hello, World!";
+console.log(greeting);
+\`\`\`
+
+<Tweet id="1234567890" />
+```
+
+Posts are automatically discovered and sorted by `createdAt` date (newest first).
+
+## 🔧 Available Scripts
+
+```bash
+# Development server with Turbopack
+pnpm run dev
+
+# Production build with Turbopack
+pnpm run build
+
+# Start production server
+pnpm start
+
+# Run ESLint
+pnpm run lint
+```
+
+## 🚢 Deployment
+
+Deploy to Vercel with one click:
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FR4ULtv%2Fraulcarini.com-v2)
+
+Don't forget to add your environment variables in the Vercel dashboard!
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
+
+## 🤝 Contributing
+
+While this is a personal portfolio, feel free to fork it and adapt it for your own use! If you find bugs or have suggestions, please open an issue.
+
+---
+
+Built with ❤️ by Raul Carini

@@ -1,0 +1,70 @@
+@layer components {
+    /* Headings */
+    .prose :where(h1):not(:where(.not-prose *)) {
+        @apply scroll-m-20 text-4xl font-bold tracking-tight text-balance mb-2;
+    }
+    .prose :where(h2):not(:where(.not-prose *)) {
+        @apply mt-10 scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0;
+    }
+    .prose :where(h3):not(:where(.not-prose *)) {
+        @apply mt-8 scroll-m-20 text-2xl font-semibold tracking-tight;
+    }
+    .prose :where(h4):not(:where(.not-prose *)) {
+        @apply mt-6 scroll-m-20 text-xl font-semibold tracking-tight;
+    }
+
+    /* Paragraph */
+    .prose :where(p):not(:where(.not-prose *)) {
+        @apply leading-7 text-muted-foreground [&:not(:first-child)]:mt-6;
+    }
+
+    /* Blockquote */
+    .prose :where(blockquote):not(:where(.not-prose *)) {
+        @apply mt-6 border-l-2 pl-4 italic;
+    }
+
+    /* Inline code */
+    .prose :where(code):not(:where(.not-prose *)) {
+        @apply bg-muted text-foreground/90 relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold;
+    }
+
+    /* Lists */
+    .prose :where(ul):not(:where(.not-prose *)) {
+        @apply my-6 ml-6 list-disc;
+    }
+    .prose :where(ol):not(:where(.not-prose *)) {
+        @apply my-6 ml-6 list-decimal;
+    }
+    .prose :where(li):not(:where(.not-prose *)) {
+        @apply mt-2 text-muted-foreground;
+    }
+
+    /* HR */
+    .prose :where(hr):not(:where(.not-prose *)) {
+        @apply my-8;
+    }
+
+    /* Tables */
+    .prose :where(table):not(:where(.not-prose *)) {
+        @apply w-full text-sm my-6 border-collapse overflow-hidden rounded-md;
+    }
+    .prose :where(tr):not(:where(.not-prose *)) {
+        @apply m-0 border-t p-0 even:bg-muted/40;
+    }
+    .prose :where(th):not(:where(.not-prose *)) {
+        @apply border px-3 py-2 text-left font-semibold bg-muted/60;
+    }
+    .prose :where(td):not(:where(.not-prose *)) {
+        @apply border px-3 py-2 text-left align-top;
+    }
+
+    /* Links */
+    .prose :where(a):not(:where(.not-prose *)) {
+        @apply text-foreground underline underline-offset-4 hover:text-primary;
+    }
+
+    /* Images */
+    .prose :where(img):not(:where(.not-prose *)) {
+        @apply rounded-md my-6;
+    }
+}

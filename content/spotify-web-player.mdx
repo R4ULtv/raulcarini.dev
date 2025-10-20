@@ -1,0 +1,262 @@
+export const metadata = {
+  title: "Spotify Web Player",
+  createdAt: "2024-11-01",
+  description: "Listen to your Music Anytime, Anywhere.",
+  keywords: "Spotify, WebPlayer, Visualization, NextJs, Auth"
+};
+
+<a href="https://github.com/r4ultv/spotify-web-player" target="_blank">
+  <Image
+    src={"/assets/spotify-web-player/og-image.png"}
+    width={720}
+    height={405}
+    alt="Spotify Web Player"
+    priority
+  />
+</a>
+
+Have you ever wished you could see your music come alive while listening to your favorite tracks?
+That's exactly the experience I set out to create with my latest project: a [**Spotify Web Player**](https://web-player.raulcarini.dev) that transforms your music into *mesmerizing visual displays*.
+
+## The Genesis of an Idea
+
+The inspiration for this project struck during one of my late-night coding sessions.
+While listening to music on [Spotify](https://spotify.com), I found myself wondering why the visual experience felt so disconnected from the audio.
+Modern music players often treat visuals as an afterthought - a static album cover or basic progress bar. But music is *dynamic*, *emotional*, and *alive*.
+Shouldn't our visual experience match that energy?
+
+This thought led me down a rabbit hole of exploration into audio visualization and the [**Spotify Web API**](https://developer.spotify.com/documentation/web-api/).
+I discovered that Spotify provides rich data about tracks in real-time, including audio features like *tempo*, *energy*, and various *acoustic properties*.
+What if we could harness this data to create dynamic visualizations that truly represent the music being played?
+
+### What Makes This Player Special?
+
+Unlike traditional web players, this project goes beyond basic playback controls. Here's what makes it unique:
+
+- **Real-time Visualization**: The player creates stunning visual effects that respond directly to your music's rhythm, beat, and energy. Every song becomes a unique visual experience.
+- **Seamless Spotify Integration**: By connecting directly to your [Spotify](https://spotify.com) account, you get instant access to your entire music library, playlists, and Spotify's vast catalog.
+- **Customizable Experience**: Users can choose from different visualization styles and color themes to match their preferences or current mood.
+
+## Authentication and Token Management with Next-Auth v5
+
+A critical aspect of this project was implementing robust authentication with Spotify's OAuth system.
+I chose to use [**Next-Auth v5 (Beta)**](https://authjs.dev/getting-started) over v4 for several compelling reasons:
+
+<a href="https://authjs.dev" target="_blank">
+  <Image
+    src={"/assets/spotify-web-player/next-auth.png"}
+    width={720}
+    height={405}
+    alt="Next-Auth v5"
+  />
+</a>
+
+### Why Next-Auth v5?
+
+The decision to use the beta version of [Next-Auth v5](https://authjs.dev) wasn't made lightly, but it offered several crucial advantages for this specific use case:
+
+- **Edge Compatibility**: V5's built-in support for [React Server Actions](https://react.dev/reference/react/use-server) made it significantly easier to handle token refreshing and session management in a [Next.js 14](https://nextjs.org) environment, while also ensuring compatibility with edge networks for improved performance.
+- **Simplified Code and Setup**: V5's new token rotation system is more robust and easier to implement, which is crucial for maintaining uninterrupted access to Spotify's APIs. The simplified code and setup process also make it easier to maintain and update the project in the future.
+
+### Token Revalidation Implementation
+
+Here's how I implemented token revalidation using Next-Auth v5:
+
+```js
+// /lib/auth.js
+async function refreshAccessToken(token) {
+  try {
+    // Endpoint for token refresh
+    const url = "https://accounts.spotify.com/api/token";
+
+    // Create Base64 encoded auth string
+    const basicAuth = Buffer.from(
+      `${process.env.AUTH_SPOTIFY_ID}:${process.env.AUTH_SPOTIFY_SECRET}`
+    ).toString("base64");
+
+    // Make refresh token request
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        Authorization: `Basic ${basicAuth}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        grant_type: "refresh_token",
+        refresh_token: token.refreshToken,
+      }),
+    });
+
+    const refreshedTokens = await response.json();
+
+    if (!response.ok) {
+      throw refreshedTokens;
+    }
+
+    // Return updated token information
+    return {
+      ...token,
+      accessToken: refreshedTokens.access_token,
+      accessTokenExpires: Date.now() + refreshedTokens.expires_in * 1000,
+      refreshToken: refreshedTokens.refresh_token ?? token.refreshToken,
+    };
+  } catch (error) {
+    console.error("Error refreshing access token", error);
+    return {
+      ...token,
+      error: "RefreshTokenError",
+    };
+  }
+}
+```
+
+### Benefits of This Approach
+
+This implementation provides several key benefits:
+
+- **Seamless Token Refresh**: Users never experience authentication-related interruptions while using the player.
+- **Error Handling**: Robust error handling ensures graceful degradation if authentication issues occur.
+- **Performance**: Token validation and refresh operations are optimized to minimize API calls.
+
+The v5 implementation has proven to be more reliable and maintainable than what was possible with v4, particularly when it comes to handling token refreshes and maintaining persistent connections to Spotify's services.
+
+## Leveraging the Spotify Web API
+
+The [**Spotify Web API**](https://developer.spotify.com/documentation/web-api) serves as the backbone of this project, providing a rich set of endpoints that enable sophisticated music playback and data analysis capabilities.
+Here's how we utilize various aspects of the API:
+
+<a href="https://developer.spotify.com/documentation/web-api" target="_blank">
+  <Image
+    src={"/assets/spotify-web-player/spotify-api.png"}
+    width={720}
+    height={405}
+    alt="Spotify Web API"
+  />
+</a>
+
+### Playback Control and Real-time Data
+
+The Web API's playback endpoints allow us to create a seamless listening experience by:
+
+- ***Controlling music playback*** (play, pause, skip, seek)
+- ***Retrieving currently playing track information***
+- ***Accessing real-time playback state***
+- ***Managing playback queue and device selection***
+
+### Premium Account Requirements
+
+The Spotify Web API's functionality is tiered based on user account types, with certain advanced features exclusively available to [Premium subscribers](https://www.spotify.com/premium/). Here's what you need to know:
+Premium-Only Features:
+
+- **Playback controls** (play, pause, skip, seek)
+- **Managing the playback queue** (including adding tracks to the queue)
+
+### Limited Functionality for Free Users:
+
+While free-tier users can access basic API features, they face significant restrictions on playback control and device management.
+Of particular note is the queue management system - despite not being explicitly labeled as Premium-only in Spotify's documentation, it exhibits unreliable behavior for free users, often leading to inconsistent results.
+
+#### Impact on Implementation:
+
+To deliver a fully functional and reliable experience with features like:
+
+- **Seamless playback control**
+- **Queue manipulation**
+- **Cross-device synchronization**
+
+A [Premium account](https://www.spotify.com/premium/) is strongly recommended.
+This requirement ensures users can access the complete range of interactive features and maintain consistent functionality across all aspects of the web player.
+
+## Dynamic Backgrounds with Shadergradient
+
+At the heart of our player's visual appeal lies an innovative dynamic background
+system powered by [shadergradient](https://shadergradient.co/) technology. This feature transforms the listening
+experience by creating *fluid*, *responsive* visual landscapes that complement each track.
+
+<a href="https://developer.spotify.com/documentation/web-api" target="_blank">
+  <Image
+    src={"/assets/spotify-web-player/shader-gradient.png"}
+    width={720}
+    height={405}
+    alt="Shader Gradient Background"
+  />
+</a>
+
+### Technical Implementation:
+
+The system employs [shadergradient](https://shadergradient.co/) to generate an ever-evolving canvas that serves as a dynamic backdrop for album artwork. This creates a seamless blend between static cover art and dynamic visual elements, resulting in a more immersive user experience.
+
+### Color Extraction Challenges:
+
+Our development process faced several key challenges:
+
+- *Accurately capturing album mood through color selection*
+- *Balancing visual impact with functional design*
+- *Ensuring consistent readability across diverse color palettes*
+
+### Optimization Process:
+
+To achieve optimal results, we:
+
+- *Experimented with multiple color extraction algorithms*
+- *Fine-tuned shader color blending parameters*
+
+### Final Implementation:
+
+The resulting system creates uniquely tailored backgrounds that:
+
+*Dynamically adapt to each track's album art*
+*Maintain perfect visual harmony with interface elements*
+*Enhance the overall listening experience through synchronized visual feedback*
+
+## Future Development Roadmap
+
+As we continue to evolve this music platform, we're developing several compelling features designed to transform the listening experience. Here's what's on the horizon:
+
+### Statistics Dashboard
+
+A comprehensive analytics suite that will offer:
+
+- Deep insights into personal **listening patterns**
+- Visual representations of **music preferences**
+- Detailed tracking of:
+  - **Genre distribution** across time
+  - **Artist engagement** metrics
+  - **Mood-based consumption** patterns
+  - **Seasonal listening** trends
+
+### Enhanced Media Integration
+
+The planned *Related Content Section* will bridge the gap between audio and visual media by automatically curating [YouTube](https://youtube.com) content for current tracks providing seamless access to official music videos.
+
+### Intelligent Track Discovery
+Our sophisticated recommendation system leverages [Spotify's powerful API](https://developer.spotify.com/documentation/web-api) to deliver personalized music suggestions:
+
+API-Driven Recommendations
+
+- Utilizes Spotify's **recommendation endpoints**
+- Analyzes user's **recently played tracks**
+- Factors in audio features like **tempo**, **energy**, and **genre**
+
+## Conclusion
+
+What began as an exploration into the synergy between music and visual design has evolved into a *comprehensive reimagining* of the digital music experience.
+The **Spotify Web Player** transcends traditional streaming platforms by orchestrating a multi-sensory journey where audio and visuals dance in perfect harmony.
+
+At its core, this project challenges the conventional notion of what a music player can be. Through *real-time visualizations* that pulse with every beat, *seamless integration* with Spotify's vast musical ecosystem, and thoughtfully crafted customization options, we've created a platform that transforms passive listening into active engagement.
+The technical foundation, built upon [Next-Auth v5](https://authjs.dev)'s robust authentication system, ensures that the magic happens seamlessly behind the scenes.
+
+This reliable infrastructure sets the stage for ambitious future developments, including:
+- A sophisticated *statistics dashboard* that will unveil the stories hidden in your listening patterns
+- Contextually integrated *media content* that enriches the musical narrative
+- An intelligent *discovery system* that opens new pathways to musical exploration
+
+But perhaps most significantly, this player represents a fundamental shift in how we experience digital music. It's not just about playing songs—it's about creating moments where technology enhances our emotional connection to music.
+Each feature, from the *dynamic backgrounds* to the *responsive visualizations*, has been carefully crafted to deepen this connection.
+
+As we look to the future, our roadmap is guided by a single vision: to continue pushing the boundaries of what's possible when technology and artistry converge.
+The **Spotify Web Player** stands as a testament to the endless possibilities that emerge when we dare to reimagine the familiar, creating an experience that resonates with both casual listeners and passionate audiophiles alike.
+
+Ready to experience music in a whole new way?
+Try the [Spotify Web Player](https://web-player.raulcarini.dev) now, or check out the [source code](https://github.com/r4ultv/spotify-web-player) if you're interested in contributing to the project.
+Your feedback and contributions are welcome as we continue to push the boundaries of music visualization.

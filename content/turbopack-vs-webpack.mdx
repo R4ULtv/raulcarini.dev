@@ -1,0 +1,82 @@
+export const metadata = {
+  title: "Turbopack vs. Webpack",
+  createdAt: "2024-12-18",
+  description: "A comparison of Turbopack and Webpack bundlers for Next.js development.",
+  type: "article",
+  keywords: "Turbopack, Webpack, Next.js, bundlers, JavaScript performance",
+};
+
+As full-stack developers, we're always looking for ways to optimize our workflows and deliver blazing-fast web applications.
+When building with frameworks like [Next.js](https://nextjs.org/), our choice of build tools is crucial.
+
+For years, [Webpack](https://webpack.js.org/) has been the go-to solution, reliably packaging our code for the browser.
+However, the landscape is evolving with the arrival of [Turbopack](https://turbo.build/pack), a modern bundler designed for speed, created by the same team behind Webpack and Next.js at [Vercel](https://vercel.com/).
+Let's explore the differences between these two bundlers and why you might consider switching to Turbopack.
+
+<Image
+  src="/assets/turbopack/turbopack.png"
+  width={720}
+  height={405}
+  alt="TurboPack Logo"
+  priority
+/>
+
+## Webpack: The Familiar and Highly Configurable Workhorse
+
+Webpack takes your code — JavaScript, CSS, images, and more — and transforms it into optimized bundles that browsers can understand.
+Its strength lies in its configurability, offering a wide array of [plugins](https://webpack.js.org/plugins/) and [loaders](https://webpack.js.org/loaders/) to tailor the build process to specific project needs.
+
+However, this flexibility can also lead to complexity and performance bottlenecks, especially as projects grow.
+The sheer number of plugins and their combined overhead can result in slower builds, frustrating development cycles, and slow Hot Module Replacement (HMR).
+We've all experienced the frustration of waiting what feels like forever for a small code change to reflect in the browser.
+
+## Turbopack: A Ground-Up Reimagining of Bundling
+
+Turbopack adopts a fundamentally different approach than Webpack. It's a brand-new, incremental bundler written in [Rust](https://www.rust-lang.org/), a language known for its speed and memory safety.
+This architectural change enables Turbopack to achieve significant performance improvements, particularly in larger and more complex applications.
+But it's not just the language; Turbopack is built on the concept of "incremental computation" and leverages a reusable [Turbo build engine](https://turbo.build/).
+
+The team at Vercel leveraged a decade of experience with Webpack, combined with insights from [Turborepo](https://turbo.build/repo) and [Google's Bazel](https://bazel.build/), to create a bundler built for the future.
+Imagine Webpack as re-baking an entire cake each time you add sprinkles, while Turbopack only adds the sprinkles and re-bakes just the changed section.
+This illustrates the core idea of incremental computation.
+
+## The Key to Speed: Incremental Computation and the Turbo Engine
+
+Turbopack's speed stems from two main factors: highly optimized machine code thanks to Rust, and, more importantly, a low-level incremental computation engine.
+This "Turbo engine" is a scheduler that parallelizes function calls across all available processor cores. It also caches the results of these calls, preventing redundant work.
+Once Turbopack completes a task, it doesn't repeat it, making it exceptionally efficient.
+
+## Why Choose Turbopack for Next.js?
+
+Next.js is designed for speed, so it makes sense to pair it with a bundler that shares that focus. Here are key advantages of using Turbopack with Next.js:
+
+- **Near-Instant Feedback:** Turbopack provides remarkably fast startup times and update speeds, leading to a more fluid and efficient development experience.
+- **Optimized for JavaScript & TypeScript:** Turbopack is specifically tailored for JavaScript and [TypeScript](https://www.typescriptlang.org/) projects, making it a natural fit for the Next.js ecosystem.
+- **Unified Graph:** Turbopack utilizes a single unified graph for multiple environments (browser, server, etc.). This simplifies building complex applications and eliminates the need for separate compilers, resulting in easier maintenance and improved stability.
+- **Bundling in Development Mode:** Unlike some modern tools that skip bundling in development, Turbopack bundles code, which reduces browser requests and leads to faster startup times.
+- **Lazy Bundling:** Turbopack only bundles the code needed for the currently requested page. It creates a minimal dependency graph of your app's imports and exports, further improving load times.
+- **Future-Proof Technology:** Turbopack is developed by the same team that built Next.js and Webpack, promising continuous development and robust support.
+- **Ready to Use with Next.js 14:** You can start using Turbopack today by adding the `--turbopack` flag to your `next dev` command.
+
+## Should You Migrate to Turbopack?
+
+You can track Turbopack's development progress and feature parity with Webpack on [Are We Turbo Yet?](https://areweturboyet.com/).
+This website shows that while development mode is quite stable and feature-complete, production builds are still under development.
+
+Currently, production builds using `next build` are not fully supported. As Turbopack is actively being developed, you might encounter some challenges, but the performance benefits are significant.
+As of today (December 2024), Turbopack is under heavy development, however, it's stable for local development.
+
+## Conclusion
+
+Turbopack represents a major leap forward in JavaScript bundling, providing a performance-oriented alternative to traditional bundlers.
+While it offers significant benefits for Next.js developers, it's essential to approach it with a balanced perspective.
+
+The bundler demonstrates dramatically improved performance due to its innovative architecture and incremental computation engine.
+However, as with any emerging technology, developers should:
+
+- Thoroughly test it within their specific use cases.
+- Stay informed about its latest development updates.
+- Be ready to address potential compatibility issues.
+
+For Next.js developers seeking the fastest possible development workflow, Turbopack is definitely worth exploring.
+Its performance improvements and forward-thinking design make it a compelling option for modern web development.
