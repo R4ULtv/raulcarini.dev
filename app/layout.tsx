@@ -29,6 +29,7 @@ export const metadata: Metadata = {
     "Full Stack Developer working on solo projects and freelancing, currently based in Milan, Italy",
   openGraph: {
     url: new URL(baseURL),
+    siteName: "Raul Carini",
     images: [
       {
         url: `/api/dynamic-og`,
