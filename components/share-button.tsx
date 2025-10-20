@@ -9,7 +9,7 @@ import { toast } from "sonner";
 const ShareButton = ({ slug }: { slug: string }) => {
   const [copied, setCopied] = React.useState(false);
 
-  const copyToClipboard = async () => {
+  const copyToClipboard = React.useCallback(async () => {
     try {
       await navigator.clipboard.writeText(`https://shrly.cc/${slug}`);
       setCopied(true);
@@ -18,7 +18,7 @@ const ShareButton = ({ slug }: { slug: string }) => {
     } catch (error) {
       console.error("Failed to copy text: ", error);
     }
-  };
+  }, [slug]);
 
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -37,7 +37,7 @@ const ShareButton = ({ slug }: { slug: string }) => {
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [slug]);
+  }, [slug, copyToClipboard]);
 
   return (
     <Button
