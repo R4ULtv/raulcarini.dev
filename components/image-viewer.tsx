@@ -60,7 +60,7 @@ export function ImageViewer({
         type="button"
         onClick={handleOpen}
         className={cn(
-          "relative overflow-hidden rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
+          "relative group overflow-hidden rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
           className,
         )}
         aria-label={`View ${alt} in fullscreen`}
@@ -72,7 +72,7 @@ export function ImageViewer({
           alt={alt}
           placeholder={placeholder}
           className={cn(
-            "transition-transform duration-300 ease-out",
+            "transition-transform duration-300 ease-out group-hover:scale-110",
             objectFit && "absolute inset-0 size-full object-center",
             objectFit === "cover" && "object-cover",
             objectFit === "contain" && "object-contain",
