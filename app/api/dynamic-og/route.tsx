@@ -7,6 +7,8 @@ import Summer from "@/components/svg/artworks/summer";
 
 import Moon from "@/components/svg/artworks/moon";
 
+import { getAllPosts } from "@/lib/content";
+
 export function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const title = searchParams.get("title") || "Raul Carini";
@@ -82,15 +84,17 @@ export function GET(request: Request) {
         >
           {description}
         </span>
-        <ArtworkComponent
-          style={{
-            width: 352,
-            height: 352,
-            position: "absolute",
-            bottom: "2rem",
-            right: "2rem",
-          }}
-        />
+        {!searchParams.get("title") && !searchParams.get("description") && (
+          <ArtworkComponent
+            style={{
+              width: 352,
+              height: 352,
+              position: "absolute",
+              bottom: "2rem",
+              right: "2rem",
+            }}
+          />
+        )}
       </div>
     ),
     {
