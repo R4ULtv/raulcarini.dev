@@ -37,7 +37,7 @@ export default async function Home() {
           <Badge
             asChild
             variant="secondary"
-            className="h-[26px] px-1.5 border border-border font-normal"
+            className="h-[26px] px-1.5 rounded border border-border font-normal"
           >
             <a
               target="_blank"
@@ -58,7 +58,7 @@ export default async function Home() {
           <Badge
             asChild
             variant="secondary"
-            className="h-[26px] px-1.5 border border-border font-normal"
+            className="h-[26px] px-1.5 rounded border border-border font-normal"
           >
             <a
               target="_blank"
@@ -79,7 +79,7 @@ export default async function Home() {
           <Badge
             asChild
             variant="secondary"
-            className="h-[26px] px-1.5 border border-border font-normal"
+            className="h-[26px] px-1.5 rounded border border-border font-normal"
           >
             <a
               target="_blank"
@@ -151,7 +151,7 @@ export default async function Home() {
           <Badge
             asChild
             variant="secondary"
-            className="h-[26px] px-1.5 border border-border font-normal"
+            className="h-[26px] px-1.5 rounded border border-border font-normal"
           >
             <a
               target="_blank"
