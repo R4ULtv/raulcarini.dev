@@ -22,7 +22,8 @@ export default async function Page({
             day: "numeric",
             year: "numeric",
           })}{" "}
-          ({formatTimeAgo(metadata.createdAt)}) • <PageViews path={slug} />
+          ({formatTimeAgo(metadata.createdAt)}) <br className="md:hidden" />{" "}
+          <span className="hidden md:inline">•</span> <PageViews path={slug} />
         </span>
         <ShareButton
           slug={
