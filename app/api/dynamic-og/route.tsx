@@ -1,13 +1,12 @@
 import ImageResponse from "@takumi-rs/image-response";
 
 import ChillTime from "@/components/svg/artworks/chill-time";
-import PlanningATrip from "@/components/svg/artworks/planning-a-trip";
 import Christmas from "@/components/svg/artworks/christmas";
 import Summer from "@/components/svg/artworks/summer";
 
 import Moon from "@/components/svg/artworks/moon";
 
-import { getAllPosts } from "@/lib/content";
+export const revalidate = 86400; // Revalidate every 24 hours
 
 export function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -22,7 +21,7 @@ export function GET(request: Request) {
   } else if (month >= 5 && month <= 7) {
     ArtworkComponent = Summer;
   } else {
-    ArtworkComponent = Math.random() < 0.5 ? ChillTime : PlanningATrip;
+    ArtworkComponent = ChillTime;
   }
 
   return new ImageResponse(
