@@ -1,22 +1,40 @@
 import ImageResponse from "@takumi-rs/image-response";
-import { MoonIcon } from "lucide-react";
+
+import ChillTime from "@/components/svg/artworks/chill-time";
+import PlanningATrip from "@/components/svg/artworks/planning-a-trip";
+import Christmas from "@/components/svg/artworks/christmas";
+import Summer from "@/components/svg/artworks/summer";
+
+import Moon from "@/components/svg/artworks/moon";
 
 export function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const title = searchParams.get("title") || "Raul Carini";
   const description = searchParams.get("description") || "Full-Stack Developer";
 
+  const month = new Date().getMonth();
+  let ArtworkComponent;
+
+  if (month === 11 || month === 0) {
+    ArtworkComponent = Christmas;
+  } else if (month >= 5 && month <= 7) {
+    ArtworkComponent = Summer;
+  } else {
+    ArtworkComponent = Math.random() < 0.5 ? ChillTime : PlanningATrip;
+  }
+
   return new ImageResponse(
     (
       <div
         style={{
           display: "flex",
+          position: "relative",
           flexDirection: "column",
           width: "100%",
           height: "100%",
-          color: "oklch(0.21 0.006 285.885)",
+          color: "#18181b", // zinc-900
           padding: "4rem",
-          backgroundColor: "oklch(0.92 0.004 286.32)",
+          backgroundColor: "#e4e4e7", // zinc-200
         }}
       >
         <div
@@ -26,10 +44,10 @@ export function GET(request: Request) {
             alignItems: "center",
             gap: "16px",
             marginBottom: "12px",
-            color: "oklch(0.21 0.006 285.885)",
+            color: "#18181b",
           }}
         >
-          <MoonIcon size={64} style={{ fill: "black" }} />
+          <Moon style={{ fill: "#18181b", width: 64, height: 64 }} />
           {searchParams.get("title") && searchParams.get("description") && (
             <span
               style={{
@@ -56,7 +74,7 @@ export function GET(request: Request) {
         <span
           style={{
             fontSize: 48,
-            color: "oklch(27.4% 0.006 286.033)",
+            color: "#27272a", // zinc-800
             fontWeight: 500,
             lineClamp: 2,
             textOverflow: "ellipsis",
@@ -64,6 +82,15 @@ export function GET(request: Request) {
         >
           {description}
         </span>
+        <ArtworkComponent
+          style={{
+            width: 352,
+            height: 352,
+            position: "absolute",
+            bottom: "2rem",
+            right: "2rem",
+          }}
+        />
       </div>
     ),
     {
