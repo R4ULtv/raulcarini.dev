@@ -26,7 +26,7 @@ export default async function sitemap() {
     ...posts.map((blog) => ({
       url: `${baseURL}/blog/${blog.slug}`,
       lastModified: new Date(blog.metadata.createdAt),
-      changeFrequency: "yearly",
+      changeFrequency: "monthly",
       priority: 0.7,
     })),
   ];
