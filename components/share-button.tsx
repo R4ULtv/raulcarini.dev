@@ -44,7 +44,7 @@ const ShareButton = ({ slug }: { slug: string }) => {
       variant="ghost"
       size="sm"
       onClick={copyToClipboard}
-      className="!pl-8 place-items-center relative text-muted-foreground"
+      className="pl-8! place-items-center relative text-muted-foreground"
     >
       <CheckIcon
         className={cn(

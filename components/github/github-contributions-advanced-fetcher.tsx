@@ -55,7 +55,7 @@ const GithubContributionsAdvancedFetcher: React.FC<{ username: string }> = ({
       ? `https://github-contributions-api.jogruber.de/v4/${username}?y=last`
       : null,
     fetcher,
-    { revalidateOnFocus: false, }
+    { revalidateOnFocus: false },
   );
 
   const {
@@ -66,8 +66,8 @@ const GithubContributionsAdvancedFetcher: React.FC<{ username: string }> = ({
     username
       ? `https://api.github.com/users/${username}/repos?sort=created`
       : null,
-      fetcher,
-      { revalidateOnFocus: false }
+    fetcher,
+    { revalidateOnFocus: false },
   );
 
   const loading = isContributionsLoading || isReposLoading;

@@ -54,7 +54,7 @@ export default function RootLayout({
       <body>
         <ThemeProvider attribute="class" disableTransitionOnChange>
           <Toaster position="top-center" duration={2000} />
-          <main className="max-w-[45rem] mx-auto py-10 sm:py-16 px-4 sm:px-6">
+          <main className="max-w-180 mx-auto py-10 sm:py-16 px-4 sm:px-6">
             <header className="mb-10 sm:mb-16 flex items-start gap-1">
               <div className="flex flex-col items-start">
                 <Link
