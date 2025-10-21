@@ -13,9 +13,9 @@ export const metadata = {
   priority
 />
 
-After a year of incrementally tweaking my portfolio, I rebuilt it end-to-end. This post covers what changed, why I migrated content from [`next-mdx-remote`](https://github.com/hashicorp/next-mdx-remote) to [`@next/mdx`](https://github.com/vercel/next.js/tree/canary/packages/next-mdx), why I replaced [`next/og`](https://github.com/vercel/next.js/tree/canary/packages/next#imageresponse) with [`@takumi-rs/image-response`](https://github.com/takumi-rs/image-response), and the real challenges I hit moving the whole codebase from JavaScript to TypeScript.
+After a year of incrementally tweaking my portfolio, I rebuilt it end-to-end. This post covers what changed, why I migrated content from [`next-mdx-remote`](https://github.com/hashicorp/next-mdx-remote) to [`@next/mdx`](https://github.com/vercel/next.js/tree/canary/packages/next-mdx), why I replaced [`next/og`](https://github.com/vercel/next.js/tree/canary/packages/next#imageresponse) with [`@takumi-rs/image-response`](https://github.com/kane50613/takumi), and the real challenges I hit moving the whole codebase from JavaScript to TypeScript.
 
-In short: MDX moved in-tree with [`@next/mdx`](https://github.com/vercel/next.js/tree/canary/packages/next-mdx), social images now run on the Edge via [`@takumi-rs/image-response`](https://github.com/takumi-rs/image-response), and the app is fully typed under strict TypeScript.
+In short: MDX moved in-tree with [`@next/mdx`](https://github.com/vercel/next.js/tree/canary/packages/next-mdx), social images now run on the Edge via [`@takumi-rs/image-response`](https://github.com/kane50613/takumi), and the app is fully typed under strict TypeScript.
 
 ## MDX
 
@@ -26,7 +26,7 @@ I started by untangling content. [`next-mdx-remote`](https://github.com/hashicor
 
 ## OG Images
 
-Social images were the next piece. I'd been using [`next/og`](https://github.com/vercel/next.js/tree/canary/packages/next#imageresponse) and its `ImageResponse`, which is a great baseline, but under heavier layouts and custom fonts I wanted more predictable rendering and better throughput on the Edge. Swapping to [`@takumi-rs/image-response`](https://github.com/takumi-rs/image-response) gave me a Rust-powered engine with a familiar API, so the mental model didn't change while performance did. The `app/api/dynamic-og` route now accepts a few query params-title, description, artwork-and returns crisp images consistently. The little hacks I had in place to avoid layout quirks simply disappeared.
+Social images were the next piece. I'd been using [`next/og`](https://github.com/vercel/next.js/tree/canary/packages/next#imageresponse) and its `ImageResponse`, which is a great baseline, but under heavier layouts and custom fonts I wanted more predictable rendering and better throughput on the Edge. Swapping to [`@takumi-rs/image-response`](https://github.com/kane50613/takumi) gave me a Rust-powered engine with a familiar API, so the mental model didn't change while performance did. The `app/api/dynamic-og` route now accepts a few query params-title, description, artwork-and returns crisp images consistently. The little hacks I had in place to avoid layout quirks simply disappeared.
 
 - **Faster & crisper**: Rust engine, ideal for Edge runtime
 - **Same mental model**: easy switch from `ImageResponse` APIs
@@ -60,4 +60,4 @@ That pattern repeats across fetchers and utilities: add the smallest useful type
 
 If I were doing it again, I'd start by defining the `Post` schema, adopt [`@next/mdx`](https://github.com/vercel/next.js/tree/canary/packages/next-mdx) early, and keep a dedicated OG route from day one. The rebuild leaves me with typed content, Takumi-powered social images on the Edge, and a strict TypeScript codebase that surfaces issues in the editor instead of production. The biggest win isn't raw speed-it's simpler pages and fewer surprises.
 
-If you're planning a similar migration, go incremental: type the content pipeline first, migrate shared utilities next, then flip strict and fix what shakes loose. And if social images matter, [`@takumi-rs/image-response`](https://github.com/takumi-rs/image-response) is an easy win when you're already at the Edge.
+If you're planning a similar migration, go incremental: type the content pipeline first, migrate shared utilities next, then flip strict and fix what shakes loose. And if social images matter, [`@takumi-rs/image-response`](https://github.com/kane50613/takumi) is an easy win when you're already at the Edge.
