@@ -9,31 +9,33 @@ interface PageViewsProps {
 }
 
 const PageViews = React.memo(({ path }: PageViewsProps) => {
-  const { data: views, error, isLoading, mutate } = useSWR<number>(
-    `/api/views/${path}`,
-    fetcher,
-    { revalidateOnFocus: false }
-  );
+  const {
+    data: views,
+    error,
+    isLoading,
+    mutate,
+  } = useSWR<number | null>(`/api/views/${path}`, fetcher, {
+    revalidateOnFocus: false,
+  });
 
   const hasPostedRef = React.useRef<string | null>(null);
 
   React.useEffect(() => {
-    if (typeof views === "number" && hasPostedRef.current !== path) {
+    // Handle both 0 and null (non-existent key) cases
+    if (views !== undefined && !isLoading && hasPostedRef.current !== path) {
       hasPostedRef.current = path;
 
+      const currentCount = typeof views === "number" ? views : 0;
+
       // Optimistically increment the view count in the UI
-      mutate(
-        (current) => (typeof current === "number" ? current + 1 : views + 1),
-        { revalidate: false }
-      );
+      mutate(currentCount + 1, { revalidate: false });
 
       // Record the view in the background
-      fetch(`/api/views/${path}`, { method: "POST" })
-        .catch((err) => {
-          console.error("Failed to record view (non-blocking):", err);
-        });
+      fetch(`/api/views/${path}`, { method: "POST" }).catch((err) => {
+        console.error("Failed to record view (non-blocking):", err);
+      });
     }
-  }, [views, path, mutate]);
+  }, [views, isLoading, path, mutate]);
 
   const formatViews = React.useCallback((count: number): string => {
     if (count >= 1_000) {
@@ -50,14 +52,15 @@ const PageViews = React.memo(({ path }: PageViewsProps) => {
     );
   }
 
-  if (error || typeof views !== "number") {
+  if (error) {
     return null;
   }
 
-  const formattedViews = formatViews(views);
+  const viewCount = typeof views === "number" ? views : 0;
+  const formattedViews = formatViews(viewCount);
 
   return (
-    <span className="text-sm" aria-label={`${views} views`} role="status">
+    <span className="text-sm" aria-label={`${viewCount} views`} role="status">
       {formattedViews} views
     </span>
   );
