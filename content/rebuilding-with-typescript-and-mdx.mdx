@@ -1,0 +1,63 @@
+export const metadata = {
+  title: "Rebuilding My Portfolio with TypeScript and @next/mdx",
+  createdAt: "2025-10-21",
+  description: "Rebuild: TypeScript, @next/mdx, and Takumi-powered OG images.",
+  keywords: ["TypeScript", "Next.js", "MDX", "refactoring", "portfolio", "migration"],
+};
+
+<Image
+  src={"/assets/portfolio/new-dynamic-og.png"}
+  width={720}
+  height={405}
+  alt="New Dynamic Og"
+  priority
+/>
+
+After a year of incrementally tweaking my portfolio, I rebuilt it end-to-end. This post covers what changed, why I migrated content from [`next-mdx-remote`](https://github.com/hashicorp/next-mdx-remote) to [`@next/mdx`](https://github.com/vercel/next.js/tree/canary/packages/next-mdx), why I replaced [`next/og`](https://github.com/vercel/next.js/tree/canary/packages/next#imageresponse) with [`@takumi-rs/image-response`](https://github.com/takumi-rs/image-response), and the real challenges I hit moving the whole codebase from JavaScript to TypeScript.
+
+In short: MDX moved in-tree with [`@next/mdx`](https://github.com/vercel/next.js/tree/canary/packages/next-mdx), social images now run on the Edge via [`@takumi-rs/image-response`](https://github.com/takumi-rs/image-response), and the app is fully typed under strict TypeScript.
+
+## MDX
+
+I started by untangling content. [`next-mdx-remote`](https://github.com/hashicorp/next-mdx-remote) had served me well, but the serialize/deserialize dance and the way it cut across the React Server Components boundary felt like extra baggage. Moving to [`@next/mdx`](https://github.com/vercel/next.js/tree/canary/packages/next-mdx) made MDX a first-class citizen again: posts compile at build time, pages stay server-friendly, and each article exports a typed `metadata` object the app can lean on. Centralizing all the remark/rehype work in one place let me tighten the experience too-headings get slugs and anchors, links route internally when they should and harden external links when they don't, images use the Next.js component, and code blocks pick up Shiki highlighting with a tiny `CopyButton` on top. The end result is quieter plumbing: content lives in `/content` and renders without a fetch or a serializer in sight.
+
+- **Less ceremony**: no serialize/deserialize; MDX compiles at build time
+- **Safer content**: typed `metadata` and shared components in `mdx-components.tsx`
+
+## OG Images
+
+Social images were the next piece. I'd been using [`next/og`](https://github.com/vercel/next.js/tree/canary/packages/next#imageresponse) and its `ImageResponse`, which is a great baseline, but under heavier layouts and custom fonts I wanted more predictable rendering and better throughput on the Edge. Swapping to [`@takumi-rs/image-response`](https://github.com/takumi-rs/image-response) gave me a Rust-powered engine with a familiar API, so the mental model didn't change while performance did. The `app/api/dynamic-og` route now accepts a few query params-title, description, artwork-and returns crisp images consistently. The little hacks I had in place to avoid layout quirks simply disappeared.
+
+- **Faster & crisper**: Rust engine, ideal for Edge runtime
+- **Same mental model**: easy switch from `ImageResponse` APIs
+
+## JavaScript → TypeScript
+
+The hardest shift, though, was language. Turning the entire codebase from JavaScript to TypeScript (in strict mode) is less about renaming files and more about drawing the real boundaries your runtime depends on. Flipping `"strict": true` surfaced all the usual suspects-implicit anys, nullable branches, unguarded unions-and it pushed me to be explicit at the RSC boundary. Server components now pass serializable props only; anything that returns a union gets narrowed before it crosses to the client. In `lib/content.ts`, I codified a `Post` shape (slug, title, dates, description, keywords) and enforced it at load time. Older entries that were missing fields got either safe defaults or made optional with clear downstream handling. Edge routes benefited as well once I typed `Request`, `Response`, headers, and search params instead of letting `any` creep in.
+
+- **Strict mode**: surfaced implicit anys and unsafe branches
+- **RSC boundaries**: serializable props only; unions narrowed before crossing
+- **Content types**: `Post` schema enforced in `lib/content.ts`
+
+A tiny helper shows the spirit of the migration:
+
+```ts
+// Before
+export function cn(...inputs) {
+  return twMerge(clsx(inputs))
+}
+
+// After
+import type { ClassValue } from "clsx";
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs))
+}
+```
+
+That pattern repeats across fetchers and utilities: add the smallest useful types, let inference do the rest, and catch mistakes where they start. With the content layer typed, the sitemap and robots work became boring in the best way-same shapes everywhere, same guarantees everywhere-and Turbopack kept the feedback loop quick enough to make the refactor stick.
+
+## Conclusion
+
+If I were doing it again, I'd start by defining the `Post` schema, adopt [`@next/mdx`](https://github.com/vercel/next.js/tree/canary/packages/next-mdx) early, and keep a dedicated OG route from day one. The rebuild leaves me with typed content, Takumi-powered social images on the Edge, and a strict TypeScript codebase that surfaces issues in the editor instead of production. The biggest win isn't raw speed-it's simpler pages and fewer surprises.
+
+If you're planning a similar migration, go incremental: type the content pipeline first, migrate shared utilities next, then flip strict and fix what shakes loose. And if social images matter, [`@takumi-rs/image-response`](https://github.com/takumi-rs/image-response) is an easy win when you're already at the Edge.
