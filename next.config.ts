@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 import createMDX from "@next/mdx";
 
 const nextConfig: NextConfig = {
+  reactCompiler: true,
   pageExtensions: ["mdx", "ts", "tsx"],
   serverExternalPackages: ["@takumi-rs/core"],
   images: {
@@ -9,6 +10,9 @@ const nextConfig: NextConfig = {
       { protocol: "https", hostname: "pbs.twimg.com" },
       { protocol: "https", hostname: "abs.twimg.com" },
     ],
+  },
+  experimental: {
+    mdxRs: true,
   },
 };
 
