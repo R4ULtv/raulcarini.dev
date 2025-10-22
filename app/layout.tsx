@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 import { FolderCogIcon, RssIcon } from "lucide-react";
 
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -52,6 +55,8 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} antialiased`}
     >
       <body>
+        <Analytics />
+        <SpeedInsights />
         <ThemeProvider attribute="class" disableTransitionOnChange>
           <Toaster position="top-center" duration={2000} />
           <main className="max-w-180 mx-auto py-10 sm:py-16 px-4 sm:px-6">
