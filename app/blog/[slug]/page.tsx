@@ -1,9 +1,9 @@
 import PageViews from "@/components/page-views";
+import ShareButton from "@/components/share-button";
+import { generateShortSlug, getAllPosts } from "@/lib/content";
 import { formatTimeAgo } from "@/lib/time";
 import { baseURL } from "@/lib/url";
-import { generateShortSlug, getAllPosts } from "@/lib/content";
 import { Metadata } from "next";
-import ShareButton from "@/components/share-button";
 
 export default async function Page({
   params,

@@ -1,22 +1,22 @@
-import Link from "next/link";
-import { getAllPosts } from "@/lib/content";
-import { Badge } from "@/components/ui/badge";
 import GitHubContributions from "@/components/github/github-contributions-advanced-fetcher";
 import GithubRepositories from "@/components/github/github-repositories";
 import { ImageViewer } from "@/components/image-viewer";
+import { Badge } from "@/components/ui/badge";
+import { getAllPosts } from "@/lib/content";
+import Link from "next/link";
 
 import Image from "next/image";
 
 import dlynr from "@/app/assets/dlynr.png";
+import job from "@/app/assets/job.jpg";
+import lake from "@/app/assets/lake.png";
 import mont from "@/app/assets/mont.png";
 import mont2 from "@/app/assets/mont2.png";
 import swag from "@/app/assets/swag.jpg";
-import lake from "@/app/assets/lake.png";
-import job from "@/app/assets/job.jpg";
 
-import lake2 from "@/app/assets/lake2.png";
 import city from "@/app/assets/city.png";
 import croatia from "@/app/assets/croatia.png";
+import lake2 from "@/app/assets/lake2.png";
 
 export default async function Home() {
   const posts = (await getAllPosts()).slice(0, 5);

@@ -1,13 +1,13 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import { baseURL } from "@/lib/url";
-import { ThemeProvider } from "next-themes";
 import ThemeSwitch from "@/components/theme-switch";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
+import { baseURL } from "@/lib/url";
 import { FolderCogIcon, RssIcon } from "lucide-react";
+import type { Metadata } from "next";
+import { ThemeProvider } from "next-themes";
+import { Geist, Geist_Mono } from "next/font/google";
+import Link from "next/link";
+import "./globals.css";
 
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
