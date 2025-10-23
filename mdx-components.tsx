@@ -99,15 +99,15 @@ async function CodeBlock(props: React.ComponentProps<"pre">) {
 
   const html = await codeToHtml(codeContent, {
     lang: language,
-    themes: { dark: "vitesse-dark", light: "vitesse-light" },
+    theme: "vesper",
   });
 
   return (
-    <div className="relative border dark:border-border/50 rounded-md not-prose text-sm mt-6 [&_pre]:py-3 [&_pre]:px-4 [&_pre]:rounded-md [&_pre]:min-h-12 [&_pre]:overflow-auto">
+    <div className="relative rounded-md not-prose text-sm mt-6 [&_pre]:py-3 [&_pre]:px-4 [&_pre]:rounded-md [&_pre]:min-h-12 [&_pre]:overflow-auto">
       <div dangerouslySetInnerHTML={{ __html: html }} />
       <CopyButton
         text={codeContent}
-        className="absolute top-2 right-2 opacity-50 hover:opacity-90 transition-opacity duration-150 ease-out"
+        className="dark text-foreground absolute top-2 right-2"
       />
     </div>
   );
