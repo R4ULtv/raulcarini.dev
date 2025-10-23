@@ -28,6 +28,7 @@ const CopyButton = ({
       variant="ghost"
       className={cn("size-8 group", className)}
       onClick={copyToClipboard}
+      aria-label="Copy to clipboard"
       {...props}
     >
       {copied ? (
