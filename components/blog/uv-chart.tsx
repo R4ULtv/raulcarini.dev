@@ -1,7 +1,5 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-
 import {
   Card,
   CardContent,
@@ -19,6 +17,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { TrendingUpIcon } from "lucide-react";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 export const description =
   "A vertical bar chart comparing package manager speeds";
@@ -157,7 +156,7 @@ export function BlogUvChart() {
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 leading-none font-medium">
           uv is up to 5-15x faster than alternatives{" "}
-          <TrendingUpIcon className="h-4 w-4" />
+          <TrendingUpIcon className="size-4" />
         </div>
         <div className="text-muted-foreground leading-none">
           Benchmarked on cold and warm cache scenarios
