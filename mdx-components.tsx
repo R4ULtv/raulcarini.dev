@@ -103,7 +103,7 @@ async function CodeBlock(props: React.ComponentProps<"pre">) {
   });
 
   return (
-    <div className="relative not-prose text-sm mt-6 [&_pre]:py-3 [&_pre]:px-4 [&_pre]:rounded-md [&_pre]:min-h-12 [&_pre]:overflow-auto">
+    <div className="relative border dark:border-border/50 rounded-md not-prose text-sm mt-6 [&_pre]:py-3 [&_pre]:px-4 [&_pre]:rounded-md [&_pre]:min-h-12 [&_pre]:overflow-auto">
       <div dangerouslySetInnerHTML={{ __html: html }} />
       <CopyButton
         text={codeContent}
