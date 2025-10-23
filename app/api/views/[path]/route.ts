@@ -16,6 +16,11 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   const path = request.nextUrl.searchParams.get("path");
+
+  if (process.env.NODE_ENV !== "production") {
+    return new NextResponse("OK");
+  }
+
   await redis.incr("@blog/pageviews:" + path);
   return new NextResponse("OK");
 }
