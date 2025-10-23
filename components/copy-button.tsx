@@ -26,14 +26,17 @@ const CopyButton = ({
     <Button
       size="icon"
       variant="ghost"
-      className={cn("size-8", className)}
+      className={cn("size-8 group", className)}
       onClick={copyToClipboard}
       {...props}
     >
       {copied ? (
         <CheckIcon aria-hidden="true" />
       ) : (
-        <CopyIcon aria-hidden="true" />
+        <CopyIcon
+          aria-hidden="true"
+          className="opacity-50 group-hover:opacity-90 transition-opacity duration-150 ease-out"
+        />
       )}
     </Button>
   );
