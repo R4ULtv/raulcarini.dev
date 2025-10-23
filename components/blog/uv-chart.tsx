@@ -82,7 +82,7 @@ export function BlogUvChart() {
           Installation and resolution speeds (in seconds)
         </CardDescription>
       </CardHeader>
-      <CardContent className="pt-6">
+      <CardContent className="px-6">
         <ChartContainer config={chartConfig} className="h-[400px] w-full">
           <BarChart accessibilityLayer layout="vertical" data={chartData}>
             <CartesianGrid horizontal={false} />
