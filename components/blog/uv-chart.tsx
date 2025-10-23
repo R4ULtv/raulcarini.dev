@@ -102,7 +102,28 @@ export function BlogUvChart() {
             <ChartTooltip
               cursor={false}
               content={
-                <ChartTooltipContent className="min-w-48" indicator="line" />
+                <ChartTooltipContent
+                  formatter={(value, name) => (
+                    <div className="text-muted-foreground flex gap-1.5 min-w-42 items-center text-xs">
+                      <div
+                        className="size-2.5 shrink-0 rounded-[2px] bg-(--color-bg)"
+                        style={
+                          {
+                            "--color-bg": `var(--color-${name})`,
+                          } as React.CSSProperties
+                        }
+                      />
+                      {chartConfig[name as keyof typeof chartConfig]?.label ||
+                        name}
+                      <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
+                        {value}
+                        <span className="text-muted-foreground font-normal">
+                          s
+                        </span>
+                      </div>
+                    </div>
+                  )}
+                />
               }
             />
             <ChartLegend content={<ChartLegendContent />} />
@@ -135,7 +156,7 @@ export function BlogUvChart() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 leading-none font-medium">
-          uv is up to 5/15x faster than alternatives{" "}
+          uv is up to 5-15x faster than alternatives{" "}
           <TrendingUpIcon className="h-4 w-4" />
         </div>
         <div className="text-muted-foreground leading-none">
