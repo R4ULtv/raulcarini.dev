@@ -136,19 +136,13 @@
     }
 }
 
-html.dark .shiki,
-html.dark .shiki span {
-    color: var(--shiki-dark) !important;
-    background-color: var(--shiki-dark-bg) !important;
-}
-
 .shiki {
     counter-reset: step;
     counter-increment: step 0;
     .line {
         &::before {
             counter-increment: step;
-            @apply mr-6 inline-block w-4 border-transparent text-right text-muted-foreground content-[counter(step)];
+            @apply mr-6 inline-block w-4 border-transparent text-right text-[#8B8B8B94] content-[counter(step)];
         }
     }
 }
