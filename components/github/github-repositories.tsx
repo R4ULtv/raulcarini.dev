@@ -23,6 +23,8 @@ const languageColors: Record<string, string> = {
   Python: "oklch(0.5354 0.1022 246.5)",
   Shell: "oklch(0.8229 0.1959 135.27)",
   MDX: "oklch(0.8158 0.1597 76.85)",
+  CSS: "oklch(0.4395 0.1591 303.69)",
+  HTML: "oklch(0.6238 0.1947 34.59)", // A typical HTML orange
 };
 
 const GithubRepositories = ({
