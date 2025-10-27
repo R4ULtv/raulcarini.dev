@@ -5,8 +5,7 @@ import Christmas from "@/components/svg/artworks/christmas";
 import Summer from "@/components/svg/artworks/summer";
 
 import Moon from "@/components/svg/artworks/moon";
-
-export const revalidate = 86400; // Revalidate every 24 hours
+import { NextResponse } from "next/server";
 
 export function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -24,7 +23,7 @@ export function GET(request: Request) {
     ArtworkComponent = ChillTime;
   }
 
-  return new ImageResponse(
+  const imageResponse = new ImageResponse(
     (
       <div
         style={{
@@ -102,4 +101,11 @@ export function GET(request: Request) {
       format: "WebP",
     },
   );
+  return new NextResponse(imageResponse.body, {
+    headers: {
+      "Content-Type": "image/webp",
+      "Cache-Control":
+        "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800",
+    },
+  });
 }
