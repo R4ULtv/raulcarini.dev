@@ -26,6 +26,8 @@ interface StatusDisplayProps {
   additionalClasses?: string;
 }
 
+const now = Date.now();
+
 const StatusDisplay: React.FC<StatusDisplayProps> = ({
   icon,
   message,
@@ -76,7 +78,7 @@ const GithubContributionsAdvancedFetcher: React.FC<{ username: string }> = ({
     contributionsResult?.contributions ?? null;
   const newPublicRepoCount: number | null = React.useMemo(() => {
     if (!reposResult) return null;
-    const oneYearAgo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
+    const oneYearAgo = new Date(now - 365 * 24 * 60 * 60 * 1000);
     return reposResult.filter((repo) => new Date(repo.created_at) > oneYearAgo)
       .length;
   }, [reposResult]);

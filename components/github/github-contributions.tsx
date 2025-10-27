@@ -30,6 +30,8 @@ export interface ContributionCellProps {
   contribution: Contribution;
 }
 
+const now = Date.now();
+
 const ContributionCell = React.memo(function ContributionCell({
   contribution,
 }: ContributionCellProps) {
@@ -104,8 +106,7 @@ export default function GitHubContributions({
         const isStartOfWeek = i % 7 === 0;
         const isWithinFirstWeekOfMonth =
           date.getDate() >= 1 && date.getDate() <= 7;
-        const isBeforeLastWeek =
-          date < new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        const isBeforeLastWeek = date < new Date(now - 7 * 24 * 60 * 60 * 1000);
 
         if (
           i === 0 ||
