@@ -1,5 +1,7 @@
 "use client";
 
+import { Bar, BarChart, XAxis, YAxis } from "recharts";
+
 import {
   Card,
   CardContent,
@@ -14,11 +16,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { TrendingUpIcon } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
-
-export const description =
-  "A vertical bar chart comparing package manager speeds";
+import { Badge } from "@/components/ui/badge";
+import { TrendingDown, TrendingUpIcon } from "lucide-react";
 
 const chartData = [
   {
@@ -55,10 +54,19 @@ export function BlogBunChart() {
           Mean installation times (lower is faster)
         </CardDescription>
       </CardHeader>
-      <CardContent className="px-6">
-        <ChartContainer config={chartConfig} className="h-[200px] w-full">
+      <CardContent>
+        <ChartContainer config={chartConfig} className="h-[220px] w-full">
           <BarChart accessibilityLayer layout="vertical" data={chartData}>
-            <CartesianGrid horizontal={false} />
+            <rect
+              x="60"
+              y="0"
+              width="95%"
+              height="85%"
+              fill="url(#default-multiple-pattern-dots)"
+            />
+            <defs>
+              <DottedBackgroundPattern />
+            </defs>
             <XAxis
               type="number"
               tickLine={false}
@@ -119,3 +127,24 @@ export function BlogBunChart() {
     </Card>
   );
 }
+
+const DottedBackgroundPattern = () => {
+  return (
+    <pattern
+      id="default-multiple-pattern-dots"
+      x="0"
+      y="0"
+      width="10"
+      height="10"
+      patternUnits="userSpaceOnUse"
+    >
+      <circle
+        className="dark:text-muted/40 text-muted"
+        cx="2"
+        cy="2"
+        r="1"
+        fill="currentColor"
+      />
+    </pattern>
+  );
+};
