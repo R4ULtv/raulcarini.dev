@@ -4,11 +4,9 @@ import { NextResponse } from "next/server";
 export const runtime = "edge";
 
 const redis = new Redis({
-  url: process.env.UPSTASH_REDIS_REST_URL!,
-  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+  url: process.env.UPSTASH_REDIS_REST_URL,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN,
 });
-
-const KEY_PREFIX = "@blog/pageviews:" as const;
 
 export async function GET() {
   let cursor = "0";
@@ -16,7 +14,7 @@ export async function GET() {
 
   do {
     const [nextCursor, keys] = await redis.scan(cursor, {
-      match: `${KEY_PREFIX}*`,
+      match: `@blog/pageviews:*`,
       count: 50,
     });
     allKeys.push(...keys);
@@ -31,7 +29,7 @@ export async function GET() {
 
   const result: Record<string, number> = {};
   allKeys.forEach((key, index) => {
-    const cleanKey = key.replace(KEY_PREFIX, "");
+    const cleanKey = key.replace("@blog/pageviews:", "");
     const value = values[index];
 
     if (typeof value === "number" && value >= 0) {
