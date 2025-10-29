@@ -46,7 +46,7 @@
 
     /* Tables */
     .prose :where(table):not(:where(.not-prose *)) {
-        @apply w-full text-sm my-6 border-collapse overflow-hidden rounded-md;
+        @apply w-full text-sm my-6 border-collapse border-hidden overflow-hidden rounded-md;
     }
     .prose :where(tr):not(:where(.not-prose *)) {
         @apply m-0 border-t p-0 even:bg-muted/40;
