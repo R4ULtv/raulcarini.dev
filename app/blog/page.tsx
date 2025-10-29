@@ -1,5 +1,7 @@
 import BookReading from "@/components/svg/artworks/book-reading";
+import { Badge } from "@/components/ui/badge";
 import { getAllPosts } from "@/lib/content";
+import { SparklesIcon } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -11,6 +13,14 @@ export const metadata: Metadata = {
 
 export default async function Home() {
   const posts = await getAllPosts();
+
+  const isNewPost = (createdAt: string) => {
+    const postDate = new Date(createdAt);
+    const now = new Date();
+    const diffInMs = now.getTime() - postDate.getTime();
+    const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+    return diffInDays <= 7;
+  };
 
   return (
     <div className="space-y-10 sm:space-y-16">
@@ -47,7 +57,7 @@ export default async function Home() {
               className="flex justify-between items-center gap-4 py-1 sm:py-3 px-3 -mx-3 group rounded-md hover:bg-muted/50 transition-colors duration-200 ease-out"
             >
               <div className="flex-1 flex flex-col">
-                <p className="font-medium">
+                <p className="font-medium space-x-1.5">
                   {post.metadata.title}{" "}
                   <span className="font-normal">
                     •{" "}
@@ -60,6 +70,15 @@ export default async function Home() {
                       },
                     )}
                   </span>
+                  {isNewPost(post.metadata.createdAt) && (
+                    <Badge
+                      variant="secondary"
+                      className="bg-blue-500 text-white dark:bg-blue-600 rounded-sm"
+                    >
+                      <SparklesIcon />
+                      New
+                    </Badge>
+                  )}
                 </p>
                 <span className="text-muted-foreground">
                   {post.metadata.description}
