@@ -1,0 +1,126 @@
+export const metadata = {
+  title: "Polar: a better Stripe alternative",
+  createdAt: "2025-10-29",
+  description:
+    "Payments, memberships, and perks for indie devs and OSS - without the glue.",
+  keywords: "Polar, Stripe, Payments, Sponsorships, Subscriptions, OSS, Indie SaaS"
+};
+
+<a href="https://polar.sh/" target="_blank">
+  <Image
+    src={"/assets/polar/og-image.jpg"}
+    width={720}
+    height={405}
+    alt="Polar.sh"
+    priority
+  />
+</a>
+
+When you're building developer tools, running an open-source project, or just trying to get your tiny SaaS off the ground, you already know the truth: payments are never "just payments."
+
+Between pricing experiments, gated downloads, proper EU VAT handling, sponsor perks, customer portals, churn saves, and trying to tie it all to your GitHub workflow—payments become this sprawling mess of integrations and glue code.
+
+That's where [Polar](https://polar.sh/) caught my attention. It feels purpose-built for us—the little guys building creator tools and developer products—while [Stripe](https://stripe.com/) remains that brilliant but overwhelming toolbox you have to piece together yourself.
+
+Think of Polar as "payments plus memberships plus sponsorships plus benefits plus GitHub automation" - all wrapped up in one coherent product. Instead of stitching together multiple services, you get the essential flows that indie builders actually need:
+
+- **Subscriptions and one-time payments** with pay-what-you-want options and coupon codes
+- **Open source sponsorships** with tiered perks and private releases
+- **Built-in benefits fulfillment** - gated downloads, license keys, private repo access
+- **Proper EU VAT handling** - invoices and receipts that don't make your accountant cry
+- **Customer portal** where people can upgrade, download invoices, or cancel themselves
+- **GitHub integration** that actually makes sense - repo-gated benefits and sponsor sync that works
+
+You can absolutely build all of this on [Stripe](https://stripe.com/). You'll just spend weeks (or months) wiring up webhooks, building benefit gating, handling VAT edge cases, and maintaining glue code. Polar ships the opinionated layer that most small teams end up building anyway - except they did the hard parts for you.
+
+### Why it feels right for indie devs and OSS
+
+**Time-to-first-dollar matters.** With Stripe, you're assembling Checkout + Billing + Tax + Portal + custom benefit gating. With Polar, you set your prices, define some perks, connect your GitHub, and start selling. The difference is real.
+
+**Benefits aren't an afterthought.** Gated downloads, license keys, private repositories - these are first-class features, not side projects you build at 2 AM.
+
+**Tax compliance without the headache.** EU VAT and compliant invoices out of the box mean fewer legal rabbit holes to fall into. Your future self will thank you.
+
+**Sponsorships feel native.** Tiered perks and GitHub sync make sponsoring feel like a proper revenue stream, not some bolted-on add-on.
+
+**Developer experience that matches how you actually work.** Clean APIs, sensible webhooks, and a UI that gets out of your way while you iterate.
+
+<a href="https://polar.sh/docs/integrate/webhooks/events" target="_blank">
+  <Image
+    src={"/assets/polar/webhooks.jpeg"}
+    width={720}
+    height={405}
+    alt="Polar webhooks"
+  />
+</a>
+
+### How they stack up
+
+So how do they actually compare? Here's the honest rundown:
+
+**Subscriptions, coupons, pay-what-you-want**: Polar ships this built-in. With Stripe, you're mixing Billing + Checkout products to get the same result.
+
+**Sponsorship tiers with perks**: Polar treats this as a first-class feature with GitHub integration. Stripe? You'll be building custom flows.
+
+**Benefits fulfillment**: Need to gate downloads, manage licenses, or control repo access? Polar includes this. Stripe means custom development.
+
+**EU VAT and invoices**: Polar's defaults just work. Stripe needs their Tax product plus configuration.
+
+**Customer portal**: Both platforms have this covered decently.
+
+**Repo-gated releases**: This is Polar's sweet spot vs. another custom build on Stripe.
+
+**Creator focus**: Polar is built for this. Stripe supports it but it's not their main thing.
+
+Bottom line: If you're a big platform team, Stripe's flexibility is exactly what you need. If you're one person shipping a tool, you probably want solutions that work out of the box.
+
+### The money question
+
+Let's talk pricing because that's always what people want to know first. Polar's model is straightforward and competitive for small teams. But here's the thing that matters more than percentages - it's about the features you don't have to build, maintain, or debug at 3 AM.
+
+Every hour you save on VAT handling, benefit gating, or payment flows is time you can actually spend building your product. That's the real ROI calculation.
+
+<a href="https://polar.sh/resources/pricing" target="_blank">
+  <Image
+    src={"/assets/polar/fees-example.png"}
+    width={720}
+    height={405}
+    alt="Polar fees example"
+  />
+</a>
+
+Already married to Stripe? That's cool. Polar can coexist alongside your existing setup, and you can migrate gradually when it makes sense. The goal isn't to throw out everything and start over - it's to stop building a payments platform when what you really want is to sell your thing.
+
+### The developer experience (where Polar really shines)
+
+This is the part that sold me on Polar:
+
+**A product model that doesn't make your head hurt.** Plans, tiers, benefits - it's intuitive instead of a maze of payment primitives.
+
+**Webhooks that actually tell you what's happening.** Instead of generic "payment succeeded" events, you get "member created," "tier upgraded," or "benefit redeemed." You know, actual business logic.
+
+**A clean interface that gets out of your way.** Launch, test, iterate on pricing without jumping through hoops or consulting docs every five minutes.
+
+**GitHub integration that feels natural.** Perks map to repositories and releases in a way that actually makes sense.
+
+Look, Stripe is still the gold standard for payment APIs. No question. Polar is that opinionated layer that takes Stripe's raw power and turns it into a shipping machine for creators who just want to get paid.
+
+### When Stripe still makes more sense
+
+I'm not anti-Stripe here. There are absolutely times when Stripe is the right choice:
+
+**Complex payment architectures:** If you need marketplace split payouts, advanced financial operations, or custom payment flows that bend reality.
+
+**Platform teams:** You've got people whose job it is to build and maintain payment infrastructure. Stripe's flexibility is your playground.
+
+**Legitimate complexity:** You're building something that actually needs Stripe's full power rather than 80% of it.
+
+For most indie dev tools, open source funding, or small SaaS products, though? Polar gets you to value faster and lets you focus on what you're actually building.
+
+### Wrapping up
+
+At the end of the day, this isn't about finding the "perfect" payment provider. It's about three things: monetize quickly, validate your pricing, and deliver real value without spending your nights building a mini-Stripe.
+
+Polar nailed what I actually need as someone shipping developer tools: recurring revenue, sponsorships with meaningful perks, EU-compliant receipts, self-serve customer management, and GitHub integration that doesn't feel like an afterthought. That focus is what makes it feel genuinely helpful instead of just another tool to configure.
+
+Stripe is still brilliant. I just think my time is better spent shipping the thing I'm actually trying to build.
