@@ -25,61 +25,17 @@ export function GET(request: Request) {
 
   const imageResponse = new ImageResponse(
     (
-      <div
-        style={{
-          display: "flex",
-          position: "relative",
-          flexDirection: "column",
-          width: "100%",
-          height: "100%",
-          color: "#18181b", // zinc-900
-          padding: "4rem",
-          backgroundColor: "#e4e4e7", // zinc-200
-        }}
-      >
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "16px",
-            marginBottom: "12px",
-            color: "#18181b",
-          }}
-        >
-          <Moon style={{ fill: "#18181b", width: 64, height: 64 }} />
+      <div tw="flex flex-col relative w-full h-full p-16 text-primary bg-zinc-200">
+        <div tw="flex items-center gap-4 mb-3">
+          <Moon style={{ width: 64, height: 64 }} />
           {searchParams.get("title") && searchParams.get("description") && (
-            <span
-              style={{
-                fontSize: 56,
-                fontWeight: 600,
-              }}
-            >
-              Raul Carini
-            </span>
+            <span tw="text-[56px] font-semibold">Raul Carini</span>
           )}
         </div>
-        <p
-          style={{
-            fontWeight: 800,
-            fontSize: 84,
-            textOverflow: "ellipsis",
-            lineClamp: 2,
-            marginTop: "0.5em",
-            marginBottom: "0.5em",
-          }}
-        >
+        <p tw="font-extrabold text-[84px] text-ellipsis mt-[0.5em] mb-[0.5em]">
           {title}
         </p>
-        <span
-          style={{
-            fontSize: 48,
-            color: "#27272a", // zinc-800
-            fontWeight: 500,
-            lineClamp: 2,
-            textOverflow: "ellipsis",
-          }}
-        >
+        <span tw="font-medium text-[48px] text-ellipsis text-zinc-800">
           {description}
         </span>
         {!searchParams.get("title") && !searchParams.get("description") && (
