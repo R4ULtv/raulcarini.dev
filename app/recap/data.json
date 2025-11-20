@@ -1,0 +1,52 @@
+{
+  "years": {
+    "2024": {
+      "activity": {
+        "activeDays": 217,
+        "mostActiveMonth": "February",
+        "mostActiveDay": "Friday"
+      },
+      "coding": {
+        "topLanguage": "JavaScript",
+        "totalContributions": 1973,
+        "newRepositories": 8,
+        "starsReceived": 6
+      },
+      "content": {
+        "newBlogPosts": 17,
+        "blogViews": 3261
+      },
+      "projects": {
+        "activeWebsites": 5,
+        "totalPageViews": 39122
+      },
+      "revenue": {
+        "totalEarnings": 0
+      }
+    },
+    "2025": {
+      "activity": {
+        "activeDays": 224,
+        "mostActiveMonth": "October",
+        "mostActiveDay": "Friday"
+      },
+      "coding": {
+        "topLanguage": "TypeScript",
+        "totalContributions": 1963,
+        "newRepositories": 13,
+        "starsReceived": 40
+      },
+      "content": {
+        "newBlogPosts": 18,
+        "blogViews": 2070
+      },
+      "projects": {
+        "activeWebsites": 10,
+        "totalPageViews": 19561
+      },
+      "revenue": {
+        "totalEarnings": 0
+      }
+    }
+  }
+}
