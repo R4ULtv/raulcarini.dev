@@ -5,7 +5,6 @@ import Christmas from "@/components/svg/artworks/christmas";
 import Summer from "@/components/svg/artworks/summer";
 
 import Moon from "@/components/svg/artworks/moon";
-import { NextResponse } from "next/server";
 
 export function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -23,11 +22,11 @@ export function GET(request: Request) {
     ArtworkComponent = ChillTime;
   }
 
-  const imageResponse = new ImageResponse(
+  return new ImageResponse(
     (
       <div tw="flex flex-col relative w-full h-full p-16 text-primary bg-zinc-200">
         <div tw="flex items-center gap-4 mb-3">
-          <Moon style={{ width: 64, height: 64 }} />
+          <Moon tw="size-16" />
           {searchParams.get("title") && searchParams.get("description") && (
             <span tw="text-[56px] font-semibold">Raul Carini</span>
           )}
@@ -39,29 +38,19 @@ export function GET(request: Request) {
           {description}
         </span>
         {!searchParams.get("title") && !searchParams.get("description") && (
-          <ArtworkComponent
-            style={{
-              width: 352,
-              height: 352,
-              position: "absolute",
-              bottom: "2rem",
-              right: "2rem",
-            }}
-          />
+          <ArtworkComponent tw="absolute bottom-8 right-8 w-[352px] h-[352px]" />
         )}
       </div>
     ),
     {
       width: 1200,
       height: 630,
-      format: "WebP",
+      format: "webp",
+      headers: {
+        "Content-Type": "image/webp",
+        "Cache-Control":
+          "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800",
+      },
     },
   );
-  return new NextResponse(imageResponse.body, {
-    headers: {
-      "Content-Type": "image/webp",
-      "Cache-Control":
-        "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800",
-    },
-  });
 }
