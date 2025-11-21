@@ -1,9 +1,9 @@
 import ImageResponse from "@takumi-rs/image-response";
 
 import ChillTime from "@/components/svg/artworks/chill-time";
+import PlanningATrip from "@/components/svg/artworks/planning-a-trip";
 import Christmas from "@/components/svg/artworks/christmas";
 import Summer from "@/components/svg/artworks/summer";
-
 import Moon from "@/components/svg/artworks/moon";
 
 export function GET(request: Request) {
@@ -11,7 +11,9 @@ export function GET(request: Request) {
   const title = searchParams.get("title") || "Raul Carini";
   const description = searchParams.get("description") || "Full-Stack Developer";
 
-  const month = new Date().getMonth();
+  const date = new Date();
+  const month = date.getMonth();
+
   let ArtworkComponent;
 
   if (month === 11 || month === 0) {
@@ -19,7 +21,7 @@ export function GET(request: Request) {
   } else if (month >= 5 && month <= 7) {
     ArtworkComponent = Summer;
   } else {
-    ArtworkComponent = ChillTime;
+    ArtworkComponent = date.getDate() % 2 === 0 ? PlanningATrip : ChillTime;
   }
 
   return new ImageResponse(
