@@ -1,5 +1,29 @@
 {
   "years": {
+    "2023": {
+      "activity": {
+        "activeDays": 103,
+        "mostActiveMonth": "December",
+        "mostActiveDay": "Friday"
+      },
+      "coding": {
+        "topLanguage": "JavaScript",
+        "totalContributions": 483,
+        "newRepositories": 13,
+        "starsReceived": 1
+      },
+      "content": {
+        "newBlogPosts": 0,
+        "blogViews": 0
+      },
+      "projects": {
+        "activeWebsites": 3,
+        "totalPageViews": 23953
+      },
+      "revenue": {
+        "totalEarnings": 0
+      }
+    },
     "2024": {
       "activity": {
         "activeDays": 217,
