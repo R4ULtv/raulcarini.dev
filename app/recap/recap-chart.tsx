@@ -41,7 +41,29 @@ export function RecapChart({ data }: { data: ChartData[] }) {
           axisLine={false}
           tickMargin={8}
         />
-        <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
+        <ChartTooltip
+          cursor={false}
+          content={
+            <ChartTooltipContent
+              formatter={(value, name) => (
+                <div className="text-muted-foreground flex gap-1.5 min-w-42 items-center text-xs">
+                  <div
+                    className="size-2.5 shrink-0 rounded-[2px] bg-(--color-bg)"
+                    style={
+                      {
+                        "--color-bg": `var(--color-${name})`,
+                      } as React.CSSProperties
+                    }
+                  />
+                  {chartConfig[name as keyof typeof chartConfig]?.label || name}
+                  <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
+                    {value}
+                  </div>
+                </div>
+              )}
+            />
+          }
+        />
         <defs>
           <linearGradient
             id="gradient-rounded-chart-contributions"
@@ -121,29 +143,6 @@ export function RecapChart({ data }: { data: ChartData[] }) {
           fillOpacity={0.4}
           stroke="var(--color-blogViews)"
           strokeWidth={0.8}
-        />
-        <ChartTooltip
-          cursor={false}
-          content={
-            <ChartTooltipContent
-              formatter={(value, name) => (
-                <div className="text-muted-foreground flex gap-1.5 min-w-42 items-center text-xs">
-                  <div
-                    className="size-2.5 shrink-0 rounded-[2px] bg-(--color-bg)"
-                    style={
-                      {
-                        "--color-bg": `var(--color-${name})`,
-                      } as React.CSSProperties
-                    }
-                  />
-                  {chartConfig[name as keyof typeof chartConfig]?.label || name}
-                  <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
-                    {value}
-                  </div>
-                </div>
-              )}
-            />
-          }
         />
       </AreaChart>
     </ChartContainer>
