@@ -129,7 +129,7 @@ export default async function RecapPage({
     recapData.years[previousYear as keyof typeof recapData.years];
 
   return (
-    <div className="fixed inset-0 z-10 bg-zinc-950 flex flex-col items-center justify-center">
+    <div className="fixed inset-0 z-10 bg-zinc-50 dark:bg-zinc-950 flex flex-col items-center justify-center">
       <div className="text-xs text-muted-foreground pb-12">
         <span className="hover:text-foreground transition-colors cursor-default">
           [ {year} RECAP ]
