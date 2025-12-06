@@ -4,7 +4,7 @@ import createMDX from "@next/mdx";
 const nextConfig: NextConfig = {
   reactCompiler: true,
   pageExtensions: ["mdx", "ts", "tsx"],
-  serverExternalPackages: ["@takumi-rs/core"],
+  serverExternalPackages: ["@takumi-rs/image-response"],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "pbs.twimg.com" },
