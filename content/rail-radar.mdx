@@ -1,0 +1,160 @@
+export const metadata = {
+  title: "Rail Radar",
+  createdAt: "2026-01-14",
+  description: "Real-time tracking of Italian trains with an interactive map powered by official RFI data.",
+  keywords: "real-time tracking, Italian trains, RFI data, Cloudflare Workers, Next.js, MapLibre, monorepo, Hono framework, interactive maps, railway tracking, serverless API"
+};
+
+<a href="https://railradar24.com" target="_blank">
+  <Image
+    src={"/assets/rail-radar/home.png"}
+    width={720}
+    height={405}
+    alt="Rail Radar home page showing interactive map of Italian railway stations"
+    priority
+  />
+</a>
+
+Have you ever wondered where your train is right now, or why it's delayed? While flight tracking services like [Flightradar24](https://www.flightradar24.com/) have made it incredibly easy to track planes in real-time, I noticed there wasn't an equivalent solution for trains in Italy. That observation sparked the creation of Rail Radar, an interactive web application that tracks Italian trains in real-time using official [RFI (Rete Ferroviaria Italiana)](https://www.rfi.it/) data across more than 2,400 railway stations.
+
+## Core Features
+
+I wanted Rail Radar to be more than just a simple station lookup tool. Here's what makes it comprehensive for anyone interested in Italian rail travel:
+
+- **Interactive Map**: A dynamic map displaying all Italian railway stations with real-time train positions and movements, powered by [MapLibre GL JS](https://maplibre.org/).
+- **Live Data**: Real-time arrival and departure information sourced directly from RFI, ensuring accuracy and reliability.
+- **Smart Search**: Fuzzy matching station search that helps you find stations even with partial or misspelled names, type "Milno" and it'll still find "Milano".
+- **Shareable URLs**: Every map state can be shared via URL, preserving the current view, zoom level, and selected station. Perfect for coordinating meetups or sharing travel information.
+- **Geolocation**: Quickly find stations near your current location with a single tap.
+- **Mobile-First Design**: Fully responsive interface that works seamlessly on both desktop and mobile devices, because most people check train times on their phones.
+
+## Architecture: A Monorepo Approach
+
+One of the key architectural decisions I made early on was to structure Rail Radar as a [monorepo](https://monorepo.tools/). This approach allows for better code organization and sharing between different parts of the application while maintaining clear boundaries.
+
+The project is organized into three main components:
+
+```text
+rail-radar/
+├── apps/
+│   ├── api/        # Cloudflare Workers API
+│   └── web/        # Next.js frontend
+└── packages/
+    └── data/       # Shared types and station database
+```
+
+### Why a Monorepo?
+
+The monorepo structure offers several advantages for this project:
+
+1. **Shared Types**: TypeScript types are defined once in the `packages/data` directory and shared across both the API and web application, ensuring type safety throughout the entire stack. No more "it works in the frontend but fails in the backend" bugs.
+2. **Station Database**: The comprehensive database of 2,400+ Italian stations lives in a shared package, making it accessible to both frontend and backend without duplication.
+3. **Atomic Changes**: When updating station data or types, I can make changes in a single commit that updates all dependent code, without coordinating multiple repositories.
+4. **Simplified Development**: Running both the API and web app locally becomes straightforward with workspace-aware package managers like [pnpm](https://pnpm.io/) or [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces).
+
+## The API Layer: Cloudflare Workers
+
+The backend is built as a serverless API using [Cloudflare Workers](https://workers.cloudflare.com/). This choice was driven by several factors that aligned perfectly with the project's needs:
+
+- **Global Distribution**: Cloudflare's edge network ensures low latency for users across Italy and beyond, handling requests at the nearest data center.
+- **Cost Efficiency**: The generous free tier (100,000 requests per day) and pay-per-request model make it economical for a project of this scale.
+- **Simplicity**: No server management, automatic scaling, and seamless deployments. I can focus on building features instead of maintaining infrastructure.
+
+The API acts as an intermediary layer between the frontend and the RFI data sources. It handles data transformation, caching, and provides a clean interface for the web application to consume.
+
+### Building with Hono
+
+Similar to my [Archive Space](/blog/archive-space) project, I chose [Hono](https://hono.dev/) as the web framework for the Cloudflare Worker. Hono is lightweight, fast, and provides an Express-like developer experience while being optimized for edge environments. If you're familiar with [Express.js](https://expressjs.com/), you'll feel right at home with Hono.
+
+```typescript
+// Simplified example of the API structure with Hono
+import { Hono } from "hono";
+import { cors } from "hono/cors";
+
+const app = new Hono<{ Bindings: Env }>();
+
+// Enable CORS for cross-origin requests from the web app
+app.use("/*", cors());
+
+// Get all stations
+app.get("/api/stations", async (c) => {
+  const stations = await getStations(c.env);
+  return c.json(stations);
+});
+
+// Get real-time departures for a specific station
+app.get("/api/stations/:id/departures", async (c) => {
+  const stationId = c.req.param("id");
+  const departures = await getDepartures(stationId, c.env);
+  return c.json(departures);
+});
+
+export default app;
+```
+
+Hono's middleware system makes it easy to add features like CORS handling, and its route parameters provide a clean way to extract station IDs from the URL. The framework's TypeScript support is excellent, giving me full type safety from request to response.
+
+## The Frontend: Next.js and MapLibre
+
+The user-facing application is built with [Next.js 15](https://nextjs.org/), taking advantage of its server-side rendering capabilities, [App Router](https://nextjs.org/docs/app), and optimized build system. For the map rendering, I chose [MapLibre GL JS](https://maplibre.org/), an open-source fork of Mapbox GL JS that provides excellent performance and flexibility without vendor lock-in.
+
+### Map Tiles with Stadia Maps
+
+For the base map tiles, Rail Radar uses [Stadia Maps](https://stadiamaps.com/). Their tiles offer a clean, readable design that works well for a transportation-focused application, and their pricing model is favorable for projects like this. The tiles are served over a CDN, ensuring fast load times regardless of where users are located.
+
+### Performance Considerations
+
+Rendering 2,400+ stations on a map requires careful attention to performance. Nobody wants a laggy map when they're trying to catch a train. Here are some of the optimizations I implemented:
+
+1. **Clustering**: At lower zoom levels, nearby stations are grouped into clusters to reduce the number of rendered elements. Instead of showing 50 individual station markers in Milan, you see one cluster marker showing "50 stations".
+2. **Viewport Culling**: Only stations within the current viewport are processed for interactions. If you're looking at Rome, the app isn't wasting resources on stations in Turin.
+3. **Lazy Loading**: Detailed station information is fetched on-demand when a user selects a station, rather than loading everything upfront.
+4. **Efficient State Management**: URL-based state ensures the app can be shared and bookmarked without complex client-side state. The URL is the source of truth for map position, zoom level, and selected station.
+
+These optimizations keep the app snappy even on slower mobile connections, which is crucial since many users check train times while on the go.
+
+## Working with RFI Data
+
+The most challenging aspect of this project was working with the RFI data. Italian railway data isn't available through a simple, well-documented public API. Instead, it required reverse-engineering existing services and understanding the data formats used by official RFI applications. This involved a lot of network inspection, reading through JavaScript files, and trial-and-error to figure out the right endpoints and parameters.
+
+The data includes:
+
+- **Station Information**: Names, coordinates, station codes, and facility types for all 2,400+ stations in the Italian railway network.
+- **Real-time Departures**: Scheduled and actual departure times, platforms, train types (Freccia, Regionale, etc.), and delays.
+- **Real-time Arrivals**: Similar information for incoming trains, including origin station and any delays along the route.
+
+By aggregating this data and presenting it through a clean, modern interface, Rail Radar makes Italian railway information more accessible than ever before. No more hunting through multiple official apps or websites to find the information you need.
+
+## Fuzzy Search Implementation
+
+One feature I'm particularly proud of is the station search. With over 2,400 stations, finding the right one quickly is essential. The search implements fuzzy matching using libraries like [Fuse.js](https://fusejs.io/), which means it can handle:
+
+- **Partial matches**: Type "Roma" and find "Roma Termini", "Roma Tiburtina", "Roma Ostiense", and dozens more.
+- **Typos**: "Milno" still finds "Milano Centrale", and "Firenze" works even if you type "Firense".
+- **Alternative spellings and accent variations**: The search handles both "Bolzano" and "Bozen" (the German name for the same city).
+
+This makes the search forgiving and user-friendly, especially on mobile devices where typing errors are common. I've found that users really appreciate not having to type station names perfectly and the search just works.
+
+## What's Next
+
+Rail Radar is an ongoing project with several planned improvements I'm excited to implement:
+
+- **Train Tracking**: Visualizing actual train positions on the map as they move between stations, similar to how Flightradar24 shows planes in motion.
+- **Route Planning**: Helping users find connections between stations, with support for multi-leg journeys.
+- **Notifications**: Alerts for delays or cancellations on saved routes, so you know before you leave for the station.
+- **Historical Data**: Analytics on punctuality and delay patterns, answering questions like "Which routes are most reliable?" or "What's the average delay for this train?"
+
+If you have ideas for other features, I'm always open to suggestions on the [GitHub repository](https://github.com/R4ULtv/rail-radar).
+
+## Conclusion
+
+Rail Radar represents the intersection of several of my interests: mapping, real-time data processing, and Italian infrastructure. Building it required tackling challenges across the full stack, from reverse-engineering data sources to optimizing map rendering performance for thousands of markers.
+
+The key architectural decisions paid off:
+- The **monorepo structure** made code sharing seamless and kept types in sync across frontend and backend
+- **Cloudflare Workers** provided the global distribution and cost efficiency needed for a real-time application
+- **Next.js and MapLibre** delivered the performance and user experience required for an interactive mapping application
+
+Most importantly, the project solved a real problem: making Italian railway information accessible through a modern, user-friendly interface. Whether you're a daily commuter checking your train's delay status or a tourist exploring Italy by rail, Rail Radar provides the information you need at a glance.
+
+If you're interested in Italian rail travel or just want to explore the railway network, visit [railradar24.com](https://railradar24.com) and start tracking trains. The project is also open source on [GitHub](https://github.com/R4ULtv/rail-radar), where contributions and feedback are always welcome. I'd love to hear how you use it or what features would make it more useful for you.
