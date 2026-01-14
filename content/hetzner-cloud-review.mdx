@@ -1,0 +1,91 @@
+export const metadata = {
+  title: "Hetzner Cloud Review",
+  createdAt: "2026-01-14",
+  description: "Honest look at Hetzner Cloud's pros and cons from real-world experience.",
+  keywords: "Hetzner, Cloud Hosting, VPS, Server Hosting, Cloud Provider, Infrastructure"
+};
+
+When you're looking for cloud hosting, the big names like AWS, Google Cloud, and Azure often dominate the conversation. But there's a European contender that's been quietly winning over developers with its straightforward pricing and solid performance: Hetzner Cloud. I recently tried it out for a personal project, and it gave me some valuable insights into what this provider does well and where it falls short.
+
+## What is Hetzner Cloud?
+
+Hetzner is a German hosting company that's been around since 1997, but their cloud platform (Hetzner Cloud) launched in 2018. They've built a reputation for offering excellent hardware at prices that significantly undercut the major cloud providers. While they might not have the global reach or the endless catalog of services that AWS offers, they focus on doing the fundamentals really well.
+
+## The Pros: Why Developers Love Hetzner
+
+### Pricing That Actually Makes Sense
+
+This is where Hetzner really shines. Their pricing is transparent and remarkably affordable. You can get a decent VPS with 2 vCPUs, 4GB RAM, and 40GB SSD storage for around €4.51/month. Compare that to equivalent offerings from AWS or Google Cloud, and you're often looking at 2-3x the cost.
+
+In my case, I ran a server for two weeks and the total cost came to around $6. The same specs on AWS would have easily cost me significantly more.
+
+### Simple, Developer-Friendly Interface
+
+The Hetzner Cloud Console is refreshingly straightforward. You're not drowning in hundreds of service options or complex IAM configurations. You can spin up a server, attach storage, configure networking, and be up and running in minutes.
+
+The CLI and API are also well-documented, making automation easy if you want to script your infrastructure.
+
+### Solid Performance
+
+For general-purpose workloads, Hetzner delivers excellent performance. The servers use modern AMD EPYC and Intel Xeon processors, NVMe SSDs, and you get generous bandwidth allocations. Network performance within Europe is particularly strong.
+
+### Great for European Projects
+
+With data centers in Germany, Finland, and recently expanded locations, Hetzner is ideal if your primary audience is in Europe. You get GDPR compliance built-in, and latency is excellent for European users.
+
+### No Egress Fees (Mostly)
+
+Unlike AWS which charges for data transfer out, Hetzner includes generous traffic allowances with each server. This alone can save hundreds or thousands of dollars for bandwidth-heavy applications.
+
+## The Cons: Where Hetzner Falls Short
+
+### Limited Global Presence
+
+If you need servers in Asia, South America, or other regions outside Europe and the US, Hetzner won't work for you. Their data center footprint is growing but still limited compared to the major cloud providers.
+
+### Fewer Managed Services
+
+Hetzner focuses on compute, storage, and networking. You won't find managed databases, serverless functions, container orchestration services, or the vast ecosystem that AWS or Azure provide. This is by design—they're targeting developers who want infrastructure, not a platform.
+
+### Support Can Be Slow
+
+While Hetzner's community and documentation are good, their support response times aren't as fast as the premium support you'd get from major cloud providers. For mission-critical applications, this could be a concern.
+
+### No Advanced Features
+
+Things like auto-scaling groups, sophisticated load balancing, or managed Kubernetes are either not available or more basic than what you'd find elsewhere. You're getting VMs, block storage, and networking, which is great if that's what you need, but limiting if you want more.
+
+### Not Optimized for Specialized Workloads
+
+While Hetzner performs well for general use cases, it's not specifically optimized for certain workloads like gaming servers or real-time applications that need guaranteed low latency. For my gaming experiment, the performance was acceptable for casual use, but I noticed occasional lag spikes. If you're running specialized workloads, dedicated providers might offer better optimization.
+
+## When Should You Use Hetzner?
+
+Hetzner is excellent for:
+
+- **Side projects and startups** where keeping costs low is crucial
+- **European-focused applications** that need GDPR compliance and low latency for EU users
+- **Developers who prefer simplicity** over endless configuration options
+- **High-bandwidth applications** that would rack up egress charges elsewhere
+- **Learning and experimentation** without breaking the bank
+
+Hetzner might not be ideal for:
+
+- **Global applications** requiring worldwide data center presence
+- **Specialized workloads** requiring optimized infrastructure (gaming, real-time trading, etc.)
+- **Applications requiring managed services** like databases, queues, or serverless functions
+- **Enterprise workloads** needing 24/7 premium support and SLAs
+
+## My Experience
+
+Testing Hetzner for a couple of weeks was enlightening. The setup was dead simple, and the total cost came to around $6 for the entire period. For a casual project with a few users, the performance was perfectly acceptable.
+
+The key takeaway is understanding what you're getting: excellent value and solid basics, not specialized optimization or premium features. But for experimenting, for small groups, or for projects where you're optimizing for cost, Hetzner proved to be a solid choice.
+
+## Conclusion
+
+Hetzner Cloud occupies an interesting niche in the hosting market. It's not trying to be everything to everyone, and that's actually its strength. If you need affordable, straightforward cloud infrastructure in Europe and you're comfortable managing your own stack, Hetzner is hard to beat on value.
+
+The pricing is transparent, the performance is solid, and the developer experience is refreshingly simple. Just make sure your use case aligns with what Hetzner does best: providing excellent infrastructure fundamentals at prices that won't make your accountant cry.
+
+For my next side project that needs a European server, I'll definitely be reaching for Hetzner again.
