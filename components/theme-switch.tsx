@@ -6,10 +6,7 @@ import { useTheme } from "next-themes";
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
-const ThemeSwitch = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLButtonElement>) => {
+const ThemeSwitch = ({ className, ...props }: React.HTMLAttributes<HTMLButtonElement>) => {
   const { theme, setTheme } = useTheme();
 
   const toggleTheme = React.useCallback(() => {
@@ -18,11 +15,7 @@ const ThemeSwitch = ({
 
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (
-        (event.metaKey || event.ctrlKey) &&
-        event.shiftKey &&
-        event.key.toLowerCase() === "l"
-      ) {
+      if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key.toLowerCase() === "l") {
         event.preventDefault();
         toggleTheme();
       }

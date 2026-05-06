@@ -44,13 +44,13 @@ A tiny helper shows the spirit of the migration:
 ```ts
 // Before
 export function cn(...inputs) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 
 // After
 import type { ClassValue } from "clsx";
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+  return twMerge(clsx(inputs));
 }
 ```
 

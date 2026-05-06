@@ -19,8 +19,7 @@ import {
 import { TrendingUpIcon } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 
-export const description =
-  "A vertical bar chart comparing package manager speeds";
+export const description = "A vertical bar chart comparing package manager speeds";
 
 const chartData = [
   {
@@ -77,9 +76,7 @@ export function BlogUvChart() {
     <Card className="mt-6 rounded-md">
       <CardHeader>
         <CardTitle>Package Manager Performance Comparison</CardTitle>
-        <CardDescription>
-          Installation and resolution speeds (in seconds)
-        </CardDescription>
+        <CardDescription>Installation and resolution speeds (in seconds)</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[400px] w-full">
@@ -121,13 +118,10 @@ export function BlogUvChart() {
                           } as React.CSSProperties
                         }
                       />
-                      {chartConfig[name as keyof typeof chartConfig]?.label ||
-                        name}
+                      {chartConfig[name as keyof typeof chartConfig]?.label || name}
                       <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
                         {value}
-                        <span className="text-muted-foreground font-normal">
-                          s
-                        </span>
+                        <span className="text-muted-foreground font-normal">s</span>
                       </div>
                     </div>
                   )}
@@ -135,18 +129,8 @@ export function BlogUvChart() {
               }
             />
             <ChartLegend content={<ChartLegendContent />} />
-            <Bar
-              dataKey="coldInstall"
-              fill="var(--color-coldInstall)"
-              radius={4}
-              barSize={14}
-            />
-            <Bar
-              dataKey="warmInstall"
-              fill="var(--color-warmInstall)"
-              radius={4}
-              barSize={14}
-            />
+            <Bar dataKey="coldInstall" fill="var(--color-coldInstall)" radius={4} barSize={14} />
+            <Bar dataKey="warmInstall" fill="var(--color-warmInstall)" radius={4} barSize={14} />
             <Bar
               dataKey="coldResolution"
               fill="var(--color-coldResolution)"
@@ -164,8 +148,7 @@ export function BlogUvChart() {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 leading-none font-medium">
-          uv is up to 5-15x faster than alternatives{" "}
-          <TrendingUpIcon className="size-4" />
+          uv is up to 5-15x faster than alternatives <TrendingUpIcon className="size-4" />
         </div>
         <div className="text-muted-foreground leading-none">
           Benchmarked on cold and warm cache scenarios
@@ -185,13 +168,7 @@ const DottedBackgroundPattern = () => {
       height="10"
       patternUnits="userSpaceOnUse"
     >
-      <circle
-        className="dark:text-muted/40 text-muted"
-        cx="2"
-        cy="2"
-        r="1"
-        fill="currentColor"
-      />
+      <circle className="dark:text-muted/40 text-muted" cx="2" cy="2" r="1" fill="currentColor" />
     </pattern>
   );
 };

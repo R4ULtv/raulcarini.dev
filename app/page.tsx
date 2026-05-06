@@ -31,19 +31,14 @@ export default async function Home() {
           About
         </a>
         <p className="text-muted-foreground">
-          Hi! I&apos;m a full-stack developer based in Milan, currently juggling
-          projects and studies. On the professional side, I&apos;m diving into
-          exciting ventures like{" "}
+          Hi! I&apos;m a full-stack developer based in Milan, currently juggling projects and
+          studies. On the professional side, I&apos;m diving into exciting ventures like{" "}
           <Badge
             asChild
             variant="secondary"
             className="h-[26px] px-1.5 rounded border border-border font-normal"
           >
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://ui.raulcarini.dev/"
-            >
+            <a target="_blank" rel="noopener noreferrer" href="https://ui.raulcarini.dev/">
               <Image
                 unoptimized
                 width={16}
@@ -60,11 +55,7 @@ export default async function Home() {
             variant="secondary"
             className="h-[26px] px-1.5 rounded border border-border font-normal"
           >
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://lazypr.vercel.app/"
-            >
+            <a target="_blank" rel="noopener noreferrer" href="https://lazypr.vercel.app/">
               <Image
                 unoptimized
                 width={16}
@@ -81,11 +72,7 @@ export default async function Home() {
             variant="secondary"
             className="h-[26px] px-1.5 rounded border border-border font-normal"
           >
-            <a
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://learn-the-web.vercel.app"
-            >
+            <a target="_blank" rel="noopener noreferrer" href="https://learn-the-web.vercel.app">
               <Image
                 unoptimized
                 width={16}
@@ -96,17 +83,11 @@ export default async function Home() {
               Learn The Web
             </a>
           </Badge>{" "}
-          a learning platform. Soon, more projects that I am building in secret
-          will arrive.
+          a learning platform. Soon, more projects that I am building in secret will arrive.
         </p>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 my-3">
-          <ImageViewer
-            src={mont2}
-            width={320}
-            alt="Alps, Italy"
-            placeholder="blur"
-          />
+          <ImageViewer src={mont2} width={320} alt="Alps, Italy" placeholder="blur" />
           <ImageViewer
             src={dlynr}
             width={320}
@@ -115,12 +96,7 @@ export default async function Home() {
             className="sm:row-span-2 row-span-1"
             objectFit="cover"
           />
-          <ImageViewer
-            src={mont}
-            width={320}
-            alt="Alps, Italy"
-            placeholder="blur"
-          />
+          <ImageViewer src={mont} width={320} alt="Alps, Italy" placeholder="blur" />
           <ImageViewer
             src={swag}
             width={320}
@@ -135,19 +111,13 @@ export default async function Home() {
             placeholder="blur"
             className="row-span-2 col-span-1"
           />
-          <ImageViewer
-            src={lake}
-            width={320}
-            alt="Lake Alps, Italy"
-            placeholder="blur"
-          />
+          <ImageViewer src={lake} width={320} alt="Lake Alps, Italy" placeholder="blur" />
         </div>
 
         <p className="text-zinc-600 dark:text-zinc-400 mt-2">
-          My true passion lies in crafting websites that solve problems. But
-          there&apos;s more to me than code! When I&apos;m not developing, music
-          takes center stage. I love producing tracks and experimenting with
-          fresh sounds. If you are interested in my music check out on my{" "}
+          My true passion lies in crafting websites that solve problems. But there&apos;s more to me
+          than code! When I&apos;m not developing, music takes center stage. I love producing tracks
+          and experimenting with fresh sounds. If you are interested in my music check out on my{" "}
           <Badge
             asChild
             variant="secondary"
@@ -171,18 +141,8 @@ export default async function Home() {
           profile.
         </p>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-3">
-          <ImageViewer
-            src={city}
-            width={320}
-            alt="Lake Garda, Italy"
-            placeholder="blur"
-          />
-          <ImageViewer
-            src={lake2}
-            width={320}
-            alt="Lake view"
-            placeholder="blur"
-          />
+          <ImageViewer src={city} width={320} alt="Lake Garda, Italy" placeholder="blur" />
+          <ImageViewer src={lake2} width={320} alt="Lake view" placeholder="blur" />
           <ImageViewer
             src={croatia}
             width={640}
@@ -212,28 +172,20 @@ export default async function Home() {
                   {post.metadata.title}{" "}
                   <span className="font-normal">
                     •{" "}
-                    {new Date(post.metadata.createdAt).toLocaleDateString(
-                      "en-US",
-                      {
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric",
-                      },
-                    )}
+                    {new Date(post.metadata.createdAt).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </span>
                 </p>
-                <span className="text-muted-foreground">
-                  {post.metadata.description}
-                </span>
+                <span className="text-muted-foreground">{post.metadata.description}</span>
               </div>
             </Link>
           ))}
         </div>
         <div className="flex items-center justify-start mt-4">
-          <Link
-            href="/blog"
-            className="py-1 text-sm text-muted-foreground hover:underline"
-          >
+          <Link href="/blog" className="py-1 text-sm text-muted-foreground hover:underline">
             Load more blog posts...
           </Link>
         </div>
@@ -275,10 +227,7 @@ export default async function Home() {
         </a>
         <p className="text-muted-foreground">
           Want to get in touch? Email me at{" "}
-          <a
-            href="mailto:contact@raulcarini.dev"
-            className="hover:underline text-foreground"
-          >
+          <a href="mailto:contact@raulcarini.dev" className="hover:underline text-foreground">
             contact@raulcarini.dev
           </a>
           .

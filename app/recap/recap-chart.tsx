@@ -35,12 +35,7 @@ export function RecapChart({ data }: { data: ChartData[] }) {
     <ChartContainer config={chartConfig} className="min-h-[200px] w-full">
       <AreaChart accessibilityLayer data={data} margin={{ top: 18, left: 18 }}>
         <CartesianGrid vertical={false} strokeDasharray="3 3" />
-        <XAxis
-          dataKey="year"
-          tickLine={false}
-          axisLine={false}
-          tickMargin={8}
-        />
+        <XAxis dataKey="year" tickLine={false} axisLine={false} tickMargin={8} />
         <ChartTooltip
           cursor={false}
           content={
@@ -65,59 +60,17 @@ export function RecapChart({ data }: { data: ChartData[] }) {
           }
         />
         <defs>
-          <linearGradient
-            id="gradient-rounded-chart-contributions"
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="1"
-          >
-            <stop
-              offset="5%"
-              stopColor="var(--color-contributions)"
-              stopOpacity={0.5}
-            />
-            <stop
-              offset="95%"
-              stopColor="var(--color-contributions)"
-              stopOpacity={0.1}
-            />
+          <linearGradient id="gradient-rounded-chart-contributions" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="var(--color-contributions)" stopOpacity={0.5} />
+            <stop offset="95%" stopColor="var(--color-contributions)" stopOpacity={0.1} />
           </linearGradient>
-          <linearGradient
-            id="gradient-rounded-chart-activeDays"
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="1"
-          >
-            <stop
-              offset="5%"
-              stopColor="var(--color-activeDays)"
-              stopOpacity={0.5}
-            />
-            <stop
-              offset="95%"
-              stopColor="var(--color-activeDays)"
-              stopOpacity={0.1}
-            />
+          <linearGradient id="gradient-rounded-chart-activeDays" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="var(--color-activeDays)" stopOpacity={0.5} />
+            <stop offset="95%" stopColor="var(--color-activeDays)" stopOpacity={0.1} />
           </linearGradient>
-          <linearGradient
-            id="gradient-rounded-chart-blogViews"
-            x1="0"
-            y1="0"
-            x2="0"
-            y2="1"
-          >
-            <stop
-              offset="5%"
-              stopColor="var(--color-blogViews)"
-              stopOpacity={0.5}
-            />
-            <stop
-              offset="95%"
-              stopColor="var(--color-blogViews)"
-              stopOpacity={0.1}
-            />
+          <linearGradient id="gradient-rounded-chart-blogViews" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="5%" stopColor="var(--color-blogViews)" stopOpacity={0.5} />
+            <stop offset="95%" stopColor="var(--color-blogViews)" stopOpacity={0.1} />
           </linearGradient>
         </defs>
         <Area

@@ -7,8 +7,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Blog",
-  description:
-    "Thoughts on software development, web technologies, and building projects.",
+  description: "Thoughts on software development, web technologies, and building projects.",
 };
 
 export default async function Home() {
@@ -40,8 +39,8 @@ export default async function Home() {
                 Thoughts & Ideas
               </h1>
               <p className="text-lg text-muted-foreground text-pretty">
-                Insights on software development, web technologies, and building
-                meaningful projects.
+                Insights on software development, web technologies, and building meaningful
+                projects.
               </p>
             </div>
           </div>
@@ -61,14 +60,11 @@ export default async function Home() {
                   {post.metadata.title}{" "}
                   <span className="font-normal">
                     •{" "}
-                    {new Date(post.metadata.createdAt).toLocaleDateString(
-                      "en-US",
-                      {
-                        month: "long",
-                        day: "numeric",
-                        year: "numeric",
-                      },
-                    )}
+                    {new Date(post.metadata.createdAt).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
                   </span>
                   {isNewPost(post.metadata.createdAt) && (
                     <Badge
@@ -80,9 +76,7 @@ export default async function Home() {
                     </Badge>
                   )}
                 </p>
-                <span className="text-muted-foreground">
-                  {post.metadata.description}
-                </span>
+                <span className="text-muted-foreground">{post.metadata.description}</span>
               </div>
             </Link>
           ))}

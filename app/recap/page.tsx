@@ -5,8 +5,7 @@ import { RecapChart } from "./recap-chart";
 
 export const metadata: Metadata = {
   title: "Recap",
-  description:
-    "A recap of my achievements, projects, and contributions over the years.",
+  description: "A recap of my achievements, projects, and contributions over the years.",
 };
 
 interface YearData {
@@ -28,9 +27,7 @@ export default function RecapPage() {
   const years = Object.keys(recapData.years).sort();
 
   const chartData = years.map((year) => {
-    const yearData = recapData.years[
-      year as keyof typeof recapData.years
-    ] as YearData;
+    const yearData = recapData.years[year as keyof typeof recapData.years] as YearData;
     return {
       year,
       contributions: yearData.coding.totalContributions,
@@ -62,10 +59,7 @@ export default function RecapPage() {
             [ {year} ]
           </Link>
         ))}
-        <Link
-          href="/"
-          className="hover:text-foreground transition-colors w-fit"
-        >
+        <Link href="/" className="hover:text-foreground transition-colors w-fit">
           [ HOME ]
         </Link>
       </div>

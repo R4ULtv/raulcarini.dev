@@ -1,8 +1,10 @@
 export const metadata = {
   title: "Rail Radar",
   createdAt: "2026-01-14",
-  description: "Real-time tracking of trains across 7 European countries with an interactive map powered by official railway data.",
-  keywords: "real-time tracking, European trains, RFI data, Deutsche Bahn, National Rail, iRail, NS, Digitraffic, Cloudflare Workers, Next.js, Mapbox, monorepo, Hono framework, interactive maps, railway tracking, serverless API"
+  description:
+    "Real-time tracking of trains across 7 European countries with an interactive map powered by official railway data.",
+  keywords:
+    "real-time tracking, European trains, RFI data, Deutsche Bahn, National Rail, iRail, NS, Digitraffic, Cloudflare Workers, Next.js, Mapbox, monorepo, Hono framework, interactive maps, railway tracking, serverless API",
 };
 
 <a href="https://railradar24.com" target="_blank">
@@ -144,6 +146,7 @@ If you have ideas for other features, I'm always open to suggestions on the [Git
 What began as a tool for tracking Italian trains has evolved into a multi-country European railway platform. The expansion from 2,400 Italian stations to over 5,700 stations across 7 countries brought unique challenges: normalizing data from vastly different APIs, building a search engine that works across multiple languages, and keeping the map performant as the dataset more than doubled.
 
 The key architectural decisions that made this growth possible:
+
 - The **monorepo structure** with shared types and UI components made adding new countries straightforward, each new integration only needs a scraper and station data.
 - **Cloudflare Workers** handled the scaling effortlessly, serving requests from edge locations close to users across all of Europe.
 - **Country-prefixed station IDs** and **GeoJSON as the single source of truth** kept the data model clean as it grew.

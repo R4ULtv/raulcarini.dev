@@ -75,16 +75,11 @@ export const size = {
 export const contentType = "image/png";
 
 export default async function Image({ params }) {
-  const post = await fetch(`https://your-api.com/posts/${params.slug}`).then(
-    (res) => res.json()
-  );
+  const post = await fetch(`https://your-api.com/posts/${params.slug}`).then((res) => res.json());
 
-  return new ImageResponse(
-    <div style={{ fontSize: 48, background: "white" }}>{post.title}</div>,
-    {
-      ...size,
-    }
-  );
+  return new ImageResponse(<div style={{ fontSize: 48, background: "white" }}>{post.title}</div>, {
+    ...size,
+  });
 }
 ```
 
@@ -98,17 +93,12 @@ export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const slug = searchParams.get("slug");
 
-  const post = await fetch(`https://your-api.com/posts/${slug}`).then((res) =>
-    res.json()
-  );
+  const post = await fetch(`https://your-api.com/posts/${slug}`).then((res) => res.json());
 
-  return new ImageResponse(
-    <div style={{ fontSize: 48, background: "white" }}>{post.title}</div>,
-    {
-      width: 1200,
-      height: 630,
-    }
-  );
+  return new ImageResponse(<div style={{ fontSize: 48, background: "white" }}>{post.title}</div>, {
+    width: 1200,
+    height: 630,
+  });
 }
 ```
 

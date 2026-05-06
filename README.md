@@ -23,17 +23,20 @@ A modern personal portfolio and blog built with Next.js 15, featuring MDX-powere
 ### Installation
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/R4ULtv/raulcarini.com-v2.git
 cd raulcarini.com-v2
 ```
 
 2. Install dependencies:
+
 ```bash
 pnpm install
 ```
 
 3. Set up environment variables (create `.env.local`):
+
 ```env
 # Upstash Redis (for page views)
 UPSTASH_REDIS_REST_URL=your_redis_url
@@ -44,6 +47,7 @@ GITHUB_TOKEN=your_github_token
 ```
 
 4. Run the development server with Turbopack:
+
 ```bash
 pnpm run dev
 ```
@@ -60,7 +64,7 @@ export const metadata = {
   createdAt: "2025-01-15",
   description: "An amazing blog post about web development",
   keywords: ["nextjs", "react", "typescript"],
-  shortSlug: "first-post" // Optional short URL
+  shortSlug: "first-post", // Optional short URL
 };
 
 # My First Blog Post

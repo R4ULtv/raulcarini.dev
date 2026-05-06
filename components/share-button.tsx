@@ -22,11 +22,7 @@ const ShareButton = ({ slug }: { slug: string }) => {
 
   React.useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (
-        (event.metaKey || event.ctrlKey) &&
-        event.shiftKey &&
-        event.key.toLowerCase() === "c"
-      ) {
+      if ((event.metaKey || event.ctrlKey) && event.shiftKey && event.key.toLowerCase() === "c") {
         event.preventDefault();
         copyToClipboard();
       }
@@ -49,17 +45,13 @@ const ShareButton = ({ slug }: { slug: string }) => {
       <CheckIcon
         className={cn(
           "absolute left-2 will-change-auto transition-[scale,opacity,filter] ease-out",
-          copied
-            ? "opacity-100 scale-100 blur-0"
-            : "opacity-0 scale-95 blur-[2px]",
+          copied ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-95 blur-[2px]",
         )}
       />
       <Link2Icon
         className={cn(
           "absolute left-2 will-change-auto transition-[scale,opacity,filter] ease-out",
-          copied
-            ? "opacity-0 scale-95 blur-[2px]"
-            : "opacity-100 scale-100 blur-0",
+          copied ? "opacity-0 scale-95 blur-[2px]" : "opacity-100 scale-100 blur-0",
         )}
       />
       Copy Link

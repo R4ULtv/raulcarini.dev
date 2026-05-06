@@ -1,8 +1,9 @@
 export const metadata = {
   title: "Shortly",
   createdAt: "2024-04-24",
-  description: "A URL Shortening Service: Convert lengthy URLs into concise and easy-to-share links.",
-  keywords: "URLShortener, NextJS, MongoDB, Authentication, Stripe"
+  description:
+    "A URL Shortening Service: Convert lengthy URLs into concise and easy-to-share links.",
+  keywords: "URLShortener, NextJS, MongoDB, Authentication, Stripe",
 };
 
 <a href="https://shrly.cc/" target="_blank">
@@ -99,10 +100,7 @@ For now, we will focus on the app folder. Inside this folder, we will manage all
 
 Each page is represented by its own folder and a file called `page.js`.
 
-<a
-  href="https://nextjs.org/docs/app/building-your-application/routing/pages"
-  target="_blank"
->
+<a href="https://nextjs.org/docs/app/building-your-application/routing/pages" target="_blank">
   <Image
     src={"/assets/shortly/page-special-file.png"}
     width={720}
@@ -148,12 +146,7 @@ In my case, I opted for MongoDB mainly for economic reasons, since its free plan
 But what is MongoDB?
 
 <a href="https://www.mongodb.com/" target="_blank">
-  <Image
-    src={"/assets/shortly/mongodb.png"}
-    width={720}
-    height={405}
-    alt="mongodb"
-  />
+  <Image src={"/assets/shortly/mongodb.png"} width={720} height={405} alt="mongodb" />
 </a>
 
 MongoDB is a NoSQL database management system that uses a document-based model.
@@ -196,12 +189,7 @@ To manage this part, I used Next Auth, a complete open-source solution for authe
 It offers a range of features that simplify the user authentication and authorization process.
 
 <a href="https://next-auth.js.org/" target="_blank">
-  <Image
-    src={"/assets/shortly/next-auth.png"}
-    width={720}
-    height={405}
-    alt="next-auth"
-  />
+  <Image src={"/assets/shortly/next-auth.png"} width={720} height={405} alt="next-auth" />
 </a>
 
 The first choice to make is the type of session to use: JWT or database.
@@ -228,12 +216,7 @@ On my website, I have chosen to offer several login options, including Google an
 There's just one last aspect to complete the website: how can users pay for the service and subscribe?
 
 <a href="https://stripe.com/" target="_blank">
-  <Image
-    src={"/assets/shortly/stripe.png"}
-    width={720}
-    height={405}
-    alt="stripe"
-  />
+  <Image src={"/assets/shortly/stripe.png"} width={720} height={405} alt="stripe" />
 </a>
 
 For payment processing, I chose Stripe, an online payment platform that allows businesses to accept payments from various sources, including:
@@ -266,12 +249,7 @@ In our case, when a user makes a payment, I receive all the payment data and wha
 This allows me to easily manage subscriptions and different plans, as well as know when a subscription has expired and then remove the user's payment plan.
 
 <a href="https://stripe.com/billing" target="_blank">
-  <Image
-    src={"/assets/shortly/stripe_billing.png"}
-    width={720}
-    height={405}
-    alt="stripe"
-  />
+  <Image src={"/assets/shortly/stripe_billing.png"} width={720} height={405} alt="stripe" />
 </a>
 
 ### How can I visualize the data?
@@ -281,12 +259,7 @@ To create it, I used Tremor.so, an open-source React library that allows you to 
 It offers a series of pre-built components based on Tailwind CSS that allow you to display complex data in a clear and concise way.
 
 <a href="https://www.tremor.so/" target="_blank">
-  <Image
-    src={"/assets/shortly/tremor.png"}
-    width={720}
-    height={405}
-    alt="tremor"
-  />
+  <Image src={"/assets/shortly/tremor.png"} width={720} height={405} alt="tremor" />
 </a>
 
 Data analysis has become a crucial aspect of computer science in recent years.

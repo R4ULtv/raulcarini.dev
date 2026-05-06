@@ -25,33 +25,26 @@ export function GET(request: Request) {
   }
 
   return new ImageResponse(
-    (
-      <div tw="flex flex-col relative w-full h-full p-16 text-primary bg-zinc-200">
-        <div tw="flex items-center gap-4 mb-3">
-          <Moon tw="size-16" />
-          {searchParams.get("title") && searchParams.get("description") && (
-            <span tw="text-[56px] font-semibold">Raul Carini</span>
-          )}
-        </div>
-        <p tw="font-extrabold text-[84px] text-ellipsis mt-[0.5em] mb-[0.5em]">
-          {title}
-        </p>
-        <span tw="font-medium text-[48px] text-ellipsis text-zinc-800">
-          {description}
-        </span>
-        {!searchParams.get("title") && !searchParams.get("description") && (
-          <ArtworkComponent tw="absolute bottom-8 right-8 w-[352px] h-[352px]" />
+    <div tw="flex flex-col relative w-full h-full p-16 text-primary bg-zinc-200">
+      <div tw="flex items-center gap-4 mb-3">
+        <Moon tw="size-16" />
+        {searchParams.get("title") && searchParams.get("description") && (
+          <span tw="text-[56px] font-semibold">Raul Carini</span>
         )}
       </div>
-    ),
+      <p tw="font-extrabold text-[84px] text-ellipsis mt-[0.5em] mb-[0.5em]">{title}</p>
+      <span tw="font-medium text-[48px] text-ellipsis text-zinc-800">{description}</span>
+      {!searchParams.get("title") && !searchParams.get("description") && (
+        <ArtworkComponent tw="absolute bottom-8 right-8 w-[352px] h-[352px]" />
+      )}
+    </div>,
     {
       width: 1200,
       height: 630,
       format: "webp",
       headers: {
         "Content-Type": "image/webp",
-        "Cache-Control":
-          "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800",
+        "Cache-Control": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800",
       },
     },
   );

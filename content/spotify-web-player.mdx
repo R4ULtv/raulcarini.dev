@@ -2,7 +2,7 @@ export const metadata = {
   title: "Spotify Web Player",
   createdAt: "2024-11-01",
   description: "Listen to your Music Anytime, Anywhere.",
-  keywords: "Spotify, WebPlayer, Visualization, NextJs, Auth"
+  keywords: "Spotify, WebPlayer, Visualization, NextJs, Auth",
 };
 
 <a href="https://github.com/r4ultv/spotify-web-player" target="_blank">
@@ -16,17 +16,17 @@ export const metadata = {
 </a>
 
 Have you ever wished you could see your music come alive while listening to your favorite tracks?
-That's exactly the experience I set out to create with my latest project: a [**Spotify Web Player**](https://web-player.raulcarini.dev) that transforms your music into *mesmerizing visual displays*.
+That's exactly the experience I set out to create with my latest project: a [**Spotify Web Player**](https://web-player.raulcarini.dev) that transforms your music into _mesmerizing visual displays_.
 
 ## The Genesis of an Idea
 
 The inspiration for this project struck during one of my late-night coding sessions.
 While listening to music on [Spotify](https://spotify.com), I found myself wondering why the visual experience felt so disconnected from the audio.
-Modern music players often treat visuals as an afterthought - a static album cover or basic progress bar. But music is *dynamic*, *emotional*, and *alive*.
+Modern music players often treat visuals as an afterthought - a static album cover or basic progress bar. But music is _dynamic_, _emotional_, and _alive_.
 Shouldn't our visual experience match that energy?
 
 This thought led me down a rabbit hole of exploration into audio visualization and the [**Spotify Web API**](https://developer.spotify.com/documentation/web-api/).
-I discovered that Spotify provides rich data about tracks in real-time, including audio features like *tempo*, *energy*, and various *acoustic properties*.
+I discovered that Spotify provides rich data about tracks in real-time, including audio features like _tempo_, _energy_, and various _acoustic properties_.
 What if we could harness this data to create dynamic visualizations that truly represent the music being played?
 
 ### What Makes This Player Special?
@@ -71,7 +71,7 @@ async function refreshAccessToken(token) {
 
     // Create Base64 encoded auth string
     const basicAuth = Buffer.from(
-      `${process.env.AUTH_SPOTIFY_ID}:${process.env.AUTH_SPOTIFY_SECRET}`
+      `${process.env.AUTH_SPOTIFY_ID}:${process.env.AUTH_SPOTIFY_SECRET}`,
     ).toString("base64");
 
     // Make refresh token request
@@ -138,10 +138,10 @@ Here's how we utilize various aspects of the API:
 
 The Web API's playback endpoints allow us to create a seamless listening experience by:
 
-- ***Controlling music playback*** (play, pause, skip, seek)
-- ***Retrieving currently playing track information***
-- ***Accessing real-time playback state***
-- ***Managing playback queue and device selection***
+- **_Controlling music playback_** (play, pause, skip, seek)
+- **_Retrieving currently playing track information_**
+- **_Accessing real-time playback state_**
+- **_Managing playback queue and device selection_**
 
 ### Premium Account Requirements
 
@@ -171,7 +171,7 @@ This requirement ensures users can access the complete range of interactive feat
 
 At the heart of our player's visual appeal lies an innovative dynamic background
 system powered by [shadergradient](https://shadergradient.co/) technology. This feature transforms the listening
-experience by creating *fluid*, *responsive* visual landscapes that complement each track.
+experience by creating _fluid_, _responsive_ visual landscapes that complement each track.
 
 <a href="https://developer.spotify.com/documentation/web-api" target="_blank">
   <Image
@@ -190,24 +190,24 @@ The system employs [shadergradient](https://shadergradient.co/) to generate an e
 
 Our development process faced several key challenges:
 
-- *Accurately capturing album mood through color selection*
-- *Balancing visual impact with functional design*
-- *Ensuring consistent readability across diverse color palettes*
+- _Accurately capturing album mood through color selection_
+- _Balancing visual impact with functional design_
+- _Ensuring consistent readability across diverse color palettes_
 
 ### Optimization Process:
 
 To achieve optimal results, we:
 
-- *Experimented with multiple color extraction algorithms*
-- *Fine-tuned shader color blending parameters*
+- _Experimented with multiple color extraction algorithms_
+- _Fine-tuned shader color blending parameters_
 
 ### Final Implementation:
 
 The resulting system creates uniquely tailored backgrounds that:
 
-*Dynamically adapt to each track's album art*
-*Maintain perfect visual harmony with interface elements*
-*Enhance the overall listening experience through synchronized visual feedback*
+_Dynamically adapt to each track's album art_
+_Maintain perfect visual harmony with interface elements_
+_Enhance the overall listening experience through synchronized visual feedback_
 
 ## Future Development Roadmap
 
@@ -227,9 +227,10 @@ A comprehensive analytics suite that will offer:
 
 ### Enhanced Media Integration
 
-The planned *Related Content Section* will bridge the gap between audio and visual media by automatically curating [YouTube](https://youtube.com) content for current tracks providing seamless access to official music videos.
+The planned _Related Content Section_ will bridge the gap between audio and visual media by automatically curating [YouTube](https://youtube.com) content for current tracks providing seamless access to official music videos.
 
 ### Intelligent Track Discovery
+
 Our sophisticated recommendation system leverages [Spotify's powerful API](https://developer.spotify.com/documentation/web-api) to deliver personalized music suggestions:
 
 API-Driven Recommendations
@@ -240,19 +241,20 @@ API-Driven Recommendations
 
 ## Conclusion
 
-What began as an exploration into the synergy between music and visual design has evolved into a *comprehensive reimagining* of the digital music experience.
+What began as an exploration into the synergy between music and visual design has evolved into a _comprehensive reimagining_ of the digital music experience.
 The **Spotify Web Player** transcends traditional streaming platforms by orchestrating a multi-sensory journey where audio and visuals dance in perfect harmony.
 
-At its core, this project challenges the conventional notion of what a music player can be. Through *real-time visualizations* that pulse with every beat, *seamless integration* with Spotify's vast musical ecosystem, and thoughtfully crafted customization options, we've created a platform that transforms passive listening into active engagement.
+At its core, this project challenges the conventional notion of what a music player can be. Through _real-time visualizations_ that pulse with every beat, _seamless integration_ with Spotify's vast musical ecosystem, and thoughtfully crafted customization options, we've created a platform that transforms passive listening into active engagement.
 The technical foundation, built upon [Next-Auth v5](https://authjs.dev)'s robust authentication system, ensures that the magic happens seamlessly behind the scenes.
 
 This reliable infrastructure sets the stage for ambitious future developments, including:
-- A sophisticated *statistics dashboard* that will unveil the stories hidden in your listening patterns
-- Contextually integrated *media content* that enriches the musical narrative
-- An intelligent *discovery system* that opens new pathways to musical exploration
+
+- A sophisticated _statistics dashboard_ that will unveil the stories hidden in your listening patterns
+- Contextually integrated _media content_ that enriches the musical narrative
+- An intelligent _discovery system_ that opens new pathways to musical exploration
 
 But perhaps most significantly, this player represents a fundamental shift in how we experience digital music. It's not just about playing songs—it's about creating moments where technology enhances our emotional connection to music.
-Each feature, from the *dynamic backgrounds* to the *responsive visualizations*, has been carefully crafted to deepen this connection.
+Each feature, from the _dynamic backgrounds_ to the _responsive visualizations_, has been carefully crafted to deepen this connection.
 
 As we look to the future, our roadmap is guided by a single vision: to continue pushing the boundaries of what's possible when technology and artistry converge.
 The **Spotify Web Player** stands as a testament to the endless possibilities that emerge when we dare to reimagine the familiar, creating an experience that resonates with both casual listeners and passionate audiophiles alike.

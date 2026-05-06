@@ -32,8 +32,8 @@ Furthermore, it automatically resizes and serves images at the correct sizes bas
 Here's a simple example of how to use the `<Image/>` component:
 
 ```jsx
-import Image from 'next/image';
-import myImage from '../public/my-image.jpg';
+import Image from "next/image";
+import myImage from "../public/my-image.jpg";
 
 function MyComponent() {
   return (
@@ -65,20 +65,12 @@ They often offer features like on-the-fly image resizing, format conversion, and
 Here's a simplified example of how you might use Cloudinary to optimize an image:
 
 ```jsx
-import Image from 'next/image';
+import Image from "next/image";
 
 function MyComponent() {
-  const cloudinaryUrl =
-    "https://res.cloudinary.com/your-cloud-name/your-image-id.jpg";
+  const cloudinaryUrl = "https://res.cloudinary.com/your-cloud-name/your-image-id.jpg";
 
-  return (
-    <Image
-      src={cloudinaryUrl}
-      alt="A descriptive alt text"
-      width={500}
-      height={300}
-     />
-    );
+  return <Image src={cloudinaryUrl} alt="A descriptive alt text" width={500} height={300} />;
 }
 ```
 

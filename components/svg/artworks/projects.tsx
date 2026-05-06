@@ -1,13 +1,7 @@
 import * as React from "react";
 
 const Projects = (props: React.SVGProps<SVGSVGElement>) => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    width="128"
-    height="128"
-    viewBox="0 0 128 128"
-    {...props}
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" {...props}>
     <g fill="current">
       <path d="M44.78 115.6c-6.41-1.47-.08-12.79 6.55-21.32a79.6 79.6 0 0 0 6.82-10.51l-2.59-1.85S50.17 90.83 47 94.26s-8 11.19-8.23 14.21-.07 7.13 6.01 7.13" />
       <path d="M94.86 110.79c-14.32-.63-48.66-44.56-48.66-44.56 3.08-1.4 6.78-7.31 6.78-7.31l-1.49-1.58s-5.19 7-9.27 7.68c0 0-1.09 0 .65 1.68S59.08 84.2 62 87.86s20.64 21.93 25.6 23.41c4.67 1.39 4.67 1.39 6 .4Z" />

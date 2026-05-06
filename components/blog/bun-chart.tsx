@@ -49,9 +49,7 @@ export function BlogBunChart() {
     <Card className="mt-6 rounded-md">
       <CardHeader>
         <CardTitle>Package Manager Install Speed Comparison</CardTitle>
-        <CardDescription>
-          Mean installation times (lower is faster)
-        </CardDescription>
+        <CardDescription>Mean installation times (lower is faster)</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig} className="h-[220px] w-full">
@@ -93,24 +91,17 @@ export function BlogBunChart() {
                           } as React.CSSProperties
                         }
                       />
-                      {chartConfig[name as keyof typeof chartConfig]?.label ||
-                        name}
+                      {chartConfig[name as keyof typeof chartConfig]?.label || name}
                       <div className="text-foreground ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums">
                         {value}
-                        <span className="text-muted-foreground font-normal">
-                          s
-                        </span>
+                        <span className="text-muted-foreground font-normal">s</span>
                       </div>
                     </div>
                   )}
                 />
               }
             />
-            <Bar
-              dataKey="installTime"
-              fill="var(--color-installTime)"
-              radius={4}
-            />
+            <Bar dataKey="installTime" fill="var(--color-installTime)" radius={4} />
           </BarChart>
         </ChartContainer>
       </CardContent>
@@ -137,13 +128,7 @@ const DottedBackgroundPattern = () => {
       height="10"
       patternUnits="userSpaceOnUse"
     >
-      <circle
-        className="dark:text-muted/40 text-muted"
-        cx="2"
-        cy="2"
-        r="1"
-        fill="currentColor"
-      />
+      <circle className="dark:text-muted/40 text-muted" cx="2" cy="2" r="1" fill="currentColor" />
     </pattern>
   );
 };

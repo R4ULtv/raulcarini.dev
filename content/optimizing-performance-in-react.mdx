@@ -1,8 +1,9 @@
 export const metadata = {
   title: "Optimizing Performance in React",
   createdAt: "2025-04-23",
-  description: "Fix Next.js performance issues with memoization, the React Compiler, and profiling.",
-  keywords: "Next.js, React Performance, React Compiler, Re-renders, Performance Optimization"
+  description:
+    "Fix Next.js performance issues with memoization, the React Compiler, and profiling.",
+  keywords: "Next.js, React Performance, React Compiler, Re-renders, Performance Optimization",
 };
 
 As developers, we strive to build fast, responsive web applications that provide a great user experience. When working with [React](https://react.dev/) and frameworks like [Next.js](https://nextjs.org/), performance is crucial, especially as applications grow in complexity. While Next.js offers many built-in optimizations like [server-side rendering](https://nextjs.org/docs/app/building-your-application/rendering/server-components) and [static generation](https://nextjs.org/docs/pages/building-your-application/data-fetching/get-static-props), understanding and managing performance within your React components is equally important.
@@ -81,10 +82,7 @@ function Counter() {
   return (
     <div>
       <p>Count: {count}</p>
-      <input
-        value={otherState}
-        onChange={(e) => setOtherState(e.target.value)}
-      />
+      <input value={otherState} onChange={(e) => setOtherState(e.target.value)} />
       <Button onClick={increment} label="Increment" />
       {/* The input change causes Counter to re-render, but because increment is memoized,
           the Button component (if wrapped in React.memo) won't re-render. */}

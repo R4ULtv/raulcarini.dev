@@ -55,11 +55,7 @@ const ContributionCell = React.memo(function ContributionCell({
   );
 });
 
-const WeekdayLabel = React.memo(function WeekdayLabel({
-  day,
-}: {
-  day: number;
-}) {
+const WeekdayLabel = React.memo(function WeekdayLabel({ day }: { day: number }) {
   return (
     <td rowSpan={2} className="text-xs font-semibold pr-6 sm:pr-8 relative">
       <div className="absolute -top-1 -left-1">{WEEKDAYS[day]}</div>
@@ -76,20 +72,13 @@ const MonthLabel = React.memo(function MonthLabel({
 }) {
   if (!date) return <td colSpan={colSpan} />;
   return (
-    <td
-      colSpan={colSpan}
-      className="text-xs font-semibold first-letter:uppercase"
-    >
+    <td colSpan={colSpan} className="text-xs font-semibold first-letter:uppercase">
       {new Date(date).toLocaleString("en-US", { month: "short" })}
     </td>
   );
 });
 
-export default function GitHubContributions({
-  data,
-}: {
-  data: Contribution[];
-}): React.JSX.Element {
+export default function GitHubContributions({ data }: { data: Contribution[] }): React.JSX.Element {
   const contributionsByDay = React.useMemo(() => {
     return data.reduce<DayContributionMap>((acc, contribution) => {
       const day = new Date(contribution.date).getDay();
@@ -104,32 +93,18 @@ export default function GitHubContributions({
       data.reduce<(React.JSX.Element | null)[]>((acc, contribution, i) => {
         const date = new Date(contribution.date);
         const isStartOfWeek = i % 7 === 0;
-        const isWithinFirstWeekOfMonth =
-          date.getDate() >= 1 && date.getDate() <= 7;
+        const isWithinFirstWeekOfMonth = date.getDate() >= 1 && date.getDate() <= 7;
         const isBeforeLastWeek = date < new Date(now - 7 * 24 * 60 * 60 * 1000);
 
-        if (
-          i === 0 ||
-          (isStartOfWeek && isWithinFirstWeekOfMonth && isBeforeLastWeek)
-        ) {
-          const daysInMonth = new Date(
-            date.getFullYear(),
-            date.getMonth() + 1,
-            0,
-          ).getDate();
+        if (i === 0 || (isStartOfWeek && isWithinFirstWeekOfMonth && isBeforeLastWeek)) {
+          const daysInMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
           const remainingDays = daysInMonth - date.getDate();
 
           acc[i] = (
             <MonthLabel
               key={i}
               date={remainingDays > 14 ? date : undefined}
-              colSpan={
-                i === 0
-                  ? Math.ceil(remainingDays / 7)
-                  : remainingDays >= 28
-                    ? 5
-                    : 4
-              }
+              colSpan={i === 0 ? Math.ceil(remainingDays / 7) : remainingDays >= 28 ? 5 : 4}
             />
           );
         } else {

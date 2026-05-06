@@ -35,11 +35,7 @@ function createHeading(level: number) {
 const TwitterBadge = ({ username }: { username: string }) => {
   return (
     <Badge variant="secondary" className="not-prose" asChild>
-      <a
-        href={"https://x.com/" + username}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <a href={"https://x.com/" + username} target="_blank" rel="noopener noreferrer">
         <Image
           unoptimized
           width={14}
@@ -105,10 +101,7 @@ async function CodeBlock(props: React.ComponentProps<"pre">) {
   return (
     <div className="relative rounded-md not-prose text-sm mt-6 [&_pre]:py-3 [&_pre]:px-4 [&_pre]:rounded-md [&_pre]:min-h-12 [&_pre]:overflow-auto">
       <div dangerouslySetInnerHTML={{ __html: html }} />
-      <CopyButton
-        text={codeContent}
-        className="dark text-foreground absolute top-2 right-2"
-      />
+      <CopyButton text={codeContent} className="dark text-foreground absolute top-2 right-2" />
     </div>
   );
 }

@@ -27,17 +27,9 @@ const languageColors: Record<string, string> = {
   HTML: "oklch(0.6238 0.1947 34.59)", // A typical HTML orange
 };
 
-const GithubRepositories = ({
-  username,
-  limit = 5,
-}: {
-  username: string;
-  limit?: number;
-}) => {
+const GithubRepositories = ({ username, limit = 5 }: { username: string; limit?: number }) => {
   const { data, error, isLoading } = useSWR<GithubRepository[]>(
-    username
-      ? `https://api.github.com/users/${username}/repos?sort=created`
-      : null,
+    username ? `https://api.github.com/users/${username}/repos?sort=created` : null,
     fetcher,
     { revalidateOnFocus: false },
   );
@@ -68,9 +60,7 @@ const GithubRepositories = ({
   if (error) {
     return (
       <div className="flex items-center justify-center h-32">
-        <p className="text-zinc-600 dark:text-zinc-400">
-          Failed to load repositories.
-        </p>
+        <p className="text-zinc-600 dark:text-zinc-400">Failed to load repositories.</p>
       </div>
     );
   }
@@ -116,9 +106,7 @@ const GithubRepositories = ({
                   </span>
                 </p>
                 {repo.description && (
-                  <span className="text-muted-foreground">
-                    {repo.description}
-                  </span>
+                  <span className="text-muted-foreground">{repo.description}</span>
                 )}
               </div>
             </a>

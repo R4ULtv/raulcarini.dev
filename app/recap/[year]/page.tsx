@@ -53,15 +53,9 @@ export async function generateMetadata({
   };
 }
 
-export default async function RecapPage({
-  params,
-}: {
-  params: Promise<{ year: string }>;
-}) {
+export default async function RecapPage({ params }: { params: Promise<{ year: string }> }) {
   const { year } = await params;
-  const yearData = recapData.years[year as keyof typeof recapData.years] as
-    | YearData
-    | undefined;
+  const yearData = recapData.years[year as keyof typeof recapData.years] as YearData | undefined;
 
   if (!yearData) {
     notFound();
@@ -125,8 +119,7 @@ export default async function RecapPage({
   const nextYear = String(Number(year) + 1);
   const previousYear = String(Number(year) - 1);
   const hasNextYear = recapData.years[nextYear as keyof typeof recapData.years];
-  const hasPreviousYear =
-    recapData.years[previousYear as keyof typeof recapData.years];
+  const hasPreviousYear = recapData.years[previousYear as keyof typeof recapData.years];
 
   return (
     <div className="fixed inset-0 z-10 bg-zinc-50 dark:bg-zinc-950 flex flex-col items-center justify-center">
@@ -149,9 +142,7 @@ export default async function RecapPage({
                 <span>{item.value}</span>
               </div>
             ))}
-            {sectionIndex < stats.length - 1 && (
-              <div className="border-t border-border my-4" />
-            )}
+            {sectionIndex < stats.length - 1 && <div className="border-t border-border my-4" />}
           </div>
         ))}
       </div>
@@ -164,10 +155,7 @@ export default async function RecapPage({
             [ {previousYear} ]
           </Link>
         )}
-        <Link
-          href="/"
-          className="hover:text-foreground transition-colors w-fit"
-        >
+        <Link href="/" className="hover:text-foreground transition-colors w-fit">
           [ HOME ]
         </Link>
         {hasNextYear && (

@@ -62,10 +62,7 @@ export default function RootLayout({
           <main className="max-w-180 mx-auto py-10 sm:py-16 px-4 sm:px-6">
             <header className="mb-10 sm:mb-16 flex items-start gap-1">
               <div className="flex flex-col items-start">
-                <Link
-                  href={"/"}
-                  className="text-base inline-block font-medium no-underline"
-                >
+                <Link href={"/"} className="text-base inline-block font-medium no-underline">
                   Raul Carini
                 </Link>
                 <span className="text-base font-medium leading-none text-muted-foreground">

@@ -2,7 +2,7 @@ export const metadata = {
   title: "GitHub Contributions",
   createdAt: "2024-11-05",
   description: "Automated GitHub contributions fetching with Next.js.",
-  keywords: "GitHub API, Next.js, Data Fetching, Caching"
+  keywords: "GitHub API, Next.js, Data Fetching, Caching",
 };
 
 I'm excited to share my new GitHub contributions visualization - a dynamic dashboard that provides an at-a-glance view of my coding activity over the past year.
@@ -16,7 +16,7 @@ The component is built using Next.js and fetches data through a streamlined syst
 export default async function getGithubContribution() {
   const res = await fetch(
     "https://github-contributions-api.jogruber.de/v4/R4ULtv?y=last",
-    { next: { revalidate: 43200 } } // Revalidate every 12h
+    { next: { revalidate: 43200 } }, // Revalidate every 12h
   );
   return await res.json();
 }

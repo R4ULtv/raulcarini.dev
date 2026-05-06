@@ -5,11 +5,7 @@ import { formatTimeAgo } from "@/lib/time";
 import { baseURL } from "@/lib/url";
 import { Metadata } from "next";
 
-export default async function Page({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const { default: Post, metadata } = await import(`@/content/${slug}.mdx`);
   return (
@@ -26,11 +22,7 @@ export default async function Page({
           <span className="hidden md:inline">•</span> <PageViews path={slug} />
         </span>
         <ShareButton
-          slug={
-            metadata.shortSlug
-              ? metadata.shortSlug
-              : generateShortSlug(metadata.title)
-          }
+          slug={metadata.shortSlug ? metadata.shortSlug : generateShortSlug(metadata.title)}
         />
       </div>
       <Post />

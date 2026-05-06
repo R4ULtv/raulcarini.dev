@@ -32,8 +32,7 @@ const projects: Project[] = [
   },
   {
     title: "UI Components",
-    description:
-      "A collection of reusable UI components built with React and Tailwind CSS.",
+    description: "A collection of reusable UI components built with React and Tailwind CSS.",
     url: "https://ui.raulcarini.dev/",
     icon: "https://ui.raulcarini.dev/favicon.ico",
     tags: ["React", "Tailwind CSS", "Components"],
@@ -59,8 +58,7 @@ const projects: Project[] = [
   },
   {
     title: "Multi-Region R2 Bucket System",
-    description:
-      "A multi-region system with Cloudflare Worker and Cloudflare R2 Buckets.",
+    description: "A multi-region system with Cloudflare Worker and Cloudflare R2 Buckets.",
     url: "https://github.com/R4ULtv/multi-region-r2-bucket-system",
     icon: "https://github.com/favicon.ico",
     tags: ["Cloudflare", "Multi-Region", "Workers"],
@@ -91,24 +89,21 @@ const projects: Project[] = [
   },
   {
     title: "LLMs Speed Test",
-    description:
-      "Benchmark your LLMs in seconds. Test and compare language model performance.",
+    description: "Benchmark your LLMs in seconds. Test and compare language model performance.",
     url: "https://snappy.raulcarini.dev",
     icon: "https://snappy.raulcarini.dev/favicon.ico",
     tags: ["LLMs", "Benchmark", "Ollama"],
   },
   {
     title: "Shadcn Registry",
-    description:
-      "Cloudflare Worker registry for shadcn/ui components with usage stats.",
+    description: "Cloudflare Worker registry for shadcn/ui components with usage stats.",
     url: "https://github.com/R4ULtv/shadcn-registry",
     icon: "https://github.com/favicon.ico",
     tags: ["Shadcn", "Registry", "Cloudflare"],
   },
   {
     title: "Spotify Web Player",
-    description:
-      "Listen to your music anytime, anywhere. Custom Spotify web player interface.",
+    description: "Listen to your music anytime, anywhere. Custom Spotify web player interface.",
     url: "https://web-player.raulcarini.dev",
     icon: "https://web-player.raulcarini.dev/favicon.ico",
     tags: ["Spotify", "Music", "Web Player"],
@@ -146,8 +141,8 @@ export default function ProjectsPage() {
                 Things I&apos;ve Built
               </h1>
               <p className="text-lg text-muted-foreground text-pretty">
-                From component libraries to developer tools, these are the
-                projects I&apos;ve shipped.
+                From component libraries to developer tools, these are the projects I&apos;ve
+                shipped.
               </p>
             </div>
           </div>
@@ -156,9 +151,7 @@ export default function ProjectsPage() {
       <section id="projects">
         {featuredProjects.length > 0 && (
           <div className="mb-8">
-            <h2 className="text-sm font-medium text-muted-foreground mb-4">
-              Featured
-            </h2>
+            <h2 className="text-sm font-medium text-muted-foreground mb-4">Featured</h2>
             <div className="flex flex-col gap-4">
               {featuredProjects.map((project) => (
                 <a
@@ -176,18 +169,13 @@ export default function ProjectsPage() {
                         height={20}
                         alt={`${project.title} Icon`}
                         src={project.icon}
-                        className={cn(
-                          "rounded",
-                          isGithubHost(project.icon) && "dark:invert",
-                        )}
+                        className={cn("rounded", isGithubHost(project.icon) && "dark:invert")}
                       />
                     </div>
                   )}
                   <div className="flex-1 flex flex-col min-w-0">
                     <p className="font-medium">{project.title}</p>
-                    <span className="text-muted-foreground text-sm">
-                      {project.description}
-                    </span>
+                    <span className="text-muted-foreground text-sm">{project.description}</span>
                     {project.tags && project.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-2">
                         {project.tags.map((tag) => (
@@ -211,9 +199,7 @@ export default function ProjectsPage() {
 
         {otherProjects.length > 0 && (
           <div>
-            <h2 className="text-sm font-medium text-muted-foreground mb-4">
-              Other Projects
-            </h2>
+            <h2 className="text-sm font-medium text-muted-foreground mb-4">Other Projects</h2>
             <div className="flex flex-col gap-4">
               {otherProjects.map((project) => (
                 <a
@@ -231,18 +217,13 @@ export default function ProjectsPage() {
                         height={20}
                         alt={`${project.title} Icon`}
                         src={project.icon}
-                        className={cn(
-                          "rounded",
-                          isGithubHost(project.icon) && "dark:invert",
-                        )}
+                        className={cn("rounded", isGithubHost(project.icon) && "dark:invert")}
                       />
                     </div>
                   )}
                   <div className="flex-1 flex flex-col min-w-0">
                     <p className="font-medium">{project.title}</p>
-                    <span className="text-muted-foreground text-sm">
-                      {project.description}
-                    </span>
+                    <span className="text-muted-foreground text-sm">{project.description}</span>
                     {project.tags && project.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-2">
                         {project.tags.map((tag) => (
@@ -280,10 +261,7 @@ export default function ProjectsPage() {
         </a>
         <p className="text-muted-foreground">
           Interested in collaborating on a project? Feel free to reach out at{" "}
-          <a
-            href="mailto:contact@raulcarini.dev"
-            className="hover:underline text-foreground"
-          >
+          <a href="mailto:contact@raulcarini.dev" className="hover:underline text-foreground">
             contact@raulcarini.dev
           </a>
           .

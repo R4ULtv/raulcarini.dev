@@ -28,11 +28,7 @@ interface StatusDisplayProps {
 
 const now = Date.now();
 
-const StatusDisplay: React.FC<StatusDisplayProps> = ({
-  icon,
-  message,
-  additionalClasses,
-}) => {
+const StatusDisplay: React.FC<StatusDisplayProps> = ({ icon, message, additionalClasses }) => {
   return (
     <div
       className={`w-full max-w-[688px] min-h-[160px] border rounded-md flex flex-col items-center justify-center gap-1 ${
@@ -45,17 +41,13 @@ const StatusDisplay: React.FC<StatusDisplayProps> = ({
   );
 };
 
-const GithubContributionsAdvancedFetcher: React.FC<{ username: string }> = ({
-  username,
-}) => {
+const GithubContributionsAdvancedFetcher: React.FC<{ username: string }> = ({ username }) => {
   const {
     data: contributionsResult,
     error: contributionsError,
     isLoading: isContributionsLoading,
   } = useSWR<GithubContributionsResponse>(
-    username
-      ? `https://github-contributions-api.jogruber.de/v4/${username}?y=last`
-      : null,
+    username ? `https://github-contributions-api.jogruber.de/v4/${username}?y=last` : null,
     fetcher,
     { revalidateOnFocus: false },
   );
@@ -65,22 +57,18 @@ const GithubContributionsAdvancedFetcher: React.FC<{ username: string }> = ({
     error: reposError,
     isLoading: isReposLoading,
   } = useSWR<GithubRepo[]>(
-    username
-      ? `https://api.github.com/users/${username}/repos?sort=created`
-      : null,
+    username ? `https://api.github.com/users/${username}/repos?sort=created` : null,
     fetcher,
     { revalidateOnFocus: false },
   );
 
   const loading = isContributionsLoading || isReposLoading;
   const error = contributionsError || reposError || null;
-  const contributionsData: Contribution[] | null =
-    contributionsResult?.contributions ?? null;
+  const contributionsData: Contribution[] | null = contributionsResult?.contributions ?? null;
   const newPublicRepoCount: number | null = React.useMemo(() => {
     if (!reposResult) return null;
     const oneYearAgo = new Date(now - 365 * 24 * 60 * 60 * 1000);
-    return reposResult.filter((repo) => new Date(repo.created_at) > oneYearAgo)
-      .length;
+    return reposResult.filter((repo) => new Date(repo.created_at) > oneYearAgo).length;
   }, [reposResult]);
 
   if (loading) {

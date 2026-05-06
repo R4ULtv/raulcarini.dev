@@ -22,9 +22,7 @@ export async function getAllPosts(): Promise<PostSummary[]> {
     withFileTypes: true,
   });
 
-  const mdxFiles = entries.filter(
-    (entry) => entry.isFile() && entry.name.endsWith(".mdx"),
-  );
+  const mdxFiles = entries.filter((entry) => entry.isFile() && entry.name.endsWith(".mdx"));
 
   const posts = await Promise.all(
     mdxFiles.map(async (entry) => {
@@ -44,9 +42,7 @@ export async function getAllPosts(): Promise<PostSummary[]> {
   );
 
   posts.sort(
-    (a, b) =>
-      new Date(b.metadata.createdAt).getTime() -
-      new Date(a.metadata.createdAt).getTime(),
+    (a, b) => new Date(b.metadata.createdAt).getTime() - new Date(a.metadata.createdAt).getTime(),
   );
 
   return posts;

@@ -1,7 +1,5 @@
 import * as React from "react";
-import GithubContributions, {
-  Contribution,
-} from "@/components/github/github-contributions";
+import GithubContributions, { Contribution } from "@/components/github/github-contributions";
 
 export default function GithubContributionsAdvanced({
   data,
@@ -13,12 +11,9 @@ export default function GithubContributionsAdvanced({
   return (
     <div className="flex flex-col gap-2 w-full md:w-min">
       <p className="text-sm text-foreground">
-        <span className="font-semibold">
-          {data.reduce((acc, item) => acc + item.count, 0)}
-        </span>{" "}
+        <span className="font-semibold">{data.reduce((acc, item) => acc + item.count, 0)}</span>{" "}
         contributions in the last year and{" "}
-        <span className="font-semibold">{newPublicRepositories}</span> new
-        public repositories.
+        <span className="font-semibold">{newPublicRepositories}</span> new public repositories.
       </p>
       <GithubContributions data={data} />
       <div className="flex items-center justify-between gap-3 w-full text-xs text-muted-foreground">
