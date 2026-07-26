@@ -124,3 +124,18 @@
 .dark .astro-code span {
   color: var(--shiki-dark) !important;
 }
+
+/* Threaded tweets are separate <figure>s that should read as one block. They
+   sit as flat siblings among the post's paragraphs, so `first:`/`last:` can
+   never match — the run has to be detected by adjacency instead. */
+[data-tweet-thread] + [data-tweet-thread] {
+  margin-top: -1px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+[data-tweet-thread]:has(+ [data-tweet-thread]) {
+  margin-bottom: 0;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
