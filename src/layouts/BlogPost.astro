@@ -20,7 +20,6 @@ const {
     updatedDate,
     heroImage,
     heroImageAlt,
-    heroImageCaption,
     readingTime,
 } = Astro.props;
 
@@ -94,20 +93,13 @@ const categoryDotClasses = {
 
                 {
                     heroImage && (
-                        <figure class="mt-8">
-                            <Image
-                                class="w-full rounded-lg border border-border"
-                                width={720}
-                                src={heroImage}
-                                alt={heroImageAlt ?? ""}
-                                loading="eager"
-                            />
-                            {heroImageCaption && (
-                                <figcaption class="mt-2 text-center text-sm text-muted-foreground">
-                                    {heroImageCaption}
-                                </figcaption>
-                            )}
-                        </figure>
+                        <Image
+                            class="mt-8 w-full rounded-lg border border-border"
+                            width={720}
+                            src={heroImage}
+                            alt={heroImageAlt ?? ""}
+                            loading="eager"
+                        />
                     )
                 }
 
