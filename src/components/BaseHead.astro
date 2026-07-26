@@ -1,0 +1,72 @@
+---
+// Import the global.css file here so that it is included on
+// all pages through the use of the <BaseHead /> component.
+import "../styles/global.css";
+import type { ImageMetadata } from "astro";
+import { SITE_TITLE } from "../consts";
+import { Font } from "astro:assets";
+
+interface Props {
+    title: string;
+    description: string;
+    keywords?: string[];
+    image?: ImageMetadata;
+}
+
+// `build.format: 'file'` makes Astro.url.pathname include a `.html` extension
+// at build time. Strip it (and any trailing slash) so canonical URLs match the
+// site's extensionless, slash-less routes.
+const canonicalPath =
+    Astro.url.pathname.replace(/(?:\/index)?\.html$/, "").replace(/\/$/, "") ||
+    "/";
+const canonicalURL = new URL(canonicalPath, Astro.site);
+
+const { title, description, keywords } = Astro.props;
+---
+
+<script is:inline>
+    (() => {
+        const savedTheme = localStorage.getItem("theme");
+        const prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)",
+        ).matches;
+
+        document.documentElement.classList.toggle(
+            "dark",
+            savedTheme === "dark" || (!savedTheme && prefersDark),
+        );
+    })();
+</script>
+
+<!-- Global Metadata -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" href="/favicon.ico" sizes="32x32" type="image/x-icon" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link
+    rel="alternate"
+    type="application/rss+xml"
+    title={SITE_TITLE}
+    href={new URL("rss.xml", Astro.site)}
+/>
+<meta name="generator" content={Astro.generator} />
+
+<Font cssVariable="--font-geist" preload />
+<Font cssVariable="--font-geist-mono" />
+
+<!-- Canonical URL -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Primary Meta Tags -->
+<title>{title}</title>
+<meta name="description" content={description} />
+{keywords && <meta name="keywords" content={keywords.join(", ")} />}
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={canonicalURL} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
