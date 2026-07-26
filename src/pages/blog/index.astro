@@ -1,0 +1,286 @@
+---
+import { getCollection } from "astro:content";
+import BaseHead from "../../components/BaseHead.astro";
+import Header from "../../components/Header.astro";
+
+const posts = (await getCollection("blog")).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+});
+
+const categoryDotClasses = {
+    projects: "bg-sky-500/70",
+    articles: "bg-violet-500/70",
+    updates: "bg-amber-500/70",
+    personal: "bg-rose-500/70",
+} as const;
+
+type Category = keyof typeof categoryDotClasses;
+
+const categoryLabels: Record<Category, string> = {
+    projects: "Projects",
+    articles: "Articles",
+    updates: "Updates",
+    personal: "Personal",
+};
+
+const categories = (Object.keys(categoryLabels) as Category[])
+    .map((category) => ({
+        id: category,
+        label: categoryLabels[category],
+        count: posts.filter((post) => post.data.category === category).length,
+    }))
+    .filter((category) => category.count > 0);
+
+const newPostWindow = 7 * 24 * 60 * 60 * 1000;
+const isNewPost = (pubDate: Date) =>
+    Date.now() - pubDate.valueOf() <= newPostWindow &&
+    Date.now() >= pubDate.valueOf();
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead
+            title="Blog | Raul Carini"
+            description="Thoughts on software development, web technologies, and building meaningful projects."
+        />
+    </head>
+    <body class="max-w-180 mx-auto px-4 py-10 sm:px-6 sm:py-16">
+        <Header />
+
+        <main>
+            <section aria-labelledby="articles-title">
+                <h2 id="articles-title" class="sr-only">Blog posts</h2>
+                <div class="mb-2 flex items-center justify-between gap-4">
+                    <div
+                        class="flex min-w-0 items-center gap-x-3 overflow-x-auto py-1 sm:gap-x-4"
+                        aria-label="Filter posts by category"
+                        data-category-filters
+                    >
+                        <button
+                            type="button"
+                            class="shrink-0 text-sm font-medium text-foreground transition-colors"
+                            data-category-filter="all"
+                            aria-pressed="true"
+                            aria-label={`All writing, ${posts.length} posts`}
+                        >
+                            All writing
+                        </button>
+                        {
+                            categories.map((category) => (
+                                <button
+                                    type="button"
+                                    class="inline-flex shrink-0 items-center gap-1.5 text-xs font-normal text-muted-foreground capitalize transition-colors hover:text-foreground"
+                                    data-category-filter={category.id}
+                                    aria-pressed="false"
+                                    aria-label={`${category.label}, ${category.count} ${
+                                        category.count === 1 ? "post" : "posts"
+                                    }`}
+                                >
+                                    <span
+                                        class:list={[
+                                            "size-1.5 shrink-0 rounded-full",
+                                            categoryDotClasses[category.id],
+                                        ]}
+                                        aria-hidden="true"
+                                    />
+                                    {category.label}
+                                </button>
+                            ))
+                        }
+                    </div>
+                    <p
+                        class="m-0 hidden shrink-0 font-mono text-xs text-muted-foreground sm:block"
+                        aria-live="polite"
+                    >
+                        <span data-visible-count>{posts.length}</span>
+                        {" "}
+                        <span data-visible-count-label>
+                            {posts.length === 1 ? "post" : "posts"}
+                        </span>
+                    </p>
+                </div>
+                <div
+                    class="h-px bg-linear-to-r from-transparent via-primary/20 to-transparent"
+                >
+                </div>
+
+                <ol class="m-0 list-none p-0">
+                    {
+                        posts.map((post) => (
+                            <li data-post-category={post.data.category}>
+                                <article>
+                                    <a
+                                        class="group block py-5 no-underline sm:py-4"
+                                        href={`/blog/${post.id}`}
+                                    >
+                                        <div class="min-w-0">
+                                            <div class="flex flex-wrap items-center gap-x-2 gap-y-1">
+                                                <h3 class="m-0 text-base font-medium tracking-[-0.012em] text-foreground">
+                                                    <span class="decoration-border-strong underline-offset-4 group-hover:underline">
+                                                        {post.data.title}
+                                                    </span>{" "}
+                                                    <span class="font-normal text-muted-foreground">
+                                                        <span aria-hidden="true">
+                                                            •{" "}
+                                                        </span>
+                                                        <time
+                                                            datetime={post.data.pubDate.toISOString()}
+                                                        >
+                                                            {dateFormatter.format(
+                                                                post.data
+                                                                    .pubDate,
+                                                            )}
+                                                        </time>
+                                                    </span>
+                                                </h3>
+                                                <span class="inline-flex items-center gap-1.5 text-xs text-muted-foreground capitalize">
+                                                    <span
+                                                        class:list={[
+                                                            "size-1.5 shrink-0 rounded-full",
+                                                            categoryDotClasses[
+                                                                post.data
+                                                                    .category
+                                                            ],
+                                                        ]}
+                                                        aria-hidden="true"
+                                                    />
+                                                    {post.data.category}
+                                                </span>
+                                                {isNewPost(
+                                                    post.data.pubDate,
+                                                ) && (
+                                                    <span class="inline-flex items-center gap-1 rounded-sm bg-sky-500/10 px-1.5 py-0.5 font-mono text-[0.625rem] font-medium tracking-wide text-sky-700 uppercase dark:text-sky-300">
+                                                        <span aria-hidden="true">
+                                                            ✦
+                                                        </span>
+                                                        New
+                                                    </span>
+                                                )}
+                                            </div>
+                                            <p class="mt-1.5 mb-0 text-sm leading-relaxed text-muted-foreground text-pretty sm:text-base">
+                                                {post.data.shortDescription}
+                                            </p>
+                                        </div>
+                                    </a>
+                                </article>
+                                <div class="h-px flex-1 bg-linear-to-r from-transparent via-primary/20 to-transparent" />
+                            </li>
+                        ))
+                    }
+                </ol>
+                <p class="sr-only" aria-live="polite" data-filter-status>
+                    Showing all {posts.length} posts
+                </p>
+            </section>
+        </main>
+
+        <script>
+            const filterGroup = document.querySelector<HTMLElement>(
+                "[data-category-filters]",
+            );
+            const filterButtons = Array.from(
+                document.querySelectorAll<HTMLButtonElement>(
+                    "[data-category-filter]",
+                ),
+            );
+            const postItems = Array.from(
+                document.querySelectorAll<HTMLElement>("[data-post-category]"),
+            );
+            const filterStatus = document.querySelector<HTMLElement>(
+                "[data-filter-status]",
+            );
+            const visibleCountElement = document.querySelector<HTMLElement>(
+                "[data-visible-count]",
+            );
+            const visibleCountLabelElement =
+                document.querySelector<HTMLElement>(
+                    "[data-visible-count-label]",
+                );
+            const validCategories = new Set(
+                filterButtons.map(
+                    (button) => button.dataset.categoryFilter ?? "all",
+                ),
+            );
+
+            const setActiveCategory = (
+                requestedCategory: string,
+                updateUrl = true,
+            ) => {
+                const category = validCategories.has(requestedCategory)
+                    ? requestedCategory
+                    : "all";
+                let visibleCount = 0;
+
+                postItems.forEach((post) => {
+                    const isVisible =
+                        category === "all" ||
+                        post.dataset.postCategory === category;
+                    post.hidden = !isVisible;
+                    if (isVisible) visibleCount += 1;
+                });
+
+                filterButtons.forEach((button) => {
+                    const isActive = button.dataset.categoryFilter === category;
+                    button.setAttribute("aria-pressed", String(isActive));
+                    button.classList.toggle("font-medium", isActive);
+                    button.classList.toggle("text-foreground", isActive);
+                    button.classList.toggle("font-normal", !isActive);
+                    button.classList.toggle("text-muted-foreground", !isActive);
+                    button.classList.toggle("hover:text-foreground", !isActive);
+                });
+
+                if (filterStatus) {
+                    const label =
+                        category === "all" ? "all" : `${category} category`;
+                    filterStatus.textContent = `Showing ${visibleCount} ${label} ${
+                        visibleCount === 1 ? "post" : "posts"
+                    }`;
+                }
+                if (visibleCountElement) {
+                    visibleCountElement.textContent = String(visibleCount);
+                }
+                if (visibleCountLabelElement) {
+                    visibleCountLabelElement.textContent =
+                        visibleCount === 1 ? "post" : "posts";
+                }
+
+                if (updateUrl) {
+                    const url = new URL(window.location.href);
+                    if (category === "all") {
+                        url.searchParams.delete("category");
+                    } else {
+                        url.searchParams.set("category", category);
+                    }
+                    window.history.pushState({}, "", url);
+                }
+            };
+
+            filterGroup?.addEventListener("click", (event) => {
+                const button = (
+                    event.target as Element
+                ).closest<HTMLButtonElement>("[data-category-filter]");
+                if (button?.dataset.categoryFilter) {
+                    setActiveCategory(button.dataset.categoryFilter);
+                }
+            });
+
+            const applyCategoryFromUrl = () => {
+                const category =
+                    new URL(window.location.href).searchParams.get(
+                        "category",
+                    ) ?? "all";
+                setActiveCategory(category, false);
+            };
+
+            window.addEventListener("popstate", applyCategoryFromUrl);
+            applyCategoryFromUrl();
+        </script>
+    </body>
+</html>

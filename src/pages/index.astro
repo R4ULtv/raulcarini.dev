@@ -1,0 +1,340 @@
+---
+import { getCollection } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import GitHubContributions from "../components/GitHubContributions.astro";
+import GitHubRepositories from "../components/GitHubRepositories.astro";
+import ProjectChip from "../components/ProjectChip.astro";
+import lazyprIcon from "../assets/icons/lazypr.png";
+import railRadarIcon from "../assets/icons/railradar.png";
+import spotifyIcon from "../assets/icons/spotify.png";
+import uiIcon from "../assets/icons/ui.png";
+import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+
+const recentPosts = (await getCollection("blog"))
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+    .slice(0, 5);
+
+const dateFormatter = new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+});
+
+const categoryDotClasses = {
+    projects: "bg-sky-500/70",
+    articles: "bg-violet-500/70",
+    updates: "bg-amber-500/70",
+    personal: "bg-rose-500/70",
+} as const;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+    </head>
+    <body class="max-w-180 mx-auto py-10 sm:py-16 px-4 sm:px-6">
+        <Header />
+
+        <main class="space-y-10 sm:space-y-16">
+            <section
+                id="about"
+                class="scroll-mt-8"
+                aria-labelledby="about-title"
+            >
+                <a
+                    class="py-5 sm:py-4 block font-medium group after:content-['#'] after:ml-1 after:opacity-0 hover:after:opacity-90 after:transition-opacity after:duration-200 after:ease-out"
+                    href="#about">About</a
+                >
+
+                <p
+                    class="text-muted-foreground m-0 text-base leading-[1.65] tracking-[-0.008em]"
+                >
+                    Hi! I’m a full-stack developer based in Milan, working
+                    professionally as a web developer. Outside of work, I’m
+                    still building and shipping side projects, including{" "}
+                    <ProjectChip
+                        href="https://ui.raulcarini.dev/"
+                        icon={uiIcon}
+                        label="UI Components"
+                    />{" "},
+                    <ProjectChip
+                        href="https://github.com/R4ULtv/lazypr"
+                        icon={lazyprIcon}
+                        label="lazypr"
+                    />{" "}
+                    and{" "}
+                    <ProjectChip
+                        href="https://www.railradar24.com"
+                        icon={railRadarIcon}
+                        label="Rail Radar"
+                    />{" "}, a real-time European train tracker that has become
+                    my most successful project so far.
+                </p>
+
+                <div
+                    class="grid grid-cols-2 sm:grid-cols-3 gap-4 my-3"
+                    aria-label="A selection of personal photographs"
+                >
+                    <a
+                        href="/images/home/lake.jpg"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Open full-size image"
+                        class="relative group overflow-hidden rounded-lg"
+                    >
+                        <img
+                            src="/images/home/lake.webp"
+                            width="320"
+                            height="213"
+                            loading="lazy"
+                            decoding="async"
+                            alt="A hillside village below a snow-capped ridge, Italy"
+                        />
+                    </a>
+                    <a
+                        href="/images/home/dlynr.jpg"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Open full-size image"
+                        class="relative group overflow-hidden rounded-lg sm:row-span-2 row-span-1"
+                    >
+                        <img
+                            src="/images/home/dlynr.webp"
+                            width="320"
+                            height="427"
+                            loading="lazy"
+                            decoding="async"
+                            alt="Raul Carini looking out at a mountain skyline at dusk, Italy"
+                            class="absolute inset-0 size-full object-center object-cover"
+                        />
+                    </a>
+                    <a
+                        href="/images/home/river.jpg"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Open full-size image"
+                        class="relative group overflow-hidden rounded-lg"
+                    >
+                        <img
+                            src="/images/home/river.webp"
+                            width="320"
+                            height="213"
+                            loading="lazy"
+                            decoding="async"
+                            alt="A road bridge over a still river at golden hour, Italy"
+                        />
+                    </a>
+                    <a
+                        href="/images/home/sea.jpg"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Open full-size image"
+                        class="relative group overflow-hidden rounded-lg row-span-2 col-span-1"
+                    >
+                        <img
+                            src="/images/home/sea.webp"
+                            width="320"
+                            height="427"
+                            loading="lazy"
+                            decoding="async"
+                            alt="A swimmer diving off a jetty into a turquoise cove, Greece"
+                        />
+                    </a>
+                    <a
+                        href="/images/home/mountains.jpg"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Open full-size image"
+                        class="relative group overflow-hidden rounded-lg row-span-2 col-span-1"
+                    >
+                        <img
+                            src="/images/home/mountains.webp"
+                            width="320"
+                            height="427"
+                            loading="lazy"
+                            decoding="async"
+                            alt="A snow-covered peak under sunset-lit clouds, Italy"
+                            class="absolute inset-0 size-full object-center object-cover"
+                        />
+                    </a>
+                    <a
+                        href="/images/home/night-sky.jpg"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Open full-size image"
+                        class="relative group overflow-hidden rounded-lg"
+                    >
+                        <img
+                            src="/images/home/night-sky.webp"
+                            width="320"
+                            height="213"
+                            loading="lazy"
+                            decoding="async"
+                            alt="A telecoms tower silhouetted against a starry twilight sky, Greece"
+                        />
+                    </a>
+                </div>
+
+                <p
+                    class="text-muted-foreground m-0 text-base leading-[1.65] tracking-[-0.008em]"
+                >
+                    I care most about building websites that solve real
+                    problems, but code is only one part of who I am. Away from
+                    the keyboard, I make music, producing tracks, exploring new
+                    sounds, and turning ideas into something you can listen to.
+                    You can find my music on{" "}
+                    <ProjectChip
+                        href="https://open.spotify.com/artist/21DbatkhkYpxIpLfQ4LeUo"
+                        icon={spotifyIcon}
+                        label="Spotify"
+                    />.
+                </p>
+
+                <div
+                    class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-3"
+                    aria-label="Travel photographs"
+                >
+                    <a
+                        href="/images/home/beach.jpg"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Open full-size image"
+                        class="relative group overflow-hidden rounded-lg"
+                    >
+                        <img
+                            src="/images/home/beach.webp"
+                            width="320"
+                            height="213"
+                            loading="lazy"
+                            decoding="async"
+                            alt="A rocky shoreline at sunset, Croatia"
+                        />
+                    </a>
+                    <a
+                        href="/images/home/dam.jpg"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Open full-size image"
+                        class="relative group overflow-hidden rounded-lg"
+                    >
+                        <img
+                            src="/images/home/dam.webp"
+                            width="320"
+                            height="213"
+                            loading="lazy"
+                            decoding="async"
+                            alt="Sun over a wide river seen from a stony bank, Italy"
+                        />
+                    </a>
+                    <a
+                        href="/images/home/flags.jpg"
+                        target="_blank"
+                        rel="noopener"
+                        aria-label="Open full-size image"
+                        class="relative group overflow-hidden rounded-lg col-span-2 sm:col-span-1"
+                    >
+                        <img
+                            src="/images/home/flags.webp"
+                            width="640"
+                            height="427"
+                            loading="lazy"
+                            decoding="async"
+                            alt="French and Italian flags below a snowy mountain face, France"
+                        />
+                    </a>
+                </div>
+            </section>
+
+            <section id="blog" class="scroll-mt-8" aria-labelledby="blog-title">
+                <a
+                    id="blog-title"
+                    class="py-5 sm:py-4 block font-medium group after:content-['#'] after:ml-1 after:opacity-0 hover:after:opacity-90 after:transition-opacity after:duration-200 after:ease-out"
+                    href="#blog">Blog</a
+                >
+
+                <div class="flex flex-col gap-6 md:gap-4">
+                    {
+                        recentPosts.map((post) => (
+                            <a
+                                class="flex items-center gap-4 py-1 sm:py-3 px-3 -mx-3 group rounded-md hover:bg-muted/50 transition-colors duration-200 ease-out"
+                                href={`/blog/${post.id}`}
+                            >
+                                <div class="min-w-0 flex-1 flex flex-col">
+                                    <div class="flex flex-col items-start gap-1 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-2">
+                                        <p class="m-0 font-medium">
+                                            {post.data.title}{" "}
+                                            <span class="font-normal">
+                                                <span aria-hidden="true">
+                                                    •{" "}
+                                                </span>
+                                                <time
+                                                    datetime={post.data.pubDate.toISOString()}
+                                                >
+                                                    {dateFormatter.format(
+                                                        post.data.pubDate,
+                                                    )}
+                                                </time>
+                                            </span>
+                                        </p>
+                                        <span
+                                            class="blog-category order-first inline-flex items-center gap-1.5 text-xs font-normal leading-none text-muted-foreground capitalize transition-colors duration-200 group-hover:text-foreground sm:order-0"
+                                            data-category={post.data.category}
+                                        >
+                                            <span
+                                                aria-hidden="true"
+                                                class:list={[
+                                                    "size-1.5 shrink-0 rounded-full",
+                                                    categoryDotClasses[
+                                                        post.data.category
+                                                    ],
+                                                ]}
+                                            />
+                                            {post.data.category}
+                                        </span>
+                                    </div>
+                                    <span class="text-muted-foreground">
+                                        {post.data.shortDescription}
+                                    </span>
+                                </div>
+                            </a>
+                        ))
+                    }
+                </div>
+
+                <div class="flex items-center justify-start mt-4">
+                    <a
+                        class="py-1 text-sm text-muted-foreground hover:text-foreground hover:underline underline-offset-4 transition-colors duration-200 ease-out"
+                        href="/blog">Load more blog posts...</a
+                    >
+                </div>
+            </section>
+
+            <GitHubContributions username="r4ultv" />
+
+            <GitHubRepositories username="r4ultv" limit={5} />
+
+            <section
+                id="contact"
+                class="scroll-mt-8"
+                aria-labelledby="contact-title"
+            >
+                <a
+                    class="py-5 sm:py-4 block font-medium group after:content-['#'] after:ml-1 after:opacity-0 hover:after:opacity-90 after:transition-opacity after:duration-200 after:ease-out"
+                    href="#contact">Contact</a
+                >
+                <p
+                    class="text-muted-foreground m-0 text-base leading-[1.65] tracking-[-0.008em]"
+                >
+                    Want to get in touch? Email me at{" "}
+                    <a
+                        class="text-foreground decoration-border-strong hover:decoration-foreground underline underline-offset-[0.2em]"
+                        href="mailto:contact@raulcarini.dev"
+                        >contact@raulcarini.dev</a
+                    >.
+                </p>
+            </section>
+        </main>
+    </body>
+</html>
