@@ -9,6 +9,9 @@ const posts = await getCollection("blog");
 const postBySlug = new Map(posts.map((post) => [post.id, post]));
 const latestYear = recapYears.at(-1)?.year ?? new Date().getFullYear();
 const firstYear = recapYears.at(0)?.year ?? latestYear;
+const nextRecapYear = latestYear + 1;
+const pendingYear =
+    new Date().getFullYear() >= nextRecapYear ? nextRecapYear : undefined;
 
 const numberFormatter = new Intl.NumberFormat("en-US");
 const monthFormatter = new Intl.DateTimeFormat("en-US", { month: "short" });
@@ -60,7 +63,10 @@ const categoryDotClasses = {
 
                 <nav aria-label="Choose a recap year">
                     <ol
-                        class="m-0 grid list-none grid-cols-3 gap-2 p-0 lg:block"
+                        class:list={[
+                            "m-0 grid list-none gap-2 p-0 lg:block",
+                            pendingYear ? "grid-cols-4" : "grid-cols-3",
+                        ]}
                     >
                         {
                             recapYears.map(({ year }, index) => (
@@ -93,6 +99,30 @@ const categoryDotClasses = {
                                     </button>
                                 </li>
                             ))
+                        }
+                        {
+                            pendingYear && (
+                                <li>
+                                    <button
+                                        type="button"
+                                        disabled
+                                        aria-label={`${pendingYear} recap, underway`}
+                                        title={`${pendingYear} recap is still underway`}
+                                        class="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-md border border-border bg-transparent px-2 py-2 font-mono text-xs text-muted-foreground opacity-60 lg:justify-start lg:rounded-none lg:border-x-0 lg:border-b-0 lg:px-0 lg:py-3"
+                                    >
+                                        <span
+                                            class="size-1.5 shrink-0 rounded-full bg-emerald-500/80"
+                                            aria-hidden="true"
+                                        />
+                                        <span class="tabular-nums">
+                                            {pendingYear}
+                                        </span>
+                                        <span class="ml-auto hidden text-[0.5rem] tracking-[0.08em] uppercase opacity-70 lg:block">
+                                            Soon
+                                        </span>
+                                    </button>
+                                </li>
+                            )
                         }
                     </ol>
                 </nav>
