@@ -16,6 +16,10 @@ pnpm-debug.log*
 # environment variables
 .env
 .env.production
+.dev.vars
+
+# cloudflare (worker-configuration.d.ts is committed so `astro check` works in CI)
+.wrangler/
 
 # macOS-specific files
 .DS_Store
