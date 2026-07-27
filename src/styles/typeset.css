@@ -94,7 +94,7 @@
     &:where(p) {
       margin-block-start: var(--typeset-flow);
       margin-block-end: 0;
-      color: var(--color-muted-foreground)
+      color: var(--color-muted-foreground);
     }
 
     /* Headings. */
@@ -245,7 +245,7 @@
     &:where(li) {
       margin-block-start: 0.5em;
       padding-inline-start: 0.4em;
-      color: var(--color-muted-foreground)
+      color: var(--color-muted-foreground);
     }
     &:where(li > p, li > ul, li > ol) {
       margin-block-start: 0.5em;
