@@ -4,13 +4,20 @@ import cloudflare from "@astrojs/cloudflare";
 import mdx from "@astrojs/mdx";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
-import { defineConfig, fontProviders } from "astro/config";
+import { defineConfig, fontProviders, sessionDrivers } from "astro/config";
 
 // https://astro.build/config
 export default defineConfig({
   adapter: cloudflare({
     imageService: "compile",
   }),
+  session: {
+    // The site does not use Astro sessions. An in-memory driver prevents the
+    // Cloudflare adapter from provisioning an unused SESSION KV namespace.
+    driver: sessionDrivers.lruCache({
+      max: 1,
+    }),
+  },
   vite: {
     plugins: [tailwindcss()],
   },
