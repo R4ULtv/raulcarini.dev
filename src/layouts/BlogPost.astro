@@ -5,12 +5,15 @@ import BaseHead from "../components/BaseHead.astro";
 import CodeCopy from "../components/CodeCopy.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import Header from "../components/Header.astro";
+import PageViews from "../components/PageViews.astro";
 
 type Props = CollectionEntry<"blog">["data"] & {
+    slug: string;
     readingTime: number;
 };
 
 const {
+    slug,
     title,
     shortDescription,
     description,
@@ -61,6 +64,8 @@ const categoryDotClasses = {
                         <FormattedDate date={pubDate} />
                         <span aria-hidden="true">·</span>
                         <span>{readingTime} min read</span>
+                        <span aria-hidden="true">·</span>
+                        <PageViews path={slug} />
                         {
                             updatedDate && (
                                 <>

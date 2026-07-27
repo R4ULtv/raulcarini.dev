@@ -18,7 +18,7 @@ function getPath(path: string | undefined) {
   return path;
 }
 
-export const GET: APIRoute = async ({ params }) => {
+export const POST: APIRoute = async ({ params, locals }) => {
   const path = getPath(params.path);
   if (!path) {
     return Response.json(
@@ -27,28 +27,19 @@ export const GET: APIRoute = async ({ params }) => {
     );
   }
 
-  const views = await getPageViewsRedis().get<number>(pageViewKey(path));
+  const redis = getPageViewsRedis();
+  const key = pageViewKey(path);
+  const views = (await redis.get<number>(key)) ?? 0;
 
-  // Keep the legacy client contract: a number for an existing counter,
-  // otherwise null.
+  // Return the stored count without making the visitor wait for the write.
+  // Local navigation does not pollute production counters.
+  if (import.meta.env.PROD) {
+    locals.cfContext.waitUntil(
+      redis.incr(key).catch((error) => {
+        console.error(`Failed to increment page views for "${path}":`, error);
+      }),
+    );
+  }
+
   return Response.json(views, { headers: RESPONSE_HEADERS });
-};
-
-export const POST: APIRoute = async ({ params }) => {
-  const path = getPath(params.path);
-  if (!path) {
-    return Response.json(
-      { error: "A valid blog post path is required." },
-      { status: 400, headers: RESPONSE_HEADERS },
-    );
-  }
-
-  // Local navigation should not pollute production counters.
-  if (!import.meta.env.PROD) {
-    return new Response("OK", { headers: RESPONSE_HEADERS });
-  }
-
-  await getPageViewsRedis().incr(pageViewKey(path));
-
-  return new Response("OK", { headers: RESPONSE_HEADERS });
 };
