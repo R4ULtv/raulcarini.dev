@@ -1,6 +1,8 @@
 import type { APIRoute } from "astro";
+import { env } from "cloudflare:workers";
 
 import { getPageViewsRedis, pageViewKey } from "../../../lib/page-views";
+import { getRateLimitResponse } from "../../../lib/rate-limit";
 
 export const prerender = false;
 
@@ -18,13 +20,18 @@ function getPath(path: string | undefined) {
   return path;
 }
 
-export const POST: APIRoute = async ({ params, locals }) => {
+export const POST: APIRoute = async ({ params, locals, request }) => {
   const path = getPath(params.path);
   if (!path) {
     return Response.json(
       { error: "A valid blog post path is required." },
       { status: 400, headers: RESPONSE_HEADERS },
     );
+  }
+
+  const rateLimitResponse = await getRateLimitResponse(request, env.PAGE_VIEWS_WRITE_RATE_LIMITER);
+  if (rateLimitResponse) {
+    return rateLimitResponse;
   }
 
   const redis = getPageViewsRedis();

@@ -7,6 +7,24 @@
   "observability": {
     "enabled": true,
   },
+  "ratelimits": [
+    {
+      "name": "PAGE_VIEWS_READ_RATE_LIMITER",
+      "namespace_id": "731001",
+      "simple": {
+        "limit": 10,
+        "period": 60,
+      },
+    },
+    {
+      "name": "PAGE_VIEWS_WRITE_RATE_LIMITER",
+      "namespace_id": "731002",
+      "simple": {
+        "limit": 30,
+        "period": 60,
+      },
+    },
+  ],
   "routes": [
     {
       "pattern": "raulcarini.dev",
