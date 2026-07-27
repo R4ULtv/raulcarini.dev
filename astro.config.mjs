@@ -10,6 +10,9 @@ import { defineConfig, fontProviders, sessionDrivers } from "astro/config";
 export default defineConfig({
   adapter: cloudflare({
     imageService: "compile",
+    // FxTwitter rejects requests from workerd during prerendering. Build static
+    // pages in Node instead; request-time routes still run on Cloudflare.
+    prerenderEnvironment: "node",
   }),
   session: {
     // The site does not use Astro sessions. An in-memory driver prevents the
