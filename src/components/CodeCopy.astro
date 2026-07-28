@@ -1,0 +1,75 @@
+<script>
+    const copyIcon = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-copy-icon lucide-copy" aria-hidden="true">
+            <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+            <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+        </svg>
+    `;
+    const checkIcon = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-check-icon lucide-check" aria-hidden="true">
+            <path d="M20 6 9 17l-5-5"></path>
+        </svg>
+    `;
+
+    function enhanceCodeBlocks() {
+        document
+            .querySelectorAll<HTMLPreElement>(
+                ".typeset pre.astro-code:not([data-copy-enhanced])",
+            )
+            .forEach((pre) => {
+                const code = pre.querySelector("code");
+                const source = code?.textContent ?? pre.textContent ?? "";
+                const wrapper = document.createElement("div");
+                const button = document.createElement("button");
+
+                wrapper.className = "code-block";
+                button.className = "code-copy-button";
+                button.type = "button";
+                button.title = "Copy code";
+                button.setAttribute("aria-label", "Copy code to clipboard");
+                button.setAttribute("aria-live", "polite");
+                button.innerHTML = copyIcon;
+
+                pre.dataset.copyEnhanced = "true";
+                pre.before(wrapper);
+                wrapper.append(pre, button);
+
+                let resetTimer: number | undefined;
+
+                button.addEventListener("click", async () => {
+                    window.clearTimeout(resetTimer);
+
+                    try {
+                        await navigator.clipboard.writeText(source);
+                        button.dataset.copyState = "copied";
+                        button.title = "Copied";
+                        button.setAttribute(
+                            "aria-label",
+                            "Code copied to clipboard",
+                        );
+                        button.innerHTML = checkIcon;
+                    } catch {
+                        button.dataset.copyState = "error";
+                        button.title = "Copy failed";
+                        button.setAttribute(
+                            "aria-label",
+                            "Could not copy code",
+                        );
+                    }
+
+                    resetTimer = window.setTimeout(() => {
+                        delete button.dataset.copyState;
+                        button.title = "Copy code";
+                        button.setAttribute(
+                            "aria-label",
+                            "Copy code to clipboard",
+                        );
+                        button.innerHTML = copyIcon;
+                    }, 2000);
+                });
+            });
+    }
+
+    enhanceCodeBlocks();
+    document.addEventListener("astro:page-load", enhanceCodeBlocks);
+</script>

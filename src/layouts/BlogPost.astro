@@ -1,0 +1,135 @@
+---
+import { Image } from "astro:assets";
+import type { CollectionEntry } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import CodeCopy from "../components/CodeCopy.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import Header from "../components/Header.astro";
+import PageViews from "../components/PageViews.astro";
+
+type Props = CollectionEntry<"blog">["data"] & {
+    slug: string;
+    readingTime: number;
+};
+
+const {
+    slug,
+    title,
+    shortDescription,
+    description,
+    category,
+    keywords,
+    pubDate,
+    updatedDate,
+    shortSlug,
+    heroImage,
+    heroImageAlt,
+    readingTime,
+} = Astro.props;
+
+const generatedShortSlug = title
+    .toLowerCase()
+    .replace(/[aeiou]/g, "")
+    .replace(/[^a-z0-9]/g, "")
+    .slice(0, 6);
+const shortUrl = `https://shrly.cc/${shortSlug ?? generatedShortSlug}`;
+
+const categoryDotClasses = {
+    projects: "bg-sky-500/70",
+    articles: "bg-violet-500/70",
+    updates: "bg-amber-500/70",
+    personal: "bg-rose-500/70",
+} as const;
+
+const socialImage = new URL(`/api/og/${slug}.webp`, Astro.site);
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead
+            title={title}
+            description={description}
+            keywords={keywords}
+            type="article"
+            {socialImage}
+            socialImageAlt={`${title} — ${shortDescription}`}
+        />
+    </head>
+
+    <body class="max-w-180 mx-auto py-10 sm:py-16 px-4 sm:px-6">
+        <Header shareUrl={shortUrl} shareTitle={title} />
+        <main>
+            <article>
+                <header>
+                    <div
+                        class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground"
+                    >
+                        <a
+                            class="inline-flex items-center gap-1.5 no-underline capitalize transition-colors hover:text-foreground"
+                            href={`/blog?category=${category}`}
+                        >
+                            <span
+                                class:list={[
+                                    "size-1.5 shrink-0 rounded-full",
+                                    categoryDotClasses[category],
+                                ]}
+                                aria-hidden="true"></span>
+                            {category}
+                        </a>
+                        <span aria-hidden="true">·</span>
+                        <FormattedDate date={pubDate} />
+                        <span aria-hidden="true">·</span>
+                        <span>{readingTime} min read</span>
+                        <span aria-hidden="true">·</span>
+                        <PageViews path={slug} />
+                        {
+                            updatedDate && (
+                                <>
+                                    <span aria-hidden="true">·</span>
+                                    <span>
+                                        Updated{" "}
+                                        <FormattedDate date={updatedDate} />
+                                    </span>
+                                </>
+                            )
+                        }
+                    </div>
+
+                    <h1
+                        class="mt-3 mb-0 text-2xl font-semibold tracking-[-0.02em] text-pretty sm:text-3xl"
+                    >
+                        {title}
+                    </h1>
+                    <p
+                        class="mt-2 mb-0 text-base leading-relaxed text-muted-foreground text-pretty"
+                    >
+                        {shortDescription}
+                    </p>
+
+                    <div
+                        class="mt-5 h-px bg-linear-to-r from-transparent via-primary/20 to-transparent"
+                    >
+                    </div>
+                </header>
+
+                {
+                    heroImage && (
+                        <Image
+                            class="mt-8 w-full rounded-lg border border-border"
+                            width={720}
+                            src={heroImage}
+                            alt={heroImageAlt ?? ""}
+                            loading="eager"
+                        />
+                    )
+                }
+
+                <div class="typeset typeset-article mt-8">
+                    <slot />
+                </div>
+                <CodeCopy />
+            </article>
+        </main>
+    </body>
+</html>

@@ -1,0 +1,68 @@
+---
+interface Props {
+    date: Date;
+}
+
+const { date } = Astro.props;
+---
+
+<time datetime={date.toISOString()}>
+    {
+        date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+        })
+    }
+    <span data-time-ago hidden></span>
+</time>
+
+<script>
+    const relativeTimeFormatter = new Intl.RelativeTimeFormat("en", {
+        numeric: "always",
+    });
+
+    const relativeTimeUnits = [
+        { limit: 60, divisor: 1, unit: "second" },
+        { limit: 3_600, divisor: 60, unit: "minute" },
+        { limit: 86_400, divisor: 3_600, unit: "hour" },
+        { limit: 2_629_800, divisor: 86_400, unit: "day" },
+        { limit: 31_557_600, divisor: 2_629_800, unit: "month" },
+        { limit: Number.POSITIVE_INFINITY, divisor: 31_557_600, unit: "year" },
+    ] as const;
+
+    function formatTimeAgo(date: Date): string {
+        const differenceInSeconds = (date.getTime() - Date.now()) / 1_000;
+
+        if (Math.abs(differenceInSeconds) < 5) {
+            return "just now";
+        }
+
+        const matchingUnit =
+            relativeTimeUnits.find(
+                ({ limit }) => Math.abs(differenceInSeconds) < limit,
+            ) ?? relativeTimeUnits.at(-1);
+
+        if (!matchingUnit) {
+            return "";
+        }
+
+        const value = Math.trunc(
+            differenceInSeconds / matchingUnit.divisor,
+        );
+
+        return relativeTimeFormatter.format(value, matchingUnit.unit);
+    }
+
+    document.querySelectorAll<HTMLTimeElement>("time[datetime]").forEach((time) => {
+        const relativeTime = time.querySelector<HTMLElement>("[data-time-ago]");
+        const date = new Date(time.dateTime);
+
+        if (!relativeTime || Number.isNaN(date.getTime())) {
+            return;
+        }
+
+        relativeTime.textContent = ` (${formatTimeAgo(date)})`;
+        relativeTime.hidden = false;
+    });
+</script>

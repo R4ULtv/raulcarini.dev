@@ -1,0 +1,128 @@
+---
+import { getTweet } from "../../lib/tweet";
+
+interface Props {
+    id: string;
+    /**
+     * Set on every tweet of a multi-post thread so consecutive quotes read as
+     * one continuous block instead of separate cards.
+     */
+    thread?: boolean;
+    /**
+     * Set on every tweet after the first in a thread: the author header is
+     * dropped so the same avatar and handle aren't repeated down the chain.
+     */
+    continued?: boolean;
+}
+
+const { id, thread = false, continued = false } = Astro.props;
+
+// Fetched on every build, so the text is baked into the HTML — visitors never
+// hit the API. Images stay hotlinked to Twitter's CDN. A null tweet means the
+// API didn't answer; the card falls back to a bare link rather than breaking
+// the build.
+const tweet = await getTweet(id);
+
+const url = tweet?.url ?? `https://x.com/i/status/${id}`;
+
+const formattedDate = tweet
+    ? new Date(tweet.date).toLocaleDateString("en-US", {
+          year: "numeric",
+          month: "short",
+          day: "numeric",
+      })
+    : null;
+---
+
+<figure
+    class="not-typeset mx-auto my-6 max-w-xl rounded-lg border border-border bg-muted/40 px-5 py-4"
+    data-tweet-thread={thread ? "" : undefined}
+>
+    {
+        !continued && (
+            <header class="flex items-center gap-2.5">
+                {tweet && (
+                    <img
+                        class="size-10 shrink-0 rounded-full bg-muted"
+                        src={tweet.avatar}
+                        width="40"
+                        height="40"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                    />
+                )}
+                <a
+                    class="min-w-0 leading-tight no-underline"
+                    href={tweet ? `https://x.com/${tweet.handle}` : url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    <span class="block truncate font-medium text-foreground">
+                        {tweet ? tweet.name : "View this post on X"}
+                    </span>
+                    {tweet && (
+                        <span class="block truncate text-sm text-muted-foreground">
+                            @{tweet.handle}
+                        </span>
+                    )}
+                </a>
+                <svg
+                    class="ml-auto size-4 shrink-0 fill-current text-muted-foreground"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                </svg>
+            </header>
+        )
+    }
+
+    {
+        tweet && (
+            <blockquote
+                cite={tweet.url}
+                class:list={[
+                    "mb-0 whitespace-pre-line text-pretty",
+                    continued ? "mt-0" : "mt-3",
+                ]}
+            >
+                {tweet.text}
+            </blockquote>
+        )
+    }
+
+    {
+        tweet?.media.map((item) => (
+            <img
+                class="mt-3 w-full rounded-md border border-border"
+                src={item.url}
+                width={item.width}
+                height={item.height}
+                alt={item.alt}
+                loading="lazy"
+                decoding="async"
+                referrerpolicy="no-referrer"
+            />
+        ))
+    }
+
+    <figcaption class="mt-3 text-sm text-muted-foreground">
+        <a
+            class="no-underline hover:underline"
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+        >
+            {
+                tweet && (
+                    <>
+                        <time datetime={tweet.date}>{formattedDate}</time>
+                        <span aria-hidden="true"> · </span>
+                    </>
+                )
+            }
+            View on X
+        </a>
+    </figcaption>
+</figure>

@@ -1,0 +1,443 @@
+---
+import { getCollection } from "astro:content";
+
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import { recapYears } from "../data/recap";
+
+const posts = await getCollection("blog");
+const postBySlug = new Map(posts.map((post) => [post.id, post]));
+const latestYear = recapYears.at(-1)?.year ?? new Date().getFullYear();
+const firstYear = recapYears.at(0)?.year ?? latestYear;
+const nextRecapYear = latestYear + 1;
+const pendingYear =
+    new Date().getFullYear() >= nextRecapYear ? nextRecapYear : undefined;
+
+const numberFormatter = new Intl.NumberFormat("en-US");
+const monthFormatter = new Intl.DateTimeFormat("en-US", { month: "short" });
+
+function formatDelta(current: number, previous: number | undefined) {
+    if (previous === undefined) return "First record";
+    if (current === previous) return "No change";
+    if (previous === 0) return `+${numberFormatter.format(current)}`;
+
+    const percentage = ((current - previous) / previous) * 100;
+    const sign = percentage > 0 ? "+" : "";
+    const digits = Math.abs(percentage) >= 10 ? 0 : 1;
+    return `${sign}${percentage.toFixed(digits)}%`;
+}
+
+const categoryDotClasses = {
+    projects: "bg-sky-500/70",
+    articles: "bg-violet-500/70",
+    updates: "bg-amber-500/70",
+    personal: "bg-rose-500/70",
+} as const;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead
+            title="Recap | Raul Carini"
+            description="An annual record of what I built, published, and learned."
+        />
+    </head>
+    <body class="max-w-180 mx-auto px-4 py-10 sm:px-6 sm:py-16">
+        <Header />
+
+        <main class="relative">
+            <aside
+                class="mb-7 lg:absolute lg:top-0 lg:right-full lg:mr-8 lg:mb-0 lg:w-28"
+            >
+                <div
+                    class="mb-3 flex items-baseline justify-between border-b border-border pb-3 lg:mb-5 lg:block lg:border-0 lg:pb-0"
+                >
+                    <h1 class="m-0 text-base font-medium">Recap</h1>
+                    <p
+                        class="m-0 font-mono text-[0.625rem] tracking-[0.08em] text-muted-foreground uppercase lg:mt-1"
+                    >
+                        {firstYear}&mdash;{latestYear}
+                    </p>
+                </div>
+
+                <nav aria-label="Choose a recap year">
+                    <ol
+                        class:list={[
+                            "m-0 grid list-none gap-2 p-0 lg:block",
+                            pendingYear ? "grid-cols-4" : "grid-cols-3",
+                        ]}
+                    >
+                        {
+                            recapYears.map(({ year }, index) => (
+                                <li class="lg:border-t lg:border-border">
+                                    <button
+                                        type="button"
+                                        class="group flex w-full items-center justify-center gap-2 rounded-md border border-border bg-transparent px-2 py-2 font-mono text-xs text-muted-foreground transition-colors hover:border-foreground/40 hover:text-foreground aria-pressed:border-foreground aria-pressed:bg-foreground aria-pressed:text-background lg:justify-start lg:rounded-none lg:border-0 lg:px-0 lg:py-3 lg:hover:bg-transparent lg:aria-pressed:bg-transparent lg:aria-pressed:text-foreground"
+                                        data-year-switch={year}
+                                        aria-controls={`recap-${year}`}
+                                        aria-pressed={
+                                            year === latestYear
+                                                ? "true"
+                                                : "false"
+                                        }
+                                    >
+                                        <span
+                                            class="hidden size-1.5 shrink-0 rounded-full bg-current opacity-0 group-aria-pressed:opacity-100 lg:block"
+                                            aria-hidden="true"
+                                        />
+                                        <span class="tabular-nums">{year}</span>
+                                        <span
+                                            class="ml-auto hidden text-[0.5625rem] opacity-50 lg:block"
+                                            aria-hidden="true"
+                                        >
+                                            {String(index + 1).padStart(
+                                                2,
+                                                "0",
+                                            )}
+                                        </span>
+                                    </button>
+                                </li>
+                            ))
+                        }
+                        {
+                            pendingYear && (
+                                <li>
+                                    <button
+                                        type="button"
+                                        disabled
+                                        aria-label={`${pendingYear} recap, underway`}
+                                        title={`${pendingYear} recap is still underway`}
+                                        class="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-md border border-border bg-transparent px-2 py-2 font-mono text-xs text-muted-foreground opacity-60 lg:justify-start lg:rounded-none lg:border-x-0 lg:border-b-0 lg:px-0 lg:py-3"
+                                    >
+                                        <span
+                                            class="size-1.5 shrink-0 rounded-full bg-emerald-500/80"
+                                            aria-hidden="true"
+                                        />
+                                        <span class="tabular-nums">
+                                            {pendingYear}
+                                        </span>
+                                        <span class="ml-auto hidden text-[0.5rem] tracking-[0.08em] uppercase opacity-70 lg:block">
+                                            Soon
+                                        </span>
+                                    </button>
+                                </li>
+                            )
+                        }
+                    </ol>
+                </nav>
+            </aside>
+
+            <div class="min-w-0">
+                {
+                    recapYears.map((recap, recapIndex) => {
+                        const previous = recapYears.at(recapIndex - 1);
+                        const highlights = recap.highlightSlugs
+                            .map((slug) => postBySlug.get(slug))
+                            .filter((post) => post !== undefined)
+                            .sort(
+                                (a, b) =>
+                                    a.data.pubDate.valueOf() -
+                                    b.data.pubDate.valueOf(),
+                            );
+
+                        const metrics = [
+                            {
+                                label: "Active days",
+                                value: recap.metrics.activeDays,
+                                previous: previous?.metrics.activeDays,
+                            },
+                            {
+                                label: "Contributions",
+                                value: recap.metrics.contributions,
+                                previous: previous?.metrics.contributions,
+                            },
+                            {
+                                label: "New repositories",
+                                value: recap.metrics.repositories,
+                                previous: previous?.metrics.repositories,
+                            },
+                            {
+                                label: "Published posts",
+                                value: recap.metrics.blogPosts,
+                                previous: previous?.metrics.blogPosts,
+                            },
+                            {
+                                label: "Stars received",
+                                value: recap.metrics.stars,
+                                previous: previous?.metrics.stars,
+                            },
+                            {
+                                label: "Recorded views",
+                                value:
+                                    recap.metrics.projectViews +
+                                    recap.metrics.blogViews,
+                                previous: previous
+                                    ? previous.metrics.projectViews +
+                                      previous.metrics.blogViews
+                                    : undefined,
+                            },
+                        ];
+
+                        return (
+                            <article
+                                id={`recap-${recap.year}`}
+                                data-recap-panel={recap.year}
+                                aria-labelledby={`recap-${recap.year}-title`}
+                                hidden={recap.year !== latestYear}
+                            >
+                                <header class="border-b border-border pb-7">
+                                    <p class="m-0 font-mono text-xs text-muted-foreground tabular-nums">
+                                        {recap.year} /{" "}
+                                        <span class="text-foreground">
+                                            {recap.topLanguage}
+                                        </span>
+                                    </p>
+                                    <h2
+                                        id={`recap-${recap.year}-title`}
+                                        class="mt-3 mb-0 text-2xl font-semibold tracking-[-0.03em] text-balance sm:text-3xl"
+                                    >
+                                        {recap.thesis}
+                                    </h2>
+                                    <p class="mt-3 mb-0 max-w-2xl text-base leading-[1.65] text-muted-foreground text-pretty">
+                                        {recap.reflection}
+                                    </p>
+                                </header>
+
+                                <section
+                                    class="mt-8"
+                                    aria-labelledby={`recap-${recap.year}-numbers`}
+                                >
+                                    <div class="mb-3 flex items-baseline justify-between gap-4">
+                                        <h3
+                                            id={`recap-${recap.year}-numbers`}
+                                            class="m-0 text-sm font-medium"
+                                        >
+                                            Year in numbers
+                                        </h3>
+                                        <p class="m-0 font-mono text-[0.625rem] text-muted-foreground">
+                                            {previous
+                                                ? `Compared with ${previous.year}`
+                                                : "Starting point"}
+                                        </p>
+                                    </div>
+                                    <dl
+                                        class="m-0 grid grid-cols-2 border-t border-border sm:grid-cols-3"
+                                    >
+                                        {
+                                            metrics.map((metric, index) => (
+                                                <div
+                                                    class:list={[
+                                                        "min-w-0 border-b border-border py-4",
+                                                        index % 2 === 0
+                                                            ? "pr-4"
+                                                            : "border-l pl-4",
+                                                        index % 3 === 0
+                                                            ? "sm:border-l-0 sm:pr-5 sm:pl-0"
+                                                            : "sm:border-l sm:px-5",
+                                                    ]}
+                                                >
+                                                    <dt class="truncate text-xs text-muted-foreground">
+                                                        {metric.label}
+                                                    </dt>
+                                                    <dd class="mt-1 mb-0 font-mono text-xl font-medium tracking-[-0.03em] tabular-nums">
+                                                        {numberFormatter.format(
+                                                            metric.value,
+                                                        )}
+                                                    </dd>
+                                                    <span class="mt-0.5 block font-mono text-[0.625rem] text-muted-foreground tabular-nums">
+                                                        {formatDelta(
+                                                            metric.value,
+                                                            metric.previous,
+                                                        )}
+                                                        {previous
+                                                            ? ` from ${previous.year}`
+                                                            : ""}
+                                                    </span>
+                                                </div>
+                                            ))
+                                        }
+                                    </dl>
+                                </section>
+
+                                <section
+                                    class="mt-9"
+                                    aria-labelledby={`recap-${recap.year}-highlights`}
+                                >
+                                    <div class="mb-2 flex items-baseline justify-between gap-4">
+                                        <h3
+                                            id={`recap-${recap.year}-highlights`}
+                                            class="m-0 text-sm font-medium"
+                                        >
+                                            Selected writing
+                                        </h3>
+                                        <span class="font-mono text-[0.625rem] text-muted-foreground">
+                                            {highlights.length > 0
+                                                ? `${highlights.length} entries`
+                                                : "No entries"}
+                                        </span>
+                                    </div>
+
+                                    {highlights.length > 0 ? (
+                                        <ol class="m-0 list-none border-t border-border p-0">
+                                            {highlights.map((post) => (
+                                                <li class="border-b border-border">
+                                                    <a
+                                                        class="group grid grid-cols-[2.75rem_minmax(0,1fr)_auto] items-center gap-3 py-3 no-underline"
+                                                        href={`/blog/${post.id}`}
+                                                    >
+                                                        <time
+                                                            class="font-mono text-[0.625rem] text-muted-foreground uppercase"
+                                                            datetime={post.data.pubDate.toISOString()}
+                                                        >
+                                                            {monthFormatter.format(
+                                                                post.data
+                                                                    .pubDate,
+                                                            )}
+                                                        </time>
+                                                        <span class="min-w-0 truncate text-sm font-medium decoration-border-strong underline-offset-4 group-hover:underline">
+                                                            {post.data.title}
+                                                        </span>
+                                                        <span
+                                                            class:list={[
+                                                                "size-1.5 shrink-0 rounded-full",
+                                                                categoryDotClasses[
+                                                                    post.data
+                                                                        .category
+                                                                ],
+                                                            ]}
+                                                            aria-label={
+                                                                post.data
+                                                                    .category
+                                                            }
+                                                        />
+                                                    </a>
+                                                </li>
+                                            ))}
+                                        </ol>
+                                    ) : (
+                                        <p class="m-0 border-y border-border py-4 text-sm leading-relaxed text-muted-foreground">
+                                            The public writing archive had not
+                                            started yet.
+                                        </p>
+                                    )}
+                                </section>
+                            </article>
+                        );
+                    })
+                }
+            </div>
+        </main>
+
+        <script>
+            const yearButtons = Array.from(
+                document.querySelectorAll<HTMLButtonElement>(
+                    "[data-year-switch]",
+                ),
+            );
+            const yearPanels = Array.from(
+                document.querySelectorAll<HTMLElement>("[data-recap-panel]"),
+            );
+            const years = yearButtons
+                .map((button) => button.dataset.yearSwitch)
+                .filter((year): year is string => Boolean(year));
+
+            function selectYear(year: string, updateHistory = true) {
+                if (!years.includes(year)) return;
+
+                yearButtons.forEach((button) => {
+                    button.setAttribute(
+                        "aria-pressed",
+                        String(button.dataset.yearSwitch === year),
+                    );
+                });
+
+                yearPanels.forEach((panel) => {
+                    const selected = panel.dataset.recapPanel === year;
+                    panel.hidden = !selected;
+                    panel.classList.toggle("recap-panel-entering", selected);
+                });
+
+                document.title = `${year} Recap | Raul Carini`;
+
+                if (updateHistory) {
+                    const url = new URL(window.location.href);
+                    url.searchParams.set("year", year);
+                    window.history.pushState({ year }, "", url);
+                }
+            }
+
+            yearButtons.forEach((button, index) => {
+                button.addEventListener("click", () => {
+                    const year = button.dataset.yearSwitch;
+                    if (year) selectYear(year);
+                });
+
+                button.addEventListener("keydown", (event) => {
+                    const vertical = window.matchMedia(
+                        "(min-width: 1024px)",
+                    ).matches;
+                    const previousKey = vertical ? "ArrowUp" : "ArrowLeft";
+                    const nextKey = vertical ? "ArrowDown" : "ArrowRight";
+
+                    if (
+                        event.key !== previousKey &&
+                        event.key !== nextKey
+                    ) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    const offset = event.key === previousKey ? -1 : 1;
+                    const target = yearButtons[index + offset];
+                    target?.focus();
+                    target?.click();
+                });
+            });
+
+            window.addEventListener("popstate", () => {
+                const year = new URL(window.location.href).searchParams.get(
+                    "year",
+                );
+                selectYear(
+                    year && years.includes(year) ? year : years.at(-1)!,
+                    false,
+                );
+            });
+
+            const requestedYear = new URL(
+                window.location.href,
+            ).searchParams.get("year");
+            selectYear(
+                requestedYear && years.includes(requestedYear)
+                    ? requestedYear
+                    : years.at(-1)!,
+                false,
+            );
+        </script>
+
+        <style>
+            .recap-panel-entering {
+                animation: recap-panel-enter 240ms
+                    cubic-bezier(0.22, 1, 0.36, 1);
+            }
+
+            @keyframes recap-panel-enter {
+                from {
+                    opacity: 0;
+                    transform: translateY(4px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @media (prefers-reduced-motion: reduce) {
+                .recap-panel-entering {
+                    animation: none;
+                }
+            }
+        </style>
+    </body>
+</html>

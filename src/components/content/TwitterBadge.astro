@@ -1,0 +1,24 @@
+---
+interface Props {
+    username: string;
+}
+
+const { username } = Astro.props;
+---
+
+<a
+    class="inline-flex items-center gap-1 py-1 px-1.5 border-border rounded-lg bg-muted text-sm align-middle"
+    href={`https://x.com/${username}`}
+    target="_blank"
+    rel="noopener noreferrer"
+>
+    <img
+        src={`https://unavatar.io/x/${username}`}
+        width="18"
+        height="18"
+        alt=""
+        loading="lazy"
+        class="m-0 rounded-full"
+    />
+    @{username}
+</a>

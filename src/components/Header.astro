@@ -1,0 +1,39 @@
+---
+import ShareLink from "./ShareLink.astro";
+import ThemeSwitch from "./ThemeSwitch.astro";
+
+type Props = {
+    shareUrl?: string;
+    shareTitle?: string;
+};
+
+const { shareUrl, shareTitle } = Astro.props;
+---
+
+<header class="mb-10 sm:mb-16 flex items-start gap-1">
+    <div class="flex flex-col items-start">
+        <a
+            class="text-base inline-block font-medium no-underline"
+            href="/"
+            aria-label="Raul Carini, home"
+        >
+            Raul Carini
+        </a>
+        <span class="text-base font-medium leading-none text-muted-foreground">
+            Full Stack Developer
+        </span>
+    </div>
+
+    <div
+        class="ml-auto flex gap-1.5 text-sm"
+        role="group"
+        aria-label="Page actions"
+    >
+        {
+            shareUrl && shareTitle && (
+                <ShareLink shortUrl={shareUrl} title={shareTitle} />
+            )
+        }
+        <ThemeSwitch />
+    </div>
+</header>

@@ -1,0 +1,277 @@
+---
+interface Props {
+    username?: string;
+    limit?: number;
+}
+
+const { username = "r4ultv", limit = 4 } = Astro.props;
+const skeletonRows = Array.from({ length: limit });
+---
+
+<section
+    id="repositories"
+    class="scroll-mt-8"
+    aria-labelledby="repositories-title"
+>
+    <a
+        id="repositories-title"
+        href="#repositories"
+        class="py-5 sm:py-4 block font-medium group after:content-['#'] after:ml-1 after:opacity-0 hover:after:opacity-90 after:transition-opacity after:duration-200 after:ease-out"
+    >
+        Repositories
+    </a>
+
+    <github-repositories data-username={username} data-limit={limit}>
+        <div data-loading class="flex flex-col gap-6 md:gap-4" role="status">
+            <span class="sr-only">Loading GitHub repositories…</span>
+
+            {
+                skeletonRows.map(() => (
+                    <div
+                        class="flex items-start gap-3 py-1 sm:py-3 px-3 -mx-3"
+                        aria-hidden="true"
+                    >
+                        <span class="mt-2 size-2 shrink-0 rounded-full bg-muted" />
+                        <div class="flex-1 flex flex-col gap-1.5">
+                            <div class="h-5 w-32 overflow-hidden rounded-sm bg-muted">
+                                <span class="skeleton-shimmer block size-full" />
+                            </div>
+                            <div class="h-5 w-full max-w-96 overflow-hidden rounded-sm bg-muted">
+                                <span class="skeleton-shimmer block size-full" />
+                            </div>
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+
+        <div
+            data-error
+            class="hidden rounded-md border border-border px-4 py-6 text-center"
+            role="status"
+        >
+            <p class="m-0 text-sm font-medium">Repositories are unavailable</p>
+            <p class="mt-1 text-xs text-muted-foreground">
+                Please try again in a moment.
+            </p>
+            <button
+                data-retry
+                type="button"
+                class="mt-3 rounded-md border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted"
+            >
+                Try again
+            </button>
+        </div>
+
+        <div data-content class="hidden flex-col gap-6 md:gap-4"></div>
+    </github-repositories>
+
+    <div class="flex items-center justify-start mt-4">
+        <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://github.com/R4ULtv?tab=repositories"
+            class="py-1 text-sm text-muted-foreground hover:underline"
+        >
+            More repositories...
+        </a>
+    </div>
+</section>
+
+<script>
+    import {
+        getGitHubActivity,
+        invalidateGitHubActivity,
+        type GitHubRepository,
+    } from "../lib/github";
+
+    // GitHub language colors.
+    const languageColors: Record<string, string> = {
+        JavaScript: "oklch(0.8961 0.1527 102.08)",
+        TypeScript: "oklch(0.5671 0.1399 253.3)",
+        Python: "oklch(0.5354 0.1022 246.5)",
+        Shell: "oklch(0.8229 0.1959 135.27)",
+        MDX: "oklch(0.8158 0.1597 76.85)",
+        CSS: "oklch(0.4395 0.1591 303.69)",
+        HTML: "oklch(0.6238 0.1947 34.59)",
+    };
+    const fallbackLanguageColor = "#8b949e";
+
+    const dateFormatter = new Intl.DateTimeFormat("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+
+    function renderRepository(repository: GitHubRepository) {
+        const color =
+            (repository.language && languageColors[repository.language]) ||
+            fallbackLanguageColor;
+
+        const link = document.createElement("a");
+        link.href = repository.html_url;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        link.className =
+            "flex items-start gap-3 py-1 sm:py-3 px-3 -mx-3 group rounded-md hover:bg-muted/50 transition-colors duration-200 ease-out";
+
+        const dot = document.createElement("span");
+        dot.className = "relative mt-2 flex size-2 shrink-0";
+        dot.setAttribute("aria-hidden", "true");
+
+        const ping = document.createElement("span");
+        ping.className =
+            "motion-safe:animate-ping absolute inline-flex size-full rounded-full opacity-75";
+        ping.style.backgroundColor = color;
+
+        const core = document.createElement("span");
+        core.className = "relative inline-flex size-2 rounded-full opacity-90";
+        core.style.backgroundColor = color;
+
+        dot.append(ping, core);
+
+        const body = document.createElement("div");
+        body.className = "min-w-0 flex-1 flex flex-col";
+
+        const heading = document.createElement("p");
+        heading.className = "m-0 font-medium";
+
+        const meta = document.createElement("span");
+        meta.className = "font-normal";
+        const separator = document.createElement("span");
+        separator.setAttribute("aria-hidden", "true");
+        separator.textContent = "• ";
+        const created = new Date(repository.created_at);
+        const time = document.createElement("time");
+        time.dateTime = created.toISOString();
+        time.textContent = dateFormatter.format(created);
+        meta.append(separator, time);
+
+        heading.append(`${repository.name} `, meta);
+        body.append(heading);
+
+        if (repository.description) {
+            const description = document.createElement("span");
+            description.className = "text-muted-foreground";
+            description.textContent = repository.description;
+            body.append(description);
+        }
+
+        link.append(dot, body);
+        return link;
+    }
+
+    class GitHubRepositories extends HTMLElement {
+        private loading = false;
+
+        connectedCallback() {
+            this.querySelector<HTMLButtonElement>(
+                "[data-retry]",
+            )?.addEventListener("click", () => {
+                const username = this.dataset.username;
+                if (username) invalidateGitHubActivity(username);
+                this.load();
+            });
+            this.load();
+        }
+
+        private async load() {
+            if (this.loading) return;
+
+            const username = this.dataset.username;
+            const limit = Number(this.dataset.limit) || 4;
+            const loadingState =
+                this.querySelector<HTMLElement>("[data-loading]");
+            const errorState = this.querySelector<HTMLElement>("[data-error]");
+            const contentState =
+                this.querySelector<HTMLElement>("[data-content]");
+
+            if (!username || !loadingState || !errorState || !contentState) {
+                return;
+            }
+
+            this.loading = true;
+            loadingState.classList.remove("hidden");
+            errorState.classList.add("hidden");
+            contentState.classList.add("hidden");
+
+            try {
+                const { repositories } = await getGitHubActivity(username);
+                const visible = repositories
+                    .filter(
+                        (repository) =>
+                            !repository.fork && !repository.private,
+                    )
+                    .slice(0, limit);
+
+                if (!visible.length) {
+                    throw new Error("No public repositories were returned.");
+                }
+
+                contentState.replaceChildren(...visible.map(renderRepository));
+
+                loadingState.classList.add("hidden");
+                contentState.classList.remove("hidden");
+                contentState.classList.add("flex", "repositories-ready");
+            } catch (error) {
+                console.error(
+                    `Could not load GitHub repositories for ${username}:`,
+                    error,
+                );
+                loadingState.classList.add("hidden");
+                errorState.classList.remove("hidden");
+            } finally {
+                this.loading = false;
+            }
+        }
+    }
+
+    if (!customElements.get("github-repositories")) {
+        customElements.define("github-repositories", GitHubRepositories);
+    }
+</script>
+
+<style>
+    github-repositories {
+        display: block;
+        width: 100%;
+    }
+
+    .skeleton-shimmer {
+        background: linear-gradient(
+            90deg,
+            transparent,
+            color-mix(in srgb, var(--foreground) 7%, transparent),
+            transparent
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.6s ease-in-out infinite;
+    }
+
+    .repositories-ready {
+        animation: repositories-in 240ms ease-out both;
+    }
+
+    @keyframes shimmer {
+        from {
+            background-position: 200% 0;
+        }
+        to {
+            background-position: -200% 0;
+        }
+    }
+
+    @keyframes repositories-in {
+        from {
+            opacity: 0;
+            transform: translateY(3px);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .skeleton-shimmer,
+        .repositories-ready {
+            animation: none;
+        }
+    }
+</style>

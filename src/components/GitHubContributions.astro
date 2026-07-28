@@ -1,0 +1,495 @@
+---
+interface Props {
+    username?: string;
+}
+
+const { username = "r4ultv" } = Astro.props;
+const skeletonCells = Array.from({ length: 53 * 7 });
+---
+
+<section
+    id="contributions"
+    class="scroll-mt-8 w-full md:w-min"
+    aria-labelledby="contributions-title"
+>
+    <a
+        id="contributions-title"
+        href="#contributions"
+        class="py-5 sm:py-4 block font-medium group after:content-['#'] after:ml-1 after:opacity-0 hover:after:opacity-90 after:transition-opacity after:duration-200 after:ease-out"
+    >
+        GitHub Contributions
+    </a>
+
+    <github-contributions data-username={username}>
+        <div data-loading class="flex w-full flex-col gap-2" role="status">
+            <span class="sr-only">Loading GitHub activity…</span>
+
+            <div
+                class="h-5 w-72 max-w-full overflow-hidden rounded bg-muted"
+                aria-hidden="true"
+            >
+                <span class="skeleton-shimmer block size-full"></span>
+            </div>
+
+            <div
+                class="max-w-full overflow-hidden pb-1"
+                aria-hidden="true"
+            >
+                <div class="w-max px-2 pt-5">
+                    <div
+                        class="grid grid-flow-col grid-rows-7 gap-0.5 pl-7 sm:pl-9"
+                    >
+                        {
+                            skeletonCells.map((_, index) => (
+                                <span
+                                    class="skeleton-cell size-2.5 rounded-[2px] bg-muted"
+                                    style={`--cell-index: ${index}`}
+                                />
+                            ))
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="flex w-full items-center justify-between gap-3"
+                aria-hidden="true"
+            >
+                <div class="h-3 w-44 overflow-hidden rounded bg-muted">
+                    <span class="skeleton-shimmer block size-full"></span>
+                </div>
+                <div class="h-3 w-28 overflow-hidden rounded bg-muted">
+                    <span class="skeleton-shimmer block size-full"></span>
+                </div>
+            </div>
+        </div>
+
+        <div
+            data-error
+            class="hidden rounded-md border border-border px-4 py-6 text-center"
+            role="status"
+        >
+            <p class="m-0 text-sm font-medium">
+                GitHub activity is unavailable
+            </p>
+            <p class="mt-1 text-xs text-muted-foreground">
+                Please try again in a moment.
+            </p>
+            <button
+                data-retry
+                type="button"
+                class="mt-3 rounded-md border border-border px-3 py-1.5 text-xs font-medium transition-colors hover:bg-muted"
+            >
+                Try again
+            </button>
+        </div>
+
+        <div data-content class="hidden w-full flex-col gap-2">
+            <p data-summary class="m-0 text-sm text-foreground"></p>
+
+            <div
+                data-calendar
+                class="max-w-full overflow-x-auto pb-1"
+                role="region"
+                aria-label={`GitHub contribution calendar for ${username}`}
+                tabindex="0"
+            >
+            </div>
+
+            <div
+                class="flex w-full flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground"
+            >
+                <a
+                    href="https://docs.github.com/account-and-profile/reference/profile-contributions-reference"
+                    class="underline-offset-2 hover:underline"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    Learn how GitHub counts contributions
+                </a>
+
+                <div
+                    class="flex items-center gap-1"
+                    aria-label="Contribution intensity: less to more"
+                >
+                    <span>Less</span>
+                    <span
+                        class="size-2.5 rounded-[2px] bg-github-0"
+                        aria-hidden="true"></span>
+                    <span
+                        class="size-2.5 rounded-[2px] bg-github-1"
+                        aria-hidden="true"></span>
+                    <span
+                        class="size-2.5 rounded-[2px] bg-github-2"
+                        aria-hidden="true"></span>
+                    <span
+                        class="size-2.5 rounded-[2px] bg-github-3"
+                        aria-hidden="true"></span>
+                    <span
+                        class="size-2.5 rounded-[2px] bg-github-4"
+                        aria-hidden="true"></span>
+                    <span>More</span>
+                </div>
+            </div>
+        </div>
+    </github-contributions>
+</section>
+
+<script>
+    import {
+        getGitHubActivity,
+        invalidateGitHubActivity,
+        type Contribution,
+    } from "../lib/github";
+
+    interface CalendarWeek {
+        start: Date;
+        days: Array<Contribution | undefined>;
+    }
+
+    interface MonthSegment {
+        label: string;
+        span: number;
+    }
+
+    const levelClasses = [
+        "bg-github-0",
+        "bg-github-1",
+        "bg-github-2",
+        "bg-github-3",
+        "bg-github-4",
+    ] as const;
+    const weekdayLabels = ["", "Mon", "", "Wed", "", "Fri", ""];
+    const dateFormatter = new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        day: "numeric",
+        timeZone: "UTC",
+    });
+    const monthFormatter = new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        timeZone: "UTC",
+    });
+    const parseDate = (date: string) => new Date(`${date}T00:00:00Z`);
+    const dateKey = (date: Date) => date.toISOString().slice(0, 10);
+
+    function buildWeeks(contributions: Contribution[]): CalendarWeek[] {
+        const firstContribution = contributions[0];
+        const lastContribution = contributions.at(-1);
+
+        if (!firstContribution || !lastContribution) return [];
+
+        const contributionByDate = new Map(
+            contributions.map((contribution) => [
+                contribution.date,
+                contribution,
+            ]),
+        );
+        const firstDate = parseDate(firstContribution.date);
+        const lastDate = parseDate(lastContribution.date);
+        const firstSunday = new Date(firstDate);
+        firstSunday.setUTCDate(
+            firstSunday.getUTCDate() - firstSunday.getUTCDay(),
+        );
+
+        const weeks: CalendarWeek[] = [];
+
+        for (
+            const weekStart = new Date(firstSunday);
+            weekStart <= lastDate;
+            weekStart.setUTCDate(weekStart.getUTCDate() + 7)
+        ) {
+            const start = new Date(weekStart);
+            const days = Array.from({ length: 7 }, (_, weekday) => {
+                const day = new Date(start);
+                day.setUTCDate(day.getUTCDate() + weekday);
+                return contributionByDate.get(dateKey(day));
+            });
+
+            weeks.push({ start, days });
+        }
+
+        return weeks;
+    }
+
+    function buildMonthSegments(weeks: CalendarWeek[]): MonthSegment[] {
+        const segments: MonthSegment[] = [];
+
+        for (const week of weeks) {
+            const label = monthFormatter.format(week.start);
+            const currentSegment = segments.at(-1);
+
+            if (currentSegment?.label === label) {
+                currentSegment.span += 1;
+            } else {
+                segments.push({ label, span: 1 });
+            }
+        }
+
+        if (segments[0]?.span <= 2) segments[0].label = "";
+        return segments;
+    }
+
+    function renderSummary(
+        target: HTMLElement,
+        contributionTotal: number,
+        repositoryCount: number,
+    ) {
+        const contributionNumber = document.createElement("strong");
+        contributionNumber.className = "font-semibold";
+        contributionNumber.textContent =
+            contributionTotal.toLocaleString("en-US");
+
+        const repositoryNumber = document.createElement("strong");
+        repositoryNumber.className = "font-semibold";
+        repositoryNumber.textContent = repositoryCount.toString();
+
+        target.replaceChildren(
+            contributionNumber,
+            " contributions in the last year and ",
+            repositoryNumber,
+            ` new public ${repositoryCount === 1 ? "repository" : "repositories"}.`,
+        );
+    }
+
+    function renderCalendar(target: HTMLElement, weeks: CalendarWeek[]) {
+        const table = document.createElement("table");
+        table.className =
+            "mx-auto w-max border-separate border-spacing-0.5 px-2 text-foreground";
+        table.setAttribute("role", "grid");
+
+        const head = table.createTHead();
+        const monthRow = head.insertRow();
+        const weekdayHeading = document.createElement("th");
+        weekdayHeading.className = "w-7 sm:w-9";
+        weekdayHeading.scope = "col";
+        const weekdaySrLabel = document.createElement("span");
+        weekdaySrLabel.className = "sr-only";
+        weekdaySrLabel.textContent = "Weekday";
+        weekdayHeading.append(weekdaySrLabel);
+        monthRow.append(weekdayHeading);
+
+        for (const segment of buildMonthSegments(weeks)) {
+            const heading = document.createElement("th");
+            heading.colSpan = segment.span;
+            heading.className =
+                "h-4 text-left text-xs font-semibold first-letter:uppercase";
+            heading.scope = "colgroup";
+            heading.textContent = segment.label;
+            monthRow.append(heading);
+        }
+
+        const body = table.createTBody();
+
+        weekdayLabels.forEach((weekday, dayIndex) => {
+            const row = body.insertRow();
+            row.className = "h-2.5";
+            const weekdayCell = document.createElement("th");
+            weekdayCell.className =
+                "relative pr-6 text-xs font-semibold sm:pr-8";
+            weekdayCell.scope = "row";
+
+            if (weekday) {
+                const label = document.createElement("span");
+                label.className = "absolute -top-1 -left-1";
+                label.textContent = weekday;
+                weekdayCell.append(label);
+            }
+
+            row.append(weekdayCell);
+
+            for (const week of weeks) {
+                const contribution = week.days[dayIndex];
+                const cell = row.insertCell();
+
+                if (!contribution) {
+                    cell.className = "size-2.5 p-0";
+                    cell.setAttribute("aria-hidden", "true");
+                    continue;
+                }
+
+                const contributionWord =
+                    contribution.count === 1
+                        ? "contribution"
+                        : "contributions";
+                const label = `${contribution.count} ${contributionWord} on ${dateFormatter.format(parseDate(contribution.date))}`;
+                const level = Math.min(
+                    4,
+                    Math.max(0, contribution.level),
+                );
+
+                cell.setAttribute("role", "gridcell");
+                cell.setAttribute("aria-label", label);
+                cell.title = label;
+                cell.className = `size-2.5 rounded-[2px] p-0 -outline-offset-1 ${levelClasses[level]}`;
+            }
+        });
+
+        target.replaceChildren(table);
+    }
+
+    class GitHubContributions extends HTMLElement {
+        private loading = false;
+
+        connectedCallback() {
+            this.querySelector<HTMLButtonElement>("[data-retry]")?.addEventListener(
+                "click",
+                () => {
+                    const username = this.dataset.username;
+                    if (username) invalidateGitHubActivity(username);
+                    this.load();
+                },
+            );
+            this.load();
+        }
+
+        private async load() {
+            if (this.loading) return;
+
+            const username = this.dataset.username;
+            const loadingState =
+                this.querySelector<HTMLElement>("[data-loading]");
+            const errorState = this.querySelector<HTMLElement>("[data-error]");
+            const contentState =
+                this.querySelector<HTMLElement>("[data-content]");
+            const summary = this.querySelector<HTMLElement>("[data-summary]");
+            const calendar =
+                this.querySelector<HTMLElement>("[data-calendar]");
+
+            if (
+                !username ||
+                !loadingState ||
+                !errorState ||
+                !contentState ||
+                !summary ||
+                !calendar
+            ) {
+                return;
+            }
+
+            this.loading = true;
+            loadingState.classList.remove("hidden");
+            errorState.classList.add("hidden");
+            contentState.classList.add("hidden");
+
+            try {
+                const { contributionsResult, repositories } =
+                    await getGitHubActivity(username);
+                const contributions = contributionsResult.contributions;
+                const lastContribution = contributions.at(-1);
+
+                if (!lastContribution) {
+                    throw new Error("The contribution response was empty.");
+                }
+
+                const periodEnd = new Date(
+                    `${lastContribution.date}T23:59:59Z`,
+                );
+                const periodStart = new Date(periodEnd);
+                periodStart.setUTCFullYear(periodStart.getUTCFullYear() - 1);
+                const repositoryCount = repositories.filter((repository) => {
+                    const createdAt = new Date(repository.created_at);
+                    return (
+                        !repository.private &&
+                        !repository.fork &&
+                        createdAt >= periodStart &&
+                        createdAt <= periodEnd
+                    );
+                }).length;
+                const contributionTotal = contributions.reduce(
+                    (total, contribution) => total + contribution.count,
+                    0,
+                );
+
+                renderSummary(
+                    summary,
+                    contributionTotal,
+                    repositoryCount,
+                );
+                renderCalendar(calendar, buildWeeks(contributions));
+
+                loadingState.classList.add("hidden");
+                contentState.classList.remove("hidden");
+                contentState.classList.add("flex", "activity-ready");
+            } catch (error) {
+                console.error(
+                    `Could not load GitHub activity for ${username}:`,
+                    error,
+                );
+                loadingState.classList.add("hidden");
+                errorState.classList.remove("hidden");
+            } finally {
+                this.loading = false;
+            }
+        }
+    }
+
+    if (!customElements.get("github-contributions")) {
+        customElements.define("github-contributions", GitHubContributions);
+    }
+</script>
+
+<style>
+    github-contributions {
+        display: block;
+        width: 100%;
+    }
+
+    .skeleton-shimmer {
+        background: linear-gradient(
+            90deg,
+            transparent,
+            color-mix(in srgb, var(--foreground) 7%, transparent),
+            transparent
+        );
+        background-size: 200% 100%;
+        animation: shimmer 1.6s ease-in-out infinite;
+    }
+
+    .skeleton-cell {
+        opacity: 0.55;
+        animation: cell-pulse 1.8s ease-in-out infinite alternate;
+        animation-delay: calc(var(--cell-index) * -17ms);
+    }
+
+    .skeleton-cell:nth-child(5n + 2) {
+        opacity: 0.7;
+    }
+
+    .skeleton-cell:nth-child(7n + 3) {
+        opacity: 0.85;
+    }
+
+    .activity-ready {
+        animation: activity-in 240ms ease-out both;
+    }
+
+    @keyframes shimmer {
+        from {
+            background-position: 200% 0;
+        }
+        to {
+            background-position: -200% 0;
+        }
+    }
+
+    @keyframes cell-pulse {
+        to {
+            opacity: 0.95;
+        }
+    }
+
+    @keyframes activity-in {
+        from {
+            opacity: 0;
+            transform: translateY(3px);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .skeleton-shimmer,
+        .skeleton-cell,
+        .activity-ready {
+            animation: none;
+        }
+    }
+</style>

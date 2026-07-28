@@ -1,0 +1,29 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+    href: string;
+    icon: ImageMetadata;
+    label: string;
+}
+
+const { href, icon, label } = Astro.props;
+---
+
+<a
+    class="group/badge inline-flex h-6.5 w-fit shrink-0 items-center justify-center gap-1 overflow-hidden rounded-lg border px-2 py-0.5 text-xs font-medium whitespace-nowrap transition-all focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 has-data-[icon=inline-end]:pr-1.5 has-data-[icon=inline-start]:pl-1.5 aria-invalid:border-destructive aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 [&>svg]:pointer-events-none [&>svg]:size-3! border-border text-foreground [a]:hover:bg-muted [a]:hover:text-muted-foreground"
+    href={href}
+    target="_blank"
+    rel="noreferrer"
+>
+    <Image
+        class="size-4"
+        src={icon}
+        width={16}
+        height={16}
+        alt={label + " icon"}
+        loading={"eager"}
+    />
+    {label}
+</a>

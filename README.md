@@ -1,117 +1,156 @@
-<img alt="Raul Carini - Full-Stack Developer" src="https://www.raulcarini.dev/api/dynamic-og">
+# raulcarini.dev
 
-A modern personal portfolio and blog built with Next.js 15, featuring MDX-powered content, dynamic Open Graph images, page view tracking, and GitHub contributions visualization. The site leverages cutting-edge Next.js features including App Router, Server Components, and Turbopack for optimal performance.
+Personal portfolio and blog, built with [Astro](https://astro.build) and deployed to Cloudflare Workers. Content lives in Markdown/MDX, most pages are prerendered to static HTML, and server-side code is limited to the page-view API.
 
 ## ✨ Features
 
-- **📝 MDX Blog** - Write rich blog posts with custom components (Tweet embeds, YouTube videos)
-- **🎨 Syntax Highlighting** - Beautiful code blocks with Shiki (`vitesse-dark`/`vitesse-light` themes)
-- **🖼️ Dynamic OG Images** - Automatically generated social preview images (WebP, 1200x630px)
-- **📊 Page View Tracking** - Real-time view counts with Upstash Redis (Edge runtime)
-- **💻 GitHub Integration** - Contribution heatmap and repository visualization
-- **🌗 Dark Mode** - Seamless theme switching with system preference detection
-- **⚡ Modern Stack** - Next.js 15.5.4, React 19.1.0, Tailwind CSS v4, TypeScript
-- **🔍 SEO Optimized** - Dynamic sitemap/robots.txt, metadata API, semantic HTML
+- **📝 MDX Blog** — posts in a type-safe content collection, with custom components (tweet embeds, YouTube embeds)
+- **🎨 Syntax Highlighting** — Shiki with dual `vitesse-light` / `vitesse-dark` themes
+- **💻 GitHub Integration** — contribution heatmap and repository list, fetched client-side and cached in `localStorage`
+- **🌗 Dark Mode** — theme switching with system preference detection, applied before first paint
+- **🔤 Local Fonts** — Geist and Geist Mono, self-hosted and optimized through Astro's font pipeline
+- **🔍 SEO** — automatic sitemap, RSS feed, canonical URLs, and per-page metadata
+- **📅 Annual Recaps** — year-by-year development metrics, highlights, and reflections
+- **📊 Page View API** — Cloudflare Worker endpoints backed by Upstash Redis
+- **☁️ Cloudflare Deployment** — static-first output with API routes, rate limiting, and observability on Cloudflare Workers
+
+## 🧰 Stack
+
+| | |
+|---|---|
+| Framework | Astro 7 |
+| Runtime / Hosting | Cloudflare Workers via `@astrojs/cloudflare` |
+| Styling | Tailwind CSS v4 (CSS-first, via `@tailwindcss/vite`) |
+| Content | `@astrojs/mdx` + content collections |
+| Language | TypeScript |
+| Lint / Format | oxlint + oxfmt |
+| Package manager | pnpm |
 
 ## 🚀 Getting Started
 
 ### Prerequisites
 
-- Node.js 20+ (latest LTS recommended)
-- npm, yarn, or pnpm
+- Node.js 22+
+- pnpm
 
 ### Installation
 
-1. Clone the repository:
-
 ```bash
-git clone https://github.com/R4ULtv/raulcarini.com-v2.git
-cd raulcarini.com-v2
-```
-
-2. Install dependencies:
-
-```bash
+git clone https://github.com/R4ULtv/raulcarini.dev.git
+cd raulcarini.dev
 pnpm install
+pnpm dev
 ```
 
-3. Set up environment variables (create `.env.local`):
+Open [http://localhost:4321](http://localhost:4321).
 
-```env
-# Upstash Redis (for page views)
-UPSTASH_REDIS_REST_URL=your_redis_url
-UPSTASH_REDIS_REST_TOKEN=your_redis_token
-
-# Optional: GitHub token for higher API rate limits
-GITHUB_TOKEN=your_github_token
-```
-
-4. Run the development server with Turbopack:
-
-```bash
-pnpm run dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) to see your site.
+Copy `.env.example` to `.dev.vars` and add the Upstash REST credentials used by the page-view API. The GitHub data is fetched from public APIs in the browser.
 
 ## 📝 Writing Blog Posts
 
-Create a new `.mdx` file in the `/content` directory:
+Create a `.md` or `.mdx` file in `src/content/blog/`. The filename becomes the slug, so `src/content/blog/my-post.mdx` is served at `/blog/my-post`.
 
 ```mdx
-export const metadata = {
-  title: "My First Blog Post",
-  createdAt: "2025-01-15",
-  description: "An amazing blog post about web development",
-  keywords: ["nextjs", "react", "typescript"],
-  shortSlug: "first-post", // Optional short URL
-};
+---
+title: My First Blog Post
+shortDescription: A one-line summary used in listings.
+description: A longer summary used for SEO and social previews.
+category: articles
+keywords: ["astro", "typescript"]
+pubDate: 2026-01-15
+---
 
-# My First Blog Post
+This is my blog post content with **markdown** support.
 
-This is my blog post content with **markdown** support!
-
-\`\`\`typescript
-const greeting = "Hello, World!";
-console.log(greeting);
-\`\`\`
-
-<Tweet id="1234567890" />
 ```
 
-Posts are automatically discovered and sorted by `createdAt` date (newest first).
+### Frontmatter
+
+| Field | Required | Notes |
+|---|---|---|
+| `title` | ✅ | |
+| `shortDescription` | ✅ | Short summary for listings |
+| `description` | ✅ | Long summary for metadata |
+| `category` | ✅ | One of `projects`, `articles`, `updates`, `personal` |
+| `keywords` | ✅ | Array of strings |
+| `pubDate` | ✅ | Sorted newest first |
+| `updatedDate` | | |
+| `heroImage` | | Resolved and optimized by Astro |
+| `heroImageAlt` | | Alt text for the hero image |
+
+The schema is enforced at build time in `src/content.config.ts` — an invalid `category` or a missing field fails the build rather than shipping broken output.
+
+## 📁 Project Structure
+
+```
+src/
+├── assets/fonts/     # Geist + Geist Mono
+├── components/       # Layout and UI components
+│   └── content/      # Components usable inside MDX
+├── content/blog/     # Blog posts (.md / .mdx)
+├── data/             # Annual recap data
+├── layouts/          # BlogPost layout
+├── lib/              # GitHub, page-view, and post helpers
+├── pages/            # Home, blog, recap, RSS, and API routes
+└── styles/           # global.css (Tailwind theme tokens)
+```
 
 ## 🔧 Available Scripts
 
 ```bash
-# Development server with Turbopack
-pnpm run dev
-
-# Production build with Turbopack
-pnpm run build
-
-# Start production server
-pnpm start
-
-# Run ESLint
-pnpm run lint
+pnpm dev        # Start the dev server
+pnpm build      # Build the static site to dist/
+pnpm preview    # Preview a completed build in the Workers runtime
+pnpm deploy     # Build and deploy with Wrangler
+pnpm cf-typegen # Regenerate Cloudflare binding types
+pnpm check      # Type-check with astro check
+pnpm lint       # Run oxlint
+pnpm fmt        # Run oxfmt
 ```
 
-## 🚢 Deployment
+> `astro check` relies on generated types in `.astro/`. If they're missing or stale, run `pnpm astro sync` first.
 
-Deploy to Vercel with one click:
+## 🚢 Cloudflare Deployment
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FR4ULtv%2Fraulcarini.com-v2)
+The site uses the Astro Cloudflare adapter. Content pages are prerendered during the build, while `/api/views` and `/api/views/:path` run on Cloudflare Workers.
 
-Don't forget to add your environment variables in the Vercel dashboard!
+[`wrangler.jsonc`](wrangler.jsonc) configures:
+
+- the `raulcarini.dev` custom domain
+- separate read and write rate-limit bindings for the page-view API
+- Worker observability
+- the `nodejs_compat` compatibility flag
+
+For local development, copy `.env.example` to `.dev.vars` and provide the Upstash REST credentials. The adapter uses Node.js to prerender static pages during development and builds because `prerenderEnvironment` is set to `"node"`. On-demand routes such as the page-view API still run in Cloudflare's `workerd` runtime. After building, `pnpm preview` runs the completed Worker bundle locally in `workerd`.
+
+Authenticate Wrangler and add the production secrets once:
+
+```bash
+pnpm wrangler login
+pnpm wrangler secret put UPSTASH_REDIS_REST_URL
+pnpm wrangler secret put UPSTASH_REDIS_REST_TOKEN
+```
+
+Deploy the site:
+
+```bash
+pnpm deploy
+```
+
+When Cloudflare bindings change, update the generated types before checking the project:
+
+```bash
+pnpm cf-typegen
+pnpm check
+```
 
 ## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
+Open source under the [MIT License](LICENSE).
 
 ## 🤝 Contributing
 
-While this is a personal portfolio, feel free to fork it and adapt it for your own use! If you find bugs or have suggestions, please open an issue.
+This is a personal site, but feel free to fork it and adapt it for your own use. Bug reports and suggestions are welcome - open an issue.
 
 ---
 

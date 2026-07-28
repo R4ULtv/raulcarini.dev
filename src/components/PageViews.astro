@@ -1,0 +1,88 @@
+---
+interface Props {
+    path: string;
+}
+
+const { path } = Astro.props;
+---
+
+<page-views
+    class="inline-block min-w-12 animate-pulse"
+    data-path={path}
+    role="status"
+    aria-label="Loading view count"
+>
+    <span data-page-views-value aria-hidden="true">&mdash; views</span>
+</page-views>
+
+<script>
+    const compactNumberFormatter = new Intl.NumberFormat("en-US", {
+        notation: "compact",
+        maximumFractionDigits: 1,
+    });
+    const fullNumberFormatter = new Intl.NumberFormat("en-US");
+
+    class PageViewsElement extends HTMLElement {
+        connectedCallback() {
+            if (this.dataset.initialized === "true") return;
+
+            this.dataset.initialized = "true";
+            void this.load();
+        }
+
+        private renderCount(count: number) {
+            const value = this.querySelector<HTMLElement>(
+                "[data-page-views-value]",
+            );
+            if (!value) return;
+
+            const label = count === 1 ? "view" : "views";
+            value.textContent = `${compactNumberFormatter.format(count)} ${label}`;
+            value.removeAttribute("aria-hidden");
+            this.setAttribute(
+                "aria-label",
+                `${fullNumberFormatter.format(count)} ${label}`,
+            );
+            this.classList.remove("animate-pulse");
+        }
+
+        private async load() {
+            const path = this.dataset.path;
+            if (!path) {
+                this.hidden = true;
+                return;
+            }
+
+            const endpoint = `/api/views/${encodeURIComponent(path)}`;
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: "POST",
+                    keepalive: true,
+                    headers: { Accept: "application/json" },
+                });
+                if (!response.ok) {
+                    throw new Error("Could not record page view");
+                }
+
+                const data: unknown = await response.json();
+                if (
+                    typeof data !== "number" ||
+                    !Number.isFinite(data) ||
+                    data < 0
+                ) {
+                    throw new Error("Invalid page view response");
+                }
+
+                this.renderCount(data);
+            } catch (error) {
+                this.hidden = true;
+                console.error("Page view tracking failed:", error);
+            }
+        }
+    }
+
+    if (!customElements.get("page-views")) {
+        customElements.define("page-views", PageViewsElement);
+    }
+</script>
