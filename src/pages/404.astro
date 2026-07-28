@@ -1,0 +1,13 @@
+---
+import ErrorPage from "../components/ErrorPage.astro";
+
+const requestedPath = decodeURI(Astro.url.pathname);
+---
+
+<ErrorPage
+    code="404"
+    eyebrow="Page not found"
+    title="This route leads nowhere."
+    description="The page may have moved, or the address might be incomplete. Head home or continue with the latest writing."
+    detail={requestedPath}
+/>

@@ -1,0 +1,142 @@
+---
+import BaseHead from "./BaseHead.astro";
+import Header from "./Header.astro";
+
+interface Props {
+    code: "404" | "500";
+    eyebrow: string;
+    title: string;
+    description: string;
+    detail?: string;
+    retry?: boolean;
+}
+
+const { code, eyebrow, title, description, detail, retry = false } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+    <head>
+        <BaseHead title={`${code} — ${title}`} description={description} />
+        <meta name="robots" content="noindex" />
+    </head>
+    <body
+        class="mx-auto flex min-h-screen max-w-180 flex-col px-4 py-10 sm:px-6 sm:py-16"
+    >
+        <Header />
+
+        <main class="flex flex-1 items-center pb-18 sm:pb-24">
+            <section class="w-full" aria-labelledby="error-title">
+                <div
+                    class="error-code relative mb-8 overflow-hidden border-y border-border py-6 sm:mb-10 sm:py-8"
+                    aria-hidden="true"
+                >
+                    <span>{code}</span>
+                    <div class="scanline"></div>
+                </div>
+
+                <div class="grid gap-6 sm:grid-cols-[9rem_1fr] sm:gap-8">
+                    <p
+                        class="m-0 font-mono text-xs uppercase tracking-[0.16em] text-muted-foreground"
+                    >
+                        {eyebrow}
+                    </p>
+
+                    <div class="max-w-lg">
+                        <h1
+                            id="error-title"
+                            class="m-0 text-2xl font-semibold tracking-[-0.035em] sm:text-3xl"
+                        >
+                            {title}
+                        </h1>
+                        <p
+                            class="mt-3 mb-0 text-base leading-[1.65] tracking-[-0.008em] text-muted-foreground"
+                        >
+                            {description}
+                        </p>
+                        {
+                            detail && (
+                                <p class="mt-4 mb-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-md border border-border bg-muted/50 px-3 py-2 font-mono text-xs text-muted-foreground">
+                                    {detail}
+                                </p>
+                            )
+                        }
+
+                        <nav
+                            class="mt-7 flex flex-wrap items-center gap-x-5 gap-y-3 text-sm"
+                            aria-label="Recovery options"
+                        >
+                            {
+                                retry && (
+                                    <button
+                                        class="cursor-pointer rounded-md bg-foreground px-3.5 py-2 font-medium text-background transition-opacity hover:opacity-80"
+                                        type="button"
+                                        data-retry
+                                    >
+                                        Try again
+                                    </button>
+                                )
+                            }
+                            <a
+                                class:list={[
+                                    "font-medium transition-colors",
+                                    retry
+                                        ? "text-muted-foreground underline underline-offset-4 decoration-border-strong hover:text-foreground hover:decoration-foreground"
+                                        : "rounded-md bg-foreground px-3.5 py-2 text-background no-underline hover:opacity-80",
+                                ]}
+                                href="/"
+                            >
+                                Go home
+                            </a>
+                            <a
+                                class="text-muted-foreground underline decoration-border-strong underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
+                                href="/blog"
+                            >
+                                Read the blog
+                            </a>
+                        </nav>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        {
+            retry && (
+                <script>
+                    document
+                        .querySelector("[data-retry]")
+                        ?.addEventListener("click", () => location.reload());
+                </script>
+            )
+        }
+    </body>
+</html>
+
+<style>
+    .error-code span {
+        display: block;
+        color: var(--foreground);
+        font-family: var(--font-geist-mono);
+        font-size: clamp(7rem, 28vw, 13rem);
+        font-weight: 400;
+        line-height: 1;
+        letter-spacing: -0.075em;
+    }
+
+    @media (prefers-reduced-motion: no-preference) {
+        .error-code span {
+            animation: resolve 500ms cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        @keyframes resolve {
+            from {
+                opacity: 0;
+                transform: translate3d(-0.08em, 0, 0);
+            }
+            to {
+                opacity: 1;
+                transform: translate3d(0, 0, 0);
+            }
+        }
+    }
+</style>

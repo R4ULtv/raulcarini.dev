@@ -1,0 +1,21 @@
+---
+import ErrorPage from "../components/ErrorPage.astro";
+
+export const prerender = false;
+
+interface Props {
+    error?: unknown;
+}
+
+// Astro provides the original error here for server-rendered failures. Keep it
+// out of the response so implementation details never reach the visitor.
+const { error: _error } = Astro.props;
+---
+
+<ErrorPage
+    code="500"
+    eyebrow="Server error"
+    title="Something interrupted the request."
+    description="The page could not be completed just now. Try the request again, or return home while the signal clears."
+    retry
+/>
