@@ -1,4 +1,4 @@
-# raulcarini.dev
+![Raul Carini](https://www.raulcarini.dev/api/og/home.webp)
 
 Personal portfolio and blog, built with [Astro](https://astro.build) and deployed to Cloudflare Workers. Content lives in Markdown/MDX, most pages are prerendered to static HTML, and server-side code is limited to the page-view API.
 
