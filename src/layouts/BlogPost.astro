@@ -32,12 +32,21 @@ const categoryDotClasses = {
     updates: "bg-amber-500/70",
     personal: "bg-rose-500/70",
 } as const;
+
+const socialImage = new URL(`/api/og/${slug}.webp`, Astro.site);
 ---
 
 <!doctype html>
 <html lang="en">
     <head>
-        <BaseHead title={title} description={description} keywords={keywords} />
+        <BaseHead
+            title={title}
+            description={description}
+            keywords={keywords}
+            type="article"
+            {socialImage}
+            socialImageAlt={`${title} — ${shortDescription}`}
+        />
     </head>
 
     <body class="max-w-180 mx-auto py-10 sm:py-16 px-4 sm:px-6">

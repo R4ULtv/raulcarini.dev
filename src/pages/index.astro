@@ -27,12 +27,18 @@ const categoryDotClasses = {
     updates: "bg-amber-500/70",
     personal: "bg-rose-500/70",
 } as const;
+
+const socialImage = new URL("/api/og/home.webp", Astro.site);
 ---
 
 <!doctype html>
 <html lang="en">
     <head>
-        <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+        <BaseHead
+            title={SITE_TITLE}
+            description={SITE_DESCRIPTION}
+            {socialImage}
+        />
     </head>
     <body class="max-w-180 mx-auto py-10 sm:py-16 px-4 sm:px-6">
         <Header />
