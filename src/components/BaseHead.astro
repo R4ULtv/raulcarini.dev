@@ -30,6 +30,13 @@ const {
     socialImageAlt = `${title} — ${description}`,
     type = "website",
 } = Astro.props;
+
+const brandedTitle =
+    title === SITE_TITLE ||
+    title.endsWith(`| ${SITE_TITLE}`) ||
+    title.endsWith(`— ${SITE_TITLE}`)
+        ? title
+        : `${title} | ${SITE_TITLE}`;
 ---
 
 <script is:inline>
@@ -66,14 +73,14 @@ const {
 <link rel="canonical" href={canonicalURL} />
 
 <!-- Primary Meta Tags -->
-<title>{title}</title>
+<title>{brandedTitle}</title>
 <meta name="description" content={description} />
 {keywords && <meta name="keywords" content={keywords.join(", ")} />}
 
 <!-- Open Graph / Facebook -->
 <meta property="og:type" content={type} />
 <meta property="og:url" content={canonicalURL} />
-<meta property="og:title" content={title} />
+<meta property="og:title" content={brandedTitle} />
 <meta property="og:description" content={description} />
 {
     socialImage && (
@@ -90,7 +97,7 @@ const {
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content={title} />
+<meta name="twitter:title" content={brandedTitle} />
 <meta name="twitter:description" content={description} />
 {
     socialImage && (
