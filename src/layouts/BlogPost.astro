@@ -21,10 +21,18 @@ const {
     keywords,
     pubDate,
     updatedDate,
+    shortSlug,
     heroImage,
     heroImageAlt,
     readingTime,
 } = Astro.props;
+
+const generatedShortSlug = title
+    .toLowerCase()
+    .replace(/[aeiou]/g, "")
+    .replace(/[^a-z0-9]/g, "")
+    .slice(0, 6);
+const shortUrl = `https://shrly.cc/${shortSlug ?? generatedShortSlug}`;
 
 const categoryDotClasses = {
     projects: "bg-sky-500/70",
@@ -50,7 +58,7 @@ const socialImage = new URL(`/api/og/${slug}.webp`, Astro.site);
     </head>
 
     <body class="max-w-180 mx-auto py-10 sm:py-16 px-4 sm:px-6">
-        <Header />
+        <Header shareUrl={shortUrl} shareTitle={title} />
         <main>
             <article>
                 <header>

@@ -1,5 +1,13 @@
 ---
+import ShareLink from "./ShareLink.astro";
 import ThemeSwitch from "./ThemeSwitch.astro";
+
+type Props = {
+    shareUrl?: string;
+    shareTitle?: string;
+};
+
+const { shareUrl, shareTitle } = Astro.props;
 ---
 
 <header class="mb-10 sm:mb-16 flex items-start gap-1">
@@ -16,7 +24,16 @@ import ThemeSwitch from "./ThemeSwitch.astro";
         </span>
     </div>
 
-    <nav class="ml-auto flex gap-1 text-sm" aria-label="Primary navigation">
+    <div
+        class="ml-auto flex gap-1.5 text-sm"
+        role="group"
+        aria-label="Page actions"
+    >
+        {
+            shareUrl && shareTitle && (
+                <ShareLink shortUrl={shareUrl} title={shareTitle} />
+            )
+        }
         <ThemeSwitch />
-    </nav>
+    </div>
 </header>

@@ -1,0 +1,134 @@
+---
+type Props = {
+    shortUrl: string;
+    title: string;
+};
+
+const { shortUrl, title } = Astro.props;
+---
+
+<button
+    type="button"
+    data-share-link
+    data-share-url={shortUrl}
+    data-share-title={title}
+    class="group relative grid size-8 shrink-0 place-items-center rounded-lg text-foreground transition-colors duration-200 hover:bg-muted hover:text-accent-foreground"
+    aria-label="Share this post"
+    title="Share this post"
+>
+    <span class="relative size-3.5" aria-hidden="true">
+        <svg
+            class="share-link-icon absolute inset-0 size-3.5 transition-[opacity,transform] duration-200 ease-out"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <circle cx="18" cy="5" r="3"></circle>
+            <circle cx="6" cy="12" r="3"></circle>
+            <circle cx="18" cy="19" r="3"></circle>
+            <path d="m8.59 13.51 6.83 3.98"></path>
+            <path d="m15.41 6.51-6.82 3.98"></path>
+        </svg>
+        <svg
+            class="share-check-icon absolute inset-0 size-3.5 scale-75 opacity-0 transition-[opacity,transform] duration-200 ease-out"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path d="M20 6 9 17l-5-5"></path>
+        </svg>
+    </span>
+</button>
+
+<script>
+    const shareSelector = "[data-share-link]";
+    const resetTimers = new WeakMap<HTMLButtonElement, number>();
+
+    function showCopied(button: HTMLButtonElement) {
+        button.dataset.copied = "true";
+        button.setAttribute("aria-label", "Short link copied");
+        button.setAttribute("title", "Short link copied");
+
+        const previousTimer = resetTimers.get(button);
+        if (previousTimer) window.clearTimeout(previousTimer);
+
+        resetTimers.set(
+            button,
+            window.setTimeout(() => {
+                delete button.dataset.copied;
+                button.setAttribute("aria-label", "Share this post");
+                button.setAttribute("title", "Share this post");
+            }, 2000),
+        );
+    }
+
+    async function copyLink(button: HTMLButtonElement, url: string) {
+        try {
+            await navigator.clipboard.writeText(url);
+        } catch {
+            const input = document.createElement("input");
+            input.value = url;
+            input.style.position = "fixed";
+            input.style.opacity = "0";
+            document.body.append(input);
+            input.select();
+            const legacyDocument = document as unknown as {
+                execCommand(command: string): boolean;
+            };
+            legacyDocument.execCommand("copy");
+            input.remove();
+        }
+        showCopied(button);
+    }
+
+    document.addEventListener("click", async (event) => {
+        const button = (event.target as Element).closest<HTMLButtonElement>(
+            shareSelector,
+        );
+        if (!button) return;
+
+        const url = button.dataset.shareUrl;
+        if (!url) return;
+
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: button.dataset.shareTitle,
+                    url,
+                });
+                return;
+            } catch (error) {
+                if ((error as DOMException).name === "AbortError") return;
+            }
+        }
+
+        await copyLink(button, url);
+    });
+</script>
+
+<style>
+    [data-share-link][data-copied] .share-link-icon {
+        transform: scale(0.75);
+        opacity: 0;
+    }
+
+    [data-share-link][data-copied] .share-check-icon {
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .share-link-icon,
+        .share-check-icon {
+            transition: none;
+        }
+    }
+</style>
