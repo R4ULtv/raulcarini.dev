@@ -1,6 +1,6 @@
 const RATE_LIMIT_HEADERS = {
   "Cache-Control": "no-store",
-  "Retry-After": "60",
+  "Retry-After": "10",
 };
 
 type RateLimiter = {
