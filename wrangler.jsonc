@@ -30,6 +30,10 @@
       "pattern": "raulcarini.dev",
       "custom_domain": true,
     },
+    {
+      "pattern": "www.raulcarini.dev",
+      "custom_domain": true,
+    },
   ],
   "secrets": {
     "required": ["UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN"],
