@@ -49,8 +49,8 @@ export default defineConfig({
       options: {
         variants: [
           {
-            src: ["./src/assets/fonts/Geist/Geist[wght].woff2"],
-            weight: "100 900",
+            src: ["./src/assets/fonts/Geist/Geist.woff2"],
+            weight: "400 700",
             style: "normal",
             display: "swap",
           },
@@ -65,8 +65,8 @@ export default defineConfig({
       options: {
         variants: [
           {
-            src: ["./src/assets/fonts/Geist/GeistMono[wght].woff2"],
-            weight: "100 900",
+            src: ["./src/assets/fonts/Geist/GeistMono.woff2"],
+            weight: "400 700",
             style: "normal",
             display: "swap",
           },
