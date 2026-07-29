@@ -1,1 +1,2 @@
 /sitemap.xml /sitemap-index.xml 308
+/recap/* /recap?year=:splat 308
