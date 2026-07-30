@@ -7,6 +7,7 @@ import FormattedDate from "../components/FormattedDate.astro";
 import Header from "../components/Header.astro";
 import PageViews from "../components/PageViews.astro";
 import { BLOG_CATEGORY_META } from "../lib/blog-meta";
+import "../styles/typeset.css";
 
 type Props = CollectionEntry<"blog">["data"] & {
     slug: string;
