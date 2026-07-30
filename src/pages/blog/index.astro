@@ -2,16 +2,11 @@
 import { getCollection } from "astro:content";
 import BaseHead from "../../components/BaseHead.astro";
 import Header from "../../components/Header.astro";
+import { formatFullDate } from "../../lib/date";
 
 const posts = (await getCollection("blog")).sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
-
-const dateFormatter = new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-});
 
 const categoryDotClasses = {
     projects: "bg-sky-500/70",
@@ -133,7 +128,7 @@ const isNewPost = (pubDate: Date) =>
                                                         <time
                                                             datetime={post.data.pubDate.toISOString()}
                                                         >
-                                                            {dateFormatter.format(
+                                                            {formatFullDate(
                                                                 post.data
                                                                     .pubDate,
                                                             )}

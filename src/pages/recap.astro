@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import { recapYears } from "../data/recap";
+import { formatMonthLabel } from "../lib/date";
 
 const posts = await getCollection("blog");
 const postBySlug = new Map(posts.map((post) => [post.id, post]));
@@ -14,7 +15,6 @@ const pendingYear =
     new Date().getFullYear() >= nextRecapYear ? nextRecapYear : undefined;
 
 const numberFormatter = new Intl.NumberFormat("en-US");
-const monthFormatter = new Intl.DateTimeFormat("en-US", { month: "short" });
 
 function formatDelta(current: number, previous: number | undefined) {
     if (previous === undefined) return "First record";
@@ -290,7 +290,7 @@ const categoryDotClasses = {
                                                             class="font-mono text-[0.625rem] text-muted-foreground uppercase"
                                                             datetime={post.data.pubDate.toISOString()}
                                                         >
-                                                            {monthFormatter.format(
+                                                            {formatMonthLabel(
                                                                 post.data
                                                                     .pubDate,
                                                             )}

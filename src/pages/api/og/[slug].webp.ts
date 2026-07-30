@@ -3,6 +3,7 @@ import { getEntry } from "astro:content";
 import { ImageResponse } from "takumi-js/response";
 
 import { SITE_DESCRIPTION, SITE_TITLE } from "../../../consts";
+import { formatCompactDate } from "../../../lib/date";
 import { readingTime } from "../../../lib/post";
 
 export const prerender = false;
@@ -21,15 +22,6 @@ const CATEGORY_ACCENTS = {
   updates: "rgba(245, 158, 11, 0.7)",
   personal: "rgba(244, 63, 94, 0.7)",
 } as const;
-
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat("en", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-    timeZone: "UTC",
-  }).format(date);
-}
 
 function template({
   eyebrow,
@@ -140,9 +132,9 @@ export const GET: APIRoute = async ({ params }) => {
     }
 
     const dates = [
-      formatDate(post.data.pubDate),
+      formatCompactDate(post.data.pubDate),
       `${readingTime(post.body)} min read`,
-      post.data.updatedDate ? `Updated ${formatDate(post.data.updatedDate)}` : undefined,
+      post.data.updatedDate ? `Updated ${formatCompactDate(post.data.updatedDate)}` : undefined,
     ]
       .filter(Boolean)
       .join("  ·  ");
