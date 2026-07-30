@@ -2,6 +2,8 @@ import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 import { defineCollection } from "astro:content";
 
+import { BLOG_CATEGORIES } from "./lib/blog-meta";
+
 const blog = defineCollection({
   loader: glob({ base: "./src/content/blog", pattern: "**/*.{md,mdx}" }),
   schema: ({ image }) =>
@@ -9,7 +11,7 @@ const blog = defineCollection({
       title: z.string(),
       shortDescription: z.string(),
       description: z.string(),
-      category: z.enum(["projects", "articles", "updates", "personal"]),
+      category: z.enum(BLOG_CATEGORIES),
       keywords: z.array(z.string()),
       pubDate: z.coerce.date(),
       updatedDate: z.coerce.date().optional(),

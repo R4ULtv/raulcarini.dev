@@ -4,6 +4,7 @@ import { getCollection } from "astro:content";
 import BaseHead from "../components/BaseHead.astro";
 import Header from "../components/Header.astro";
 import { recapYears } from "../data/recap";
+import { BLOG_CATEGORY_META } from "../lib/blog-meta";
 import { formatMonthLabel } from "../lib/date";
 
 const posts = await getCollection("blog");
@@ -27,12 +28,6 @@ function formatDelta(current: number, previous: number | undefined) {
     return `${sign}${percentage.toFixed(digits)}%`;
 }
 
-const categoryDotClasses = {
-    projects: "bg-sky-500/70",
-    articles: "bg-violet-500/70",
-    updates: "bg-amber-500/70",
-    personal: "bg-rose-500/70",
-} as const;
 ---
 
 <!doctype html>
@@ -301,10 +296,10 @@ const categoryDotClasses = {
                                                         <span
                                                             class:list={[
                                                                 "size-1.5 shrink-0 rounded-full",
-                                                                categoryDotClasses[
+                                                                BLOG_CATEGORY_META[
                                                                     post.data
                                                                         .category
-                                                                ],
+                                                                ].dotClass,
                                                             ]}
                                                             aria-label={
                                                                 post.data

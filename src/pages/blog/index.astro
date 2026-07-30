@@ -2,40 +2,24 @@
 import { getCollection } from "astro:content";
 import BaseHead from "../../components/BaseHead.astro";
 import Header from "../../components/Header.astro";
+import {
+    BLOG_CATEGORIES,
+    BLOG_CATEGORY_META,
+    isNewPost,
+} from "../../lib/blog-meta";
 import { formatFullDate } from "../../lib/date";
 
 const posts = (await getCollection("blog")).sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 
-const categoryDotClasses = {
-    projects: "bg-sky-500/70",
-    articles: "bg-violet-500/70",
-    updates: "bg-amber-500/70",
-    personal: "bg-rose-500/70",
-} as const;
-
-type Category = keyof typeof categoryDotClasses;
-
-const categoryLabels: Record<Category, string> = {
-    projects: "Projects",
-    articles: "Articles",
-    updates: "Updates",
-    personal: "Personal",
-};
-
-const categories = (Object.keys(categoryLabels) as Category[])
+const categories = BLOG_CATEGORIES
     .map((category) => ({
         id: category,
-        label: categoryLabels[category],
+        label: BLOG_CATEGORY_META[category].label,
         count: posts.filter((post) => post.data.category === category).length,
     }))
     .filter((category) => category.count > 0);
-
-const newPostWindow = 7 * 24 * 60 * 60 * 1000;
-const isNewPost = (pubDate: Date) =>
-    Date.now() - pubDate.valueOf() <= newPostWindow &&
-    Date.now() >= pubDate.valueOf();
 ---
 
 <!doctype html>
@@ -81,7 +65,8 @@ const isNewPost = (pubDate: Date) =>
                                     <span
                                         class:list={[
                                             "size-1.5 shrink-0 rounded-full",
-                                            categoryDotClasses[category.id],
+                                            BLOG_CATEGORY_META[category.id]
+                                                .dotClass,
                                         ]}
                                         aria-hidden="true"
                                     />
@@ -139,10 +124,10 @@ const isNewPost = (pubDate: Date) =>
                                                     <span
                                                         class:list={[
                                                             "size-1.5 shrink-0 rounded-full",
-                                                            categoryDotClasses[
+                                                            BLOG_CATEGORY_META[
                                                                 post.data
                                                                     .category
-                                                            ],
+                                                            ].dotClass,
                                                         ]}
                                                         aria-hidden="true"
                                                     />

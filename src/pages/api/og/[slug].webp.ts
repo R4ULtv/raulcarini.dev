@@ -3,6 +3,7 @@ import { getEntry } from "astro:content";
 import { ImageResponse } from "takumi-js/response";
 
 import { SITE_DESCRIPTION, SITE_TITLE } from "../../../consts";
+import { BLOG_CATEGORY_META } from "../../../lib/blog-meta";
 import { formatCompactDate } from "../../../lib/date";
 import { readingTime } from "../../../lib/post";
 
@@ -15,13 +16,6 @@ const BLOG_SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const RESPONSE_HEADERS = {
   "Cache-Control": "public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800",
 };
-
-const CATEGORY_ACCENTS = {
-  projects: "rgba(14, 165, 233, 0.7)",
-  articles: "rgba(139, 92, 246, 0.7)",
-  updates: "rgba(245, 158, 11, 0.7)",
-  personal: "rgba(244, 63, 94, 0.7)",
-} as const;
 
 function template({
   eyebrow,
@@ -144,7 +138,7 @@ export const GET: APIRoute = async ({ params }) => {
       title: post.data.title,
       description: post.data.shortDescription,
       details: dates,
-      accent: CATEGORY_ACCENTS[post.data.category],
+      accent: BLOG_CATEGORY_META[post.data.category].ogAccent,
     });
   }
 

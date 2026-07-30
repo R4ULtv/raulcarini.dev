@@ -6,6 +6,7 @@ import CodeCopy from "../components/CodeCopy.astro";
 import FormattedDate from "../components/FormattedDate.astro";
 import Header from "../components/Header.astro";
 import PageViews from "../components/PageViews.astro";
+import { BLOG_CATEGORY_META } from "../lib/blog-meta";
 
 type Props = CollectionEntry<"blog">["data"] & {
     slug: string;
@@ -33,13 +34,6 @@ const generatedShortSlug = title
     .replace(/[^a-z0-9]/g, "")
     .slice(0, 6);
 const shortUrl = `https://shrly.cc/${shortSlug ?? generatedShortSlug}`;
-
-const categoryDotClasses = {
-    projects: "bg-sky-500/70",
-    articles: "bg-violet-500/70",
-    updates: "bg-amber-500/70",
-    personal: "bg-rose-500/70",
-} as const;
 
 const socialImage = new URL(`/api/og/${slug}.webp`, Astro.site);
 ---
@@ -72,7 +66,7 @@ const socialImage = new URL(`/api/og/${slug}.webp`, Astro.site);
                             <span
                                 class:list={[
                                     "size-1.5 shrink-0 rounded-full",
-                                    categoryDotClasses[category],
+                                    BLOG_CATEGORY_META[category].dotClass,
                                 ]}
                                 aria-hidden="true"></span>
                             {category}

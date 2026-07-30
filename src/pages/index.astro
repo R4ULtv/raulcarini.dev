@@ -10,23 +10,12 @@ import railRadarIcon from "../assets/icons/railradar.png";
 import spotifyIcon from "../assets/icons/spotify.png";
 import uiIcon from "../assets/icons/ui.png";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
+import { BLOG_CATEGORY_META, isNewPost } from "../lib/blog-meta";
 import { formatFullDate } from "../lib/date";
 
 const recentPosts = (await getCollection("blog"))
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
     .slice(0, 5);
-
-const newPostWindow = 7 * 24 * 60 * 60 * 1000;
-const isNewPost = (pubDate: Date) =>
-    Date.now() - pubDate.valueOf() <= newPostWindow &&
-    Date.now() >= pubDate.valueOf();
-
-const categoryDotClasses = {
-    projects: "bg-sky-500/70",
-    articles: "bg-violet-500/70",
-    updates: "bg-amber-500/70",
-    personal: "bg-rose-500/70",
-} as const;
 
 const socialImage = new URL("/api/og/home.webp", Astro.site);
 ---
@@ -300,9 +289,9 @@ const socialImage = new URL("/api/og/home.webp", Astro.site);
                                                 aria-hidden="true"
                                                 class:list={[
                                                     "size-1.5 shrink-0 rounded-full",
-                                                    categoryDotClasses[
+                                                    BLOG_CATEGORY_META[
                                                         post.data.category
-                                                    ],
+                                                    ].dotClass,
                                                 ]}
                                             />
                                             {post.data.category}
