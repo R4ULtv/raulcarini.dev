@@ -46,7 +46,10 @@ function toSmallVariant(url: string): string {
 
 async function fetchTweet(id: string): Promise<Tweet> {
   const response = await fetch(`https://api.fxtwitter.com/i/status/${id}`, {
-    headers: { Accept: "application/json" },
+    headers: {
+      Accept: "application/json",
+      "User-Agent": "raulcarini.dev/1.0 (+https://www.raulcarini.dev)",
+    },
     signal: AbortSignal.timeout(15_000),
   });
 
