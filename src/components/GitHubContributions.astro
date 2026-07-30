@@ -4,7 +4,6 @@ interface Props {
 }
 
 const { username = "r4ultv" } = Astro.props;
-const skeletonCells = Array.from({ length: 53 * 7 });
 ---
 
 <section
@@ -31,22 +30,24 @@ const skeletonCells = Array.from({ length: 53 * 7 });
                 <span class="skeleton-shimmer block size-full"></span>
             </div>
 
-            <div
-                class="max-w-full overflow-hidden pb-1"
-                aria-hidden="true"
-            >
+            <div class="max-w-full overflow-hidden pb-1" aria-hidden="true">
                 <div class="w-max px-2 pt-5">
                     <div
-                        class="grid grid-flow-col grid-rows-7 gap-0.5 pl-7 sm:pl-9"
+                        class="skeleton-grid flex flex-col gap-0.5 pl-7 sm:pl-9"
                     >
-                        {
-                            skeletonCells.map((_, index) => (
-                                <span
-                                    class="skeleton-cell size-2.5 rounded-[2px] bg-muted"
-                                    style={`--cell-index: ${index}`}
-                                />
-                            ))
-                        }
+                        <span class="skeleton-cell"></span>
+                        <span class="skeleton-cell" style="--delay: -300ms"
+                        ></span>
+                        <span class="skeleton-cell" style="--delay: -600ms"
+                        ></span>
+                        <span class="skeleton-cell" style="--delay: -900ms"
+                        ></span>
+                        <span class="skeleton-cell" style="--delay: -1200ms"
+                        ></span>
+                        <span class="skeleton-cell" style="--delay: -1500ms"
+                        ></span>
+                        <span class="skeleton-cell" style="--delay: -1800ms"
+                        ></span>
                     </div>
                 </div>
             </div>
@@ -114,19 +115,19 @@ const skeletonCells = Array.from({ length: 53 * 7 });
                 >
                     <span>Less</span>
                     <span
-                        class="size-2.5 rounded-[2px] bg-github-0"
+                        class="size-2.5 rounded-xs bg-github-0"
                         aria-hidden="true"></span>
                     <span
-                        class="size-2.5 rounded-[2px] bg-github-1"
+                        class="size-2.5 rounded-xs bg-github-1"
                         aria-hidden="true"></span>
                     <span
-                        class="size-2.5 rounded-[2px] bg-github-2"
+                        class="size-2.5 rounded-xs bg-github-2"
                         aria-hidden="true"></span>
                     <span
-                        class="size-2.5 rounded-[2px] bg-github-3"
+                        class="size-2.5 rounded-xs bg-github-3"
                         aria-hidden="true"></span>
                     <span
-                        class="size-2.5 rounded-[2px] bg-github-4"
+                        class="size-2.5 rounded-xs bg-github-4"
                         aria-hidden="true"></span>
                     <span>More</span>
                 </div>
@@ -308,19 +309,14 @@ const skeletonCells = Array.from({ length: 53 * 7 });
                 }
 
                 const contributionWord =
-                    contribution.count === 1
-                        ? "contribution"
-                        : "contributions";
+                    contribution.count === 1 ? "contribution" : "contributions";
                 const label = `${contribution.count} ${contributionWord} on ${dateFormatter.format(parseDate(contribution.date))}`;
-                const level = Math.min(
-                    4,
-                    Math.max(0, contribution.level),
-                );
+                const level = Math.min(4, Math.max(0, contribution.level));
 
                 cell.setAttribute("role", "gridcell");
                 cell.setAttribute("aria-label", label);
                 cell.title = label;
-                cell.className = `size-2.5 rounded-[2px] p-0 -outline-offset-1 ${levelClasses[level]}`;
+                cell.className = `size-2.5 rounded-xs p-0 -outline-offset-1 ${levelClasses[level]}`;
             }
         });
 
@@ -331,14 +327,13 @@ const skeletonCells = Array.from({ length: 53 * 7 });
         private loading = false;
 
         connectedCallback() {
-            this.querySelector<HTMLButtonElement>("[data-retry]")?.addEventListener(
-                "click",
-                () => {
-                    const username = this.dataset.username;
-                    if (username) invalidateGitHubActivity(username);
-                    this.load();
-                },
-            );
+            this.querySelector<HTMLButtonElement>(
+                "[data-retry]",
+            )?.addEventListener("click", () => {
+                const username = this.dataset.username;
+                if (username) invalidateGitHubActivity(username);
+                this.load();
+            });
             this.load();
         }
 
@@ -352,8 +347,7 @@ const skeletonCells = Array.from({ length: 53 * 7 });
             const contentState =
                 this.querySelector<HTMLElement>("[data-content]");
             const summary = this.querySelector<HTMLElement>("[data-summary]");
-            const calendar =
-                this.querySelector<HTMLElement>("[data-calendar]");
+            const calendar = this.querySelector<HTMLElement>("[data-calendar]");
 
             if (
                 !username ||
@@ -400,11 +394,7 @@ const skeletonCells = Array.from({ length: 53 * 7 });
                     0,
                 );
 
-                renderSummary(
-                    summary,
-                    contributionTotal,
-                    repositoryCount,
-                );
+                renderSummary(summary, contributionTotal, repositoryCount);
                 renderCalendar(calendar, buildWeeks(contributions));
 
                 loadingState.classList.add("hidden");
@@ -442,25 +432,80 @@ const skeletonCells = Array.from({ length: 53 * 7 });
             transparent
         );
         background-size: 200% 100%;
-        animation: shimmer 1.6s ease-in-out infinite;
+    }
+
+    .skeleton-grid {
+        width: 670px;
     }
 
     .skeleton-cell {
+        width: 10px;
+        height: 10px;
+        flex: none;
+        border-radius: 2px;
+        background: var(--muted);
+        box-shadow:
+            12px 0 var(--muted),
+            24px 0 var(--muted),
+            36px 0 var(--muted),
+            48px 0 var(--muted),
+            60px 0 var(--muted),
+            72px 0 var(--muted),
+            84px 0 var(--muted),
+            96px 0 var(--muted),
+            108px 0 var(--muted),
+            120px 0 var(--muted),
+            132px 0 var(--muted),
+            144px 0 var(--muted),
+            156px 0 var(--muted),
+            168px 0 var(--muted),
+            180px 0 var(--muted),
+            192px 0 var(--muted),
+            204px 0 var(--muted),
+            216px 0 var(--muted),
+            228px 0 var(--muted),
+            240px 0 var(--muted),
+            252px 0 var(--muted),
+            264px 0 var(--muted),
+            276px 0 var(--muted),
+            288px 0 var(--muted),
+            300px 0 var(--muted),
+            312px 0 var(--muted),
+            324px 0 var(--muted),
+            336px 0 var(--muted),
+            348px 0 var(--muted),
+            360px 0 var(--muted),
+            372px 0 var(--muted),
+            384px 0 var(--muted),
+            396px 0 var(--muted),
+            408px 0 var(--muted),
+            420px 0 var(--muted),
+            432px 0 var(--muted),
+            444px 0 var(--muted),
+            456px 0 var(--muted),
+            468px 0 var(--muted),
+            480px 0 var(--muted),
+            492px 0 var(--muted),
+            504px 0 var(--muted),
+            516px 0 var(--muted),
+            528px 0 var(--muted),
+            540px 0 var(--muted),
+            552px 0 var(--muted),
+            564px 0 var(--muted),
+            576px 0 var(--muted),
+            588px 0 var(--muted),
+            600px 0 var(--muted),
+            612px 0 var(--muted),
+            624px 0 var(--muted);
         opacity: 0.55;
-        animation: cell-pulse 1.8s ease-in-out infinite alternate;
-        animation-delay: calc(var(--cell-index) * -17ms);
     }
 
-    .skeleton-cell:nth-child(5n + 2) {
+    .skeleton-cell:nth-child(3n + 2) {
         opacity: 0.7;
     }
 
-    .skeleton-cell:nth-child(7n + 3) {
+    .skeleton-cell:nth-child(4n + 3) {
         opacity: 0.85;
-    }
-
-    .activity-ready {
-        animation: activity-in 240ms ease-out both;
     }
 
     @keyframes shimmer {
@@ -485,11 +530,18 @@ const skeletonCells = Array.from({ length: 53 * 7 });
         }
     }
 
-    @media (prefers-reduced-motion: reduce) {
-        .skeleton-shimmer,
-        .skeleton-cell,
+    @media (prefers-reduced-motion: no-preference) {
+        .skeleton-shimmer {
+            animation: shimmer 1.6s ease-in-out infinite;
+        }
+
+        .skeleton-cell {
+            animation: cell-pulse 1.8s ease-in-out infinite alternate;
+            animation-delay: var(--delay, 0ms);
+        }
+
         .activity-ready {
-            animation: none;
+            animation: activity-in 240ms ease-out both;
         }
     }
 </style>
