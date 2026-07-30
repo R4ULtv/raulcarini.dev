@@ -45,17 +45,40 @@ const { shortUrl, title } = Astro.props;
         >
             <path d="M20 6 9 17l-5-5"></path>
         </svg>
+        <svg
+            class="share-failed-icon absolute inset-0 size-3.5 scale-75 text-red-500 opacity-0 transition-[opacity,transform] duration-200 ease-out"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+        >
+            <path d="M18 6 6 18"></path>
+            <path d="m6 6 12 12"></path>
+        </svg>
     </span>
+    <span
+        class="sr-only"
+        aria-live="polite"
+        aria-atomic="true"
+        data-share-status></span
+    >
 </button>
 
 <script>
+    import {
+        copyText,
+        resetCopyFeedback,
+        setCopyFeedback,
+    } from "../lib/clipboard";
+
     const shareSelector = "[data-share-link]";
     const resetTimers = new WeakMap<HTMLButtonElement, number>();
 
-    function showCopied(button: HTMLButtonElement) {
-        button.dataset.copied = "true";
-        button.setAttribute("aria-label", "Short link copied");
-        button.setAttribute("title", "Short link copied");
+    function showCopyResult(button: HTMLButtonElement, copied: boolean) {
+        setCopyFeedback(button, copied);
 
         const previousTimer = resetTimers.get(button);
         if (previousTimer) window.clearTimeout(previousTimer);
@@ -63,30 +86,14 @@ const { shortUrl, title } = Astro.props;
         resetTimers.set(
             button,
             window.setTimeout(() => {
-                delete button.dataset.copied;
-                button.setAttribute("aria-label", "Share this post");
-                button.setAttribute("title", "Share this post");
+                resetCopyFeedback(button);
             }, 2000),
         );
     }
 
     async function copyLink(button: HTMLButtonElement, url: string) {
-        try {
-            await navigator.clipboard.writeText(url);
-        } catch {
-            const input = document.createElement("input");
-            input.value = url;
-            input.style.position = "fixed";
-            input.style.opacity = "0";
-            document.body.append(input);
-            input.select();
-            const legacyDocument = document as unknown as {
-                execCommand(command: string): boolean;
-            };
-            legacyDocument.execCommand("copy");
-            input.remove();
-        }
-        showCopied(button);
+        const copied = await copyText(url, navigator.clipboard, document);
+        showCopyResult(button, copied);
     }
 
     document.addEventListener("click", async (event) => {
@@ -125,9 +132,20 @@ const { shortUrl, title } = Astro.props;
         opacity: 1;
     }
 
+    [data-share-link][data-copy-failed] .share-link-icon {
+        transform: scale(0.75);
+        opacity: 0;
+    }
+
+    [data-share-link][data-copy-failed] .share-failed-icon {
+        transform: scale(1);
+        opacity: 1;
+    }
+
     @media (prefers-reduced-motion: reduce) {
         .share-link-icon,
-        .share-check-icon {
+        .share-check-icon,
+        .share-failed-icon {
             transition: none;
         }
     }
