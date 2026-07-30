@@ -12,10 +12,16 @@ import uiIcon from "../assets/icons/ui.png";
 import { SITE_DESCRIPTION, SITE_TITLE } from "../consts";
 import { BLOG_CATEGORY_META, isNewPost } from "../lib/blog-meta";
 import { formatFullDate } from "../lib/date";
+import { recapYears } from "../data/recap";
+import { deriveRecapNavigation } from "../lib/recap";
 
 const recentPosts = (await getCollection("blog"))
     .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
     .slice(0, 5);
+const { recapsDescending, pendingYear } = deriveRecapNavigation(
+    recapYears,
+    new Date(),
+);
 
 const socialImage = new URL("/api/og/home.webp", Astro.site);
 ---
@@ -331,53 +337,63 @@ const socialImage = new URL("/api/og/home.webp", Astro.site);
                     Recap
                 </a>
 
-                <div class="-mx-3 flex items-start gap-4 px-3 py-3">
-                    <time
-                        class="mt-0.5 shrink-0 font-mono text-xs text-muted-foreground tabular-nums"
-                        datetime="2026"
-                    >
-                        2026
-                    </time>
-                    <div class="min-w-0">
-                        <p class="m-0 flex items-center gap-2 font-medium">
-                            Underway
-                            <span
-                                class="size-1.5 rounded-full bg-emerald-500/80"
-                                aria-hidden="true"></span>
-                        </p>
-                        <p
-                            class="mt-0.5 mb-0 text-sm leading-relaxed text-muted-foreground"
-                        >
-                            The year is still being written. Its recap will
-                            follow.
-                        </p>
-                    </div>
-                </div>
+                {
+                    pendingYear !== undefined && (
+                        <div class="-mx-3 flex items-start gap-4 px-3 py-3">
+                            <time
+                                class="mt-0.5 shrink-0 font-mono text-xs text-muted-foreground tabular-nums"
+                                datetime={String(pendingYear)}
+                            >
+                                {pendingYear}
+                            </time>
+                            <div class="min-w-0">
+                                <p class="m-0 flex items-center gap-2 font-medium">
+                                    Underway
+                                    <span
+                                        class="size-1.5 rounded-full bg-emerald-500/80"
+                                        aria-hidden="true"
+                                    />
+                                </p>
+                                <p class="mt-0.5 mb-0 text-sm leading-relaxed text-muted-foreground">
+                                    The year is still being written. Its recap
+                                    will follow.
+                                </p>
+                            </div>
+                        </div>
+                    )
+                }
 
-                <div
-                    class="mt-3 flex items-baseline gap-4 border-t border-border pt-4 text-sm sm:ml-12"
-                >
-                    <span class="shrink-0 text-xs text-muted-foreground"
-                        >Past years</span
-                    >
-                    <nav
-                        class="flex flex-wrap gap-x-4 gap-y-2"
-                        aria-label="Past recaps"
-                    >
-                        <a
-                            class="underline decoration-border-strong underline-offset-4 transition-colors hover:decoration-foreground"
-                            href="/recap?year=2025">2025</a
-                        >
-                        <a
-                            class="text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
-                            href="/recap?year=2024">2024</a
-                        >
-                        <a
-                            class="text-muted-foreground underline decoration-border underline-offset-4 transition-colors hover:text-foreground hover:decoration-foreground"
-                            href="/recap?year=2023">2023</a
-                        >
-                    </nav>
-                </div>
+                {
+                    recapsDescending.length > 0 ? (
+                        <div class="mt-3 flex items-baseline gap-4 border-t border-border pt-4 text-sm sm:ml-12">
+                            <span class="shrink-0 text-xs text-muted-foreground">
+                                Past years
+                            </span>
+                            <nav
+                                class="flex flex-wrap gap-x-4 gap-y-2"
+                                aria-label="Past recaps"
+                            >
+                                {recapsDescending.map(({ year }, index) => (
+                                    <a
+                                        class:list={[
+                                            "underline underline-offset-4 transition-colors hover:decoration-foreground",
+                                            index === 0
+                                                ? "decoration-border-strong"
+                                                : "text-muted-foreground decoration-border hover:text-foreground",
+                                        ]}
+                                        href={`/recap?year=${year}`}
+                                    >
+                                        {year}
+                                    </a>
+                                ))}
+                            </nav>
+                        </div>
+                    ) : (
+                        <p class="m-0 text-sm text-muted-foreground">
+                            No recaps published yet.
+                        </p>
+                    )
+                }
             </section>
 
             <section

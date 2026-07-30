@@ -6,14 +6,12 @@ import Header from "../components/Header.astro";
 import { recapYears } from "../data/recap";
 import { BLOG_CATEGORY_META } from "../lib/blog-meta";
 import { formatMonthLabel } from "../lib/date";
+import { deriveRecapNavigation } from "../lib/recap";
 
 const posts = await getCollection("blog");
 const postBySlug = new Map(posts.map((post) => [post.id, post]));
-const latestYear = recapYears.at(-1)?.year ?? new Date().getFullYear();
-const firstYear = recapYears.at(0)?.year ?? latestYear;
-const nextRecapYear = latestYear + 1;
-const pendingYear =
-    new Date().getFullYear() >= nextRecapYear ? nextRecapYear : undefined;
+const { recaps, firstYear, latestYear, pendingYear } =
+    deriveRecapNavigation(recapYears, new Date());
 
 const numberFormatter = new Intl.NumberFormat("en-US");
 
@@ -52,7 +50,12 @@ function formatDelta(current: number, previous: number | undefined) {
                     <p
                         class="m-0 font-mono text-[0.625rem] tracking-[0.08em] text-muted-foreground uppercase lg:mt-1"
                     >
-                        {firstYear}&mdash;{latestYear}
+                        {
+                            firstYear !== undefined &&
+                            latestYear !== undefined
+                                ? `${firstYear}—${latestYear}`
+                                : "No recaps yet"
+                        }
                     </p>
                 </div>
 
@@ -64,7 +67,7 @@ function formatDelta(current: number, previous: number | undefined) {
                         ]}
                     >
                         {
-                            recapYears.map(({ year }, index) => (
+                            recaps.map(({ year }, index) => (
                                 <li class="lg:border-t lg:border-border">
                                     <button
                                         type="button"
@@ -125,8 +128,8 @@ function formatDelta(current: number, previous: number | undefined) {
 
             <div class="min-w-0">
                 {
-                    recapYears.map((recap, recapIndex) => {
-                        const previous = recapYears.at(recapIndex - 1);
+                    recaps.map((recap, recapIndex) => {
+                        const previous = recaps.at(recapIndex - 1);
                         const highlights = recap.highlightSlugs
                             .map((slug) => postBySlug.get(slug))
                             .filter((post) => post !== undefined)
