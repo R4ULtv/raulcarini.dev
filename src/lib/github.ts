@@ -34,11 +34,17 @@ interface CachedGitHubActivity {
 export const CACHE_DURATION = 60 * 60 * 1000;
 const STALE_CACHE_DURATION = 7 * 24 * 60 * 60 * 1000;
 const CACHE_KEY_PREFIX = "github-activity:v1:";
+// Keep stalled upstreams from blocking rendering and stale-cache fallback.
+export const GITHUB_REQUEST_TIMEOUT_MS = 5_000;
 
 const cacheKey = (username: string) => `${CACHE_KEY_PREFIX}${username.toLowerCase()}`;
 
 async function fetchJson<T>(url: string): Promise<T> {
-  const response = await fetch(url, { headers: { Accept: "application/json" } });
+  const response = await fetch(url, {
+    headers: { Accept: "application/json" },
+    // Each outbound request gets its own full timeout budget.
+    signal: AbortSignal.timeout(GITHUB_REQUEST_TIMEOUT_MS),
+  });
 
   if (!response.ok) {
     throw new Error(`${response.status} ${response.statusText}`);
