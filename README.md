@@ -30,7 +30,7 @@ Personal portfolio and blog, built with [Astro](https://astro.build) and deploye
 
 ### Prerequisites
 
-- Node.js 22+
+- Node.js 22.12 or newer
 - pnpm
 
 ### Installation
