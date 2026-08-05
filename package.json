@@ -17,23 +17,23 @@
     "@astrojs/mdx": "^7.0.5",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
-    "@upstash/redis": "^1.38.0",
+    "@upstash/redis": "^1.38.1",
     "astro": "^7.1.6",
     "sharp": "^0.35.3",
-    "takumi-js": "^2.5.3"
+    "takumi-js": "^2.5.6"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@tailwindcss/vite": "^4.3.3",
     "@types/node": "^26.1.2",
-    "oxfmt": "^0.61.0",
-    "oxlint": "^1.76.0",
+    "oxfmt": "^0.62.0",
+    "oxlint": "^1.77.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "wrangler": "^4.115.0"
+    "wrangler": "^4.118.0"
   },
   "engines": {
     "node": ">=22.12.0"
   },
-  "packageManager": "pnpm@11.18.0"
+  "packageManager": "pnpm@11.20.0"
 }
