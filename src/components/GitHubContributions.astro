@@ -227,6 +227,8 @@ const { username = "r4ultv" } = Astro.props;
         }
 
         if (segments[0]?.span <= 2) segments[0].label = "";
+        const lastSegment = segments.at(-1);
+        if (lastSegment?.span === 1) lastSegment.label = "";
         return segments;
     }
 
@@ -273,9 +275,14 @@ const { username = "r4ultv" } = Astro.props;
             const heading = document.createElement("th");
             heading.colSpan = segment.span;
             heading.className =
-                "h-4 text-left text-xs font-semibold first-letter:uppercase";
+                "relative h-4 text-left text-xs font-semibold";
             heading.scope = "colgroup";
-            heading.textContent = segment.label;
+
+            const label = document.createElement("span");
+            label.className =
+                "absolute top-0 left-0 whitespace-nowrap first-letter:uppercase";
+            label.textContent = segment.label;
+            heading.append(label);
             monthRow.append(heading);
         }
 
