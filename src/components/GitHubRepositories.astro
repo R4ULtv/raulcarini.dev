@@ -94,6 +94,7 @@ const skeletonRows = Array.from({ length: limit });
         MDX: "oklch(0.8158 0.1597 76.85)",
         CSS: "oklch(0.4395 0.1591 303.69)",
         HTML: "oklch(0.6238 0.1947 34.59)",
+        Rust: "oklch(0.7675 0.0814 51.2)",
     };
     const fallbackLanguageColor = "#8b949e";
 
@@ -199,8 +200,7 @@ const skeletonRows = Array.from({ length: limit });
                 const { repositories } = await getGitHubActivity(username);
                 const visible = repositories
                     .filter(
-                        (repository) =>
-                            !repository.fork && !repository.private,
+                        (repository) => !repository.fork && !repository.private,
                     )
                     .slice(0, limit);
 
