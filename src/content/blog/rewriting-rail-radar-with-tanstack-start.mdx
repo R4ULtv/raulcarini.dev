@@ -1,0 +1,132 @@
+---
+title: Rewriting Rail Radar with TanStack Start
+pubDate: 2026-08-30
+shortDescription: Moving a growing train tracker from Next.js and Vercel to TanStack Start and Cloudflare
+description: >-
+  Rail Radar's Next.js application worked, but I no longer wanted a growing
+  project tied to Vercel's cost model. This is why I rewrote the frontend with
+  TanStack Start, how its hybrid rendering model works on Cloudflare Workers,
+  and why I still think Vercel is a good choice for smaller projects.
+category: projects
+keywords:
+  - Rail Radar
+  - TanStack Start
+  - TanStack Router
+  - Next.js migration
+  - Vercel costs
+  - Cloudflare Workers
+  - React
+  - server functions
+  - static prerendering
+  - R2
+---
+
+Rail Radar's Next.js application worked. I rewrote it anyway because I no longer wanted one of my largest projects tied to Vercel's pricing and deployment model.
+
+The replacement uses [TanStack Start](https://tanstack.com/start/latest), Vite, and Cloudflare Workers. It keeps React and file-based routing, but gives me direct control over rendering, assets, server endpoints, and deployment. The full migration spans [66 commits and 276 changed files](https://github.com/R4ULtv/rail-radar/pull/48), so this was not a weekend package swap.
+
+The new application is now live in production at [railradar24.com](https://www.railradar24.com), after running on the preview environment and merging through `preview` into `main`.
+
+## The problem was not Next.js
+
+I want to be precise about this because framework migration posts tend to turn into break-up letters.
+
+Next.js did its job. It gave Rail Radar server rendering, route conventions, metadata APIs, image handling, and an easy deployment path. Vercel made that path exceptionally convenient. Connect the repository, add the environment variables, and deploy.
+
+That is still a very good trade for a small website or a side project whose main constraint is getting online quickly. I would use Vercel again for that kind of project.
+
+Rail Radar is no longer in that category. It now contains 21,814 stations, serves live railway data across Europe, generates station and operator pages for search engines, streams station photos, and has a real audience. I wrote in my [six-month update](/blog/rail-radar-six-months-later) that the site had moved to Vercel's $20 per month plan. The amount itself was manageable. The concern was what came after it.
+
+Larger applications create more opportunities for metered usage: requests, server rendering, bandwidth, builds, analytics, image transformations, and traffic that does not always come from humans. I did not want every architectural decision to include a quiet calculation about which Vercel meter it might touch.
+
+This was not a reaction to a surprise invoice. It was a decision about where I want to build larger projects. I prefer infrastructure with a cost model I can reason about, deployment configuration that lives in the repository, and primitives I can compose directly.
+
+## TanStack Start kept React without keeping the platform
+
+Moving away from Vercel did not require moving away from React. That made [TanStack Start](https://tanstack.com/start/latest/docs/framework/react/overview) the most interesting option.
+
+TanStack Start combines TanStack Router's typed file routes with server rendering and server functions. It runs through Vite and can target Cloudflare Workers using Cloudflare's Vite plugin. In practical terms, I could keep the component system and most of the application logic while replacing the parts that were coupled to Next.js.
+
+The old web app depended on Next.js 16, `next/navigation`, `next/image`, SWR, and nuqs. The new one uses TanStack Start, TanStack Router, and TanStack Query. Route files moved from `app/station/[id]/page.tsx` to `src/routes/station/$id.tsx`, and the route now owns its loader, metadata, pending state, not-found state, and component in one place.
+
+Station data is loaded through a typed server function:
+
+```tsx
+export const loadStationPage = createServerFn({ method: "GET" })
+  .validator((data: { id: string }) => ({ id: data.id.trim() }))
+  .handler(({ data }) => getStationPageData(data.id));
+```
+
+The station route calls that function from its loader. During an initial server render, it executes on the server. During client navigation, TanStack Start handles the request back to the server. The page does not need to know which side is executing the loader, and the server-only station implementation does not enter the browser bundle.
+
+This is the part of TanStack Start that mattered most to me. It gave me a full-stack React model without requiring the hosting platform and framework to be the same product.
+
+## Rail Radar now mixes static pages, SSR, and live browser data
+
+Rail Radar cannot use one rendering strategy everywhere.
+
+The homepage, legal pages, reports, operator directory, every operator detail page, and the most important station pages are prerendered during the build. The paths come directly from the station and operator datasets, so adding data updates the static page set automatically.
+
+The current build prerenders **1,239 routes**: 1,128 important railway stations, 104 operators, and seven fixed pages. Those pages can be served as static assets without invoking the Worker for their initial HTML.
+
+Less important station pages and the country directories remain request-time SSR routes. Live arrivals, departures, station statistics, search results, and trending stations are fetched in the browser and continue to refresh after the page loads.
+
+The result is a deliberately mixed architecture:
+
+```text
+Browser
+  |
+  +-- prerendered pages ------------> Cloudflare Static Assets
+  |
+  +-- request-time pages -----------> TanStack Start on a Worker
+  |
+  +-- live train data --------------> Rail Radar API Worker
+  |
+  +-- station photos ---------------> Web Worker routes ---> R2
+```
+
+This gives popular station pages fast, indexable HTML without trying to prerender every station. It also avoids pretending that a live departure board can become static. The stable shell is rendered ahead of time or on request, while the volatile railway data remains live.
+
+## Moving to Cloudflare removed an entire asset service
+
+The old architecture had a separate `apps/static` Worker for station photos and other assets. Once the web application itself became a Cloudflare Worker, keeping that service meant another deployment, another domain boundary, and more configuration for no useful isolation.
+
+The migration moved repository-owned images, flags, operator logos, fonts, and social images into the web application's static assets. Curated station photos remain in an EU R2 bucket, but the web Worker now exposes them through same-origin `/media/*` routes.
+
+Those routes validate station manifests and object keys, reject unsupported methods, apply rate limits, stream objects without buffering them, and set different cache policies for manifests and immutable images. The same Worker also handles dynamic Open Graph images and the sitemap.
+
+Consolidating assets was not just cleanup. It made the deployment model legible: static files go through Cloudflare Static Assets, application requests go through TanStack Start, and large station media stays in R2.
+
+## Prerendering exposed the awkward parts
+
+The first version of the migration allowed station pages to read their R2 photo manifests while prerendering. That sounds reasonable until a production build starts making remote storage connections for hundreds of pages.
+
+It made builds dependent on a live bucket, mixed deployment data into what should have been deterministic page generation, and added unnecessary work. The fix was to defer photo manifests until hydration. A station page can still prerender its metadata, map image, nearby stations, and layout, then request its curated gallery from the browser.
+
+Development and production builds also need opposite R2 behavior. The Vite development server can connect to the real bucket so photos are testable locally. Production builds force the R2 binding to remain local so prerendering cannot accidentally read remote objects. Once deployed, the Worker receives the real binding.
+
+Another complication was routing between prerendered and SSR station pages. A normal client-side transition to a page that was emitted as a static document can behave differently from a request-time route. The navigation logic now knows which station pages are prerendered and uses the appropriate path.
+
+These were not reasons to abandon TanStack Start. They were reminders that changing frameworks means taking ownership of decisions the previous platform made for me.
+
+## The migration traded convention for control
+
+The new stack is not automatically better in every category.
+
+Next.js has a larger ecosystem, more production history, and a very polished default deployment. TanStack Start is younger, its generated route tree is a new moving part that has to be regenerated and committed before types line up, and some behavior that Next.js packages behind framework conventions now lives in my Vite and Wrangler configuration.
+
+The application is also not "cloud agnostic" just because it left Vercel. It uses Cloudflare Workers Static Assets, an R2 binding, a rate-limit binding, and Cloudflare observability. Moving again would require work.
+
+The difference is that those dependencies are explicit. `vite.config.ts` decides which routes are prerendered. `wrangler.jsonc` declares the Worker entry point, custom domain, R2 bucket, rate limiter, compatibility flags, and observability settings. I can see the system I am deploying instead of discovering it through a collection of dashboard settings and usage categories.
+
+Cloudflare is not free infrastructure without limits, either. Rail Radar can still create costs as traffic and storage grow. The point was never to avoid paying for a project people use.
+
+## I am not moving every side project away from Vercel
+
+My current rule is simple. For a small project, Vercel's convenience can be worth more than the infrastructure control. The fastest deployment is often the right one when I am testing an idea, building a demo, or maintaining a site with predictable low traffic.
+
+For a larger project that I expect to operate for years, I now care more about predictable costs, portable framework choices, and owning the deployment configuration. Rail Radar crossed that line.
+
+That does not make TanStack Start and Cloudflare the universal answer. It makes them the right answer for this application: a React interface with a large static dataset, request-time pages, live client data, edge endpoints, and R2-backed media.
+
+The rewrite is serving [railradar24.com](https://www.railradar24.com) today. You can inspect the complete [TanStack Start migration in pull request #48](https://github.com/R4ULtv/rail-radar/pull/48), including the route conversion, hybrid prerendering configuration, server functions, and Cloudflare deployment setup.
