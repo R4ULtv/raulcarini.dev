@@ -13,14 +13,14 @@
     "fmt": "oxfmt"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^14.2.6",
+    "@astrojs/cloudflare": "^14.3.0",
     "@astrojs/mdx": "^7.0.8",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
-    "@upstash/redis": "^1.38.3",
-    "astro": "^7.2.10",
+    "@upstash/redis": "^1.38.4",
+    "astro": "^7.3.1",
     "sharp": "^0.35.4",
-    "takumi-js": "^2.13.5"
+    "takumi-js": "^2.13.6"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
@@ -30,7 +30,7 @@
     "oxlint": "^1.81.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "wrangler": "^4.128.0"
+    "wrangler": "^4.129.0"
   },
   "engines": {
     "node": ">=22.12.0"
