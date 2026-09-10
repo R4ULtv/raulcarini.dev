@@ -13,24 +13,24 @@
     "fmt": "oxfmt"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^14.3.0",
+    "@astrojs/cloudflare": "^14.3.1",
     "@astrojs/mdx": "^7.0.8",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "@upstash/redis": "^1.38.4",
-    "astro": "^7.3.1",
+    "astro": "^7.3.2",
     "sharp": "^0.35.4",
-    "takumi-js": "^2.13.6"
+    "takumi-js": "^2.13.7"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@tailwindcss/vite": "^4.3.3",
-    "@types/node": "^26.4.1",
+    "@types/node": "^26.5.0",
     "oxfmt": "^0.66.0",
-    "oxlint": "^1.81.0",
+    "oxlint": "^1.82.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "wrangler": "^4.129.0"
+    "wrangler": "^4.130.0"
   },
   "engines": {
     "node": ">=22.12.0"
