@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.3.1",
-    "@astrojs/mdx": "^7.0.8",
+    "@astrojs/mdx": "^8.0.1",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
     "@upstash/redis": "^1.38.4",
@@ -25,15 +25,15 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@tailwindcss/vite": "^4.3.3",
-    "@types/node": "^26.5.0",
-    "oxfmt": "^0.66.0",
+    "@types/node": "^26.5.1",
+    "oxfmt": "^0.67.0",
     "oxlint": "^1.82.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "wrangler": "^4.130.0"
+    "wrangler": "^4.131.2"
   },
   "engines": {
     "node": ">=22.12.0"
   },
-  "packageManager": "pnpm@12.3.4"
+  "packageManager": "pnpm@12.4.1"
 }
