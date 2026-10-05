@@ -13,27 +13,27 @@
     "fmt": "oxfmt"
   },
   "dependencies": {
-    "@astrojs/cloudflare": "^14.3.1",
-    "@astrojs/mdx": "^8.0.1",
+    "@astrojs/cloudflare": "^14.3.3",
+    "@astrojs/mdx": "^8.0.2",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.4",
-    "@upstash/redis": "^1.38.4",
-    "astro": "^7.3.2",
-    "sharp": "^0.35.4",
-    "takumi-js": "^2.13.7"
+    "@upstash/redis": "^1.39.0",
+    "astro": "^7.3.5",
+    "sharp": "^0.35.5",
+    "takumi-js": "^2.14.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@tailwindcss/vite": "^4.3.3",
-    "@types/node": "^26.5.1",
-    "oxfmt": "^0.67.0",
-    "oxlint": "^1.82.0",
+    "@types/node": "^26.6.4",
+    "oxfmt": "^0.71.0",
+    "oxlint": "^1.86.0",
     "tailwindcss": "^4.3.3",
     "typescript": "^6.0.3",
-    "wrangler": "^4.131.2"
+    "wrangler": "^4.147.0"
   },
   "engines": {
     "node": ">=22.12.0"
   },
-  "packageManager": "pnpm@12.4.1"
+  "packageManager": "pnpm@12.9.1"
 }
